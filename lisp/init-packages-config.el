@@ -5,4 +5,6 @@
 (ac-config-default)
 (require 'fuzzy)
 (setq ac-fuzzy-enable t)
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
 (provide 'init-packages-config)

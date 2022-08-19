@@ -7,5 +7,6 @@
 ;;donwload auto-complete and dependence
 (use-package auto-complete)
 (use-package pos-tip)
+(use-package neotree)
 (use-package fuzzy)
 (provide 'init-packages)
