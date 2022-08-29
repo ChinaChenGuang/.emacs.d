@@ -1,82 +1,106 @@
-((("window-numbering-mode" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("window-numbering" .
-   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0])
-  ("window" .
-   [0 0 0 0 0 2])
-  ("window-right" .
-   [0 0 0 0 0 0 0 0 0 1 0 0])
-  ("window-left" .
-   [0 0 0 0 0 0 0 0 0 1 0])
-  ("symbol" .
-   [1 0 0 0 0 0])
-  ("move-line-up-down" .
-   [0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
-  ("set-cursor-color" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("lambda" .
-   [0 0 0 2 0 0])
-  ("highlight-parentheses-mode" .
-   [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
-  ("History" .
-   [2 0 0 0 0 0 0])
-  ("global-highlight-parentheses-mode" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("global" .
-   [0 0 0 0 0 3])
-  ("highlight" .
-   [0 0 0 0 0 1 0 0 0])
-  (":ensure" .
-   [0 0 0 0 0 0 1])
-  (":config" .
-   [0 0 0 0 1 0 0])
-  ("load-path" .
-   [0 0 0 0 1 0 0 0 0])
-  ("add-to-list" .
+((("global-set-key" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("neotree" .
+   [0 0 0 2 0 0 0])
+  ("evil" .
+   [0 0 1 0])
+  ("remq" .
+   [1 0 0 0])
+  ("evil-mode" .
+   [0 0 0 0 0 0 0 0 1])
+  ("global-hl-line-mode" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("global-linum-mode" .
+   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0])
+  ("fullscreen" .
+   [0 0 0 0 0 1 0 0 0 0])
+  ("default-frame-alist" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("global-highlight-changes-mode" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("global-hi-lock-mode" .
+   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
+  ("define-globalized-minor-mode" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("custom-theme--load-path" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
+  ("cua-mode" .
+   [0 0 0 0 0 0 0 1])
+  ("custom-theme-load-path" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1])
+  ("custom.el" .
+   [0 0 0 0 0 0 1 0 1])
+  ("add-hook" .
+   [0 0 0 0 0 0 0 1])
+  ("zeno-theme" .
+   [0 0 2 3 1 0 0 0 0 1])
+  ("load-theme" .
+   [0 0 0 0 0 0 0 0 0 4])
+  (":init" .
+   [1 0 0 0 2])
+  ("zerop" .
+   [0 0 0 1 0])
+  ("use-package" .
    [0 0 0 0 0 0 0 0 0 0 4])
   ("require" .
    [0 0 0 0 0 0 7])
-  ("use-package" .
-   [0 0 0 0 0 0 0 0 0 0 2])
-  ("zerop" .
-   [0 0 0 1 0])
-  (":init" .
-   [1 0 0 0 1])
-  ("load-theme" .
-   [0 0 0 0 0 0 0 0 0 4])
-  ("zeno-theme" .
-   [0 0 2 3 1 0 0 0 0 1])
-  ("add-hook" .
-   [0 0 0 0 0 0 0 1])
-  ("custom.el" .
-   [0 0 0 0 0 0 1 0 1])
-  ("custom-theme-load-path" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1])
-  ("cua-mode" .
-   [0 0 0 0 0 0 0 1])
-  ("custom-theme--load-path" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
-  ("define-globalized-minor-mode" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0])
-  ("global-hi-lock-mode" .
-   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
-  ("global-highlight-changes-mode" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
-  ("default-frame-alist" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("fullscreen" .
-   [0 0 0 0 0 1 0 0 0 0])
-  ("global-linum-mode" .
-   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0])
-  ("global-hl-line-mode" .
-   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
-  ("evil-mode" .
-   [0 0 0 0 0 0 0 0 1])
-  ("remq" .
-   [1 0 0 0])
-  ("evil" .
-   [0 0 1 0])
-  ("neotree" .
-   [0 0 0 2 0 0 0])
-  ("global-set-key" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1])))
+  ("add-to-list" .
+   [0 0 0 0 0 0 0 0 0 0 4])
+  ("load-path" .
+   [0 0 0 0 1 0 0 0 0])
+  (":config" .
+   [0 0 0 0 1 0 0])
+  (":ensure" .
+   [0 0 0 0 1 0 3])
+  ("highlight" .
+   [0 0 0 0 0 1 0 0 0])
+  ("global" .
+   [0 0 0 0 0 3])
+  ("global-highlight-parentheses-mode" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("History" .
+   [2 0 0 0 0 0 0])
+  ("highlight-parentheses-mode" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("lambda" .
+   [0 0 0 2 0 0])
+  ("set-cursor-color" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("move-line-up-down" .
+   [0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("symbol" .
+   [1 0 0 0 0 0])
+  ("window-left" .
+   [0 0 0 0 0 0 0 0 0 1 0])
+  ("window-right" .
+   [0 0 0 0 0 0 0 0 0 1 0 0])
+  ("window" .
+   [0 0 0 0 0 2])
+  ("window-numbering" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0])
+  ("window-numbering-mode" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("user" .
+   [0 0 0 1])
+  (":diminish" .
+   [0 0 0 0 0 1 0 0 1])
+  ("avy-move-line" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("ivy-mode" .
+   [0 0 2 1 0 0 0 0])
+  (":hook" .
+   [0 0 0 0 1])
+  ("after-init" .
+   [0 0 0 0 0 0 0 0 0 1])
+  (":key" .
+   [0 0 0 1])
+  (":keymap" .
+   [0 0 0 0 0 1 0])
+  (":bind-keymap" .
+   [0 0 0 0 0 0 0 0 2 0 0 1])
+  ("avy-goto-char" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 0])
+  ("neotree-vc" .
+   [0 0 0 0 0 0 0 0 0 1])
+  ("neotree-toggle" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0])))
