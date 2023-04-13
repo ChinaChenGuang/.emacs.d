@@ -22,5 +22,12 @@
 ;;(global-set-key (kbd "<down>") 'window-down)
 ;;(global-set-key (kbd "<right>") 'window-right)
 
+;;**********
+;; config short-key for neotree
+;;**********
+(require 'neotree)
+(global-set-key [f9] 'neotree-toggle)
+
+
 
 (provide 'init-kyd)
