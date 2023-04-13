@@ -1,2 +1,6 @@
 # .emacs.d
-add a user who in other place
+Configurate emacs files for DV editor:
+1. Support for SystemVerilog
+2. Support for Python and Shell script
+
+
