@@ -33,5 +33,13 @@
 (global-highlight-parentheses-mode t)
 
 (set-frame-font "-outline-Courier New-normal-normal-normal-mono-20-*-*-*-c-*-iso8859-1")
+
+;;***************************************************************************************************
+;; Line Hightlight theme config
+;;***************************************************************************************************
+(set-face-attribute 'hl-line nil :background "gray15")
+(set-cursor-color "#FFA500")
+(setq-default cursor-type 'bar)
+
 (provide 'init-ui)
 
