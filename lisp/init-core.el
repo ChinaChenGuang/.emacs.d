@@ -17,10 +17,16 @@
 (prefer-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 
+;; 启用原生编译并确保缓存目录存在
 (when (fboundp 'native-compile-async)
   (setq comp-deferred-compilation t
         comp-async-report-warnings-errors nil)
-  (native-compile-async "~/.emacs.d/eln-cache/"))
+  ;; 定义并确保 eln-cache 目录存在
+  (let ((eln-cache-dir (expand-file-name "eln-cache" user-emacs-directory)))
+    (unless (file-directory-p eln-cache-dir)
+      (make-directory eln-cache-dir t))
+    ;; 开始异步原生编译
+    (native-compile-async eln-cache-dir)))
 
 ;; ----------------------------------------------------------------------
 ;; 基础编辑功能 (Basic Editing Features)
