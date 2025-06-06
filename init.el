@@ -1,25 +1,23 @@
-(add-to-list 'load-path
-	     "~/.emacs.d/lisp")
-(add-to-list 'load-path
-	     "~/.emacs.d/plugins/auto-complete")
-(add-to-list 'load-path
-	     "~/.emacs.d/plugins/autopair")
-(add-to-list 'load-path
-	     "~/.emacs.d/plugins/neotree")
-(add-to-list 'load-path
-	     "~/.emacs.d/plugins")
-(add-to-list 'custom-theme-load-path
-	     "~/.emacs.d/theme")
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(require 'neotree)
-(require 'init-const)
-(require 'init-startup)
-(require 'init-elpa)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; 主配置文件 (Main Configuration File) - init.el
+;; 这个文件是 Emacs 启动的入口，它的作用是加载其他配置文件。
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 将 'lisp' 目录添加到加载路径中，以便 Emacs 能找到我们的模块化配置
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; 依次加载各个配置模块
 (require 'init-packages)
-(require 'init-packages-config)
-(require 'init-ui)
-(require 'init-kyd)
+(require 'init-core)
+(require 'init-dev)
+(require 'init-misc)
+
+;; 加载 Emacs 通过 `M-x customize` 保存的自定义设置
+;; 将其放在最后，以确保它能覆盖其他设置
+(setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
-  (load-file custom-file))
-;;(provide init)
-;;;init.el ends here
+  (load custom-file))
+
+;;; init.el ends here

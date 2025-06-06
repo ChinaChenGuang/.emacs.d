@@ -1,46 +1,38 @@
-;; theme
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; UI、字体和主题配置 (UI, Fonts, and Theme)
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;***************************************************************************************************
-;; Config Emcas DISPLAY
-;;***************************************************************************************************
-;; (global-linum-mode t)
-(global-display-line-numbers-mode)
-(global-hl-line-mode t)
+;; ----------------------------------------------------------------------
+;; 界面元素 (UI Elements)
+;; ----------------------------------------------------------------------
 
-;;***************************************************************************************************
-;; Config Emcas Theme
-;;***************************************************************************************************
+;; 全局开启行高亮
+(global-hl-line-mode 1)
+
+;; 显示行号
+(global-display-line-numbers-mode 1)
+(setq display-line-numbers-type 'relative)
 
 
-;;(use-package gruvbox-theme
-;;  :init (load-theme 'gruvbox-dark-soft t))
-(load-theme 'high-contrast t)
-;;***************************************************************************************************
-;; Config Emcas Windows
-;;***************************************************************************************************
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; ----------------------------------------------------------------------
+;; 仅在图形界面 (GUI) 下生效的配置
+;; ----------------------------------------------------------------------
+(when (display-graphic-p)
+  ;; --- 设置字体 (Font Settings) ---
+  (defun set-chinese-font-for-han ()
+    "为中文字符集寻找并设置一个合适的字体。"
+    (dolist (font '("Sarasa Mono SC" "WenQuanYi Micro Hei Mono" "Microsoft YaHei Mono" "PingFang SC" "sans-serif"))
+      (when (find-font (font-spec :family font))
+        (set-fontset-font t 'han (font-spec :family font))
+        (return))))
+  (set-chinese-font-for-han)
 
-;;***************************************************************************************************
-;; Config Emcas fontface
-;;***************************************************************************************************
-
-;;***************************************************************************************************
-;; Config Emcas fontface
-;;***************************************************************************************************
-(define-globalized-minor-mode global-highlight-parentheses-mode
-  highlight-parentheses-mode
-  (lambda()
-    (highlight-parentheses-mode)))
-(global-highlight-parentheses-mode t)
-
-(set-frame-font "-outline-Courier New-normal-normal-normal-mono-20-*-*-*-c-*-iso8859-1")
-
-;;***************************************************************************************************
-;; Line Hightlight theme config
-;;***************************************************************************************************
-(set-face-attribute 'hl-line nil :background "gray15")
-(set-cursor-color "#FFA500")
-(setq-default cursor-type 'bar)
+  ;; --- 加载主题 (Theme) ---
+  (use-package gruvbox-theme
+    :config
+    (load-theme 'gruvbox-dark-hard t)))
 
 (provide 'init-ui)
-
+;;; init-ui.el ends here
