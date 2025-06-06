@@ -10,7 +10,9 @@
 
 ;; 依次加载各个配置模块
 (require 'init-packages)
+(require 'init-ui)
 (require 'init-core)
+(require 'init-completion) ; <-- 新增：加载补全框架配置
 (require 'init-dev)
 (require 'init-misc)
 

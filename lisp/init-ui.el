@@ -30,9 +30,10 @@
   (set-chinese-font-for-han)
 
   ;; --- 加载主题 (Theme) ---
-  (use-package gruvbox-theme
+  ;; 使用 doom-one 主题，这是一个流行的暗色、低饱和度主题
+  (use-package doom-themes
     :config
-    (load-theme 'gruvbox-dark-hard t)))
+    (load-theme 'doom-one t)))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
