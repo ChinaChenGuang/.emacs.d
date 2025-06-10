@@ -23,17 +23,25 @@
   ;; --- 设置字体 (Font Settings) ---
   (defun set-chinese-font-for-han ()
     "为中文字符集寻找并设置一个合适的字体。"
-    (dolist (font '("Sarasa Mono SC" "WenQuanYi Micro Hei Mono" "Microsoft YaHei Mono" "PingFang SC" "sans-serif"))
-      (when (find-font (font-spec :family font))
-        (set-fontset-font t 'han (font-spec :family font))
-        (return))))
+    ;; 使用 catch 和 throw 来实现更稳健的循环退出
+    (catch 'font-found
+      (dolist (font '("Sarasa Mono SC" "WenQuanYi Micro Hei Mono" "Microsoft YaHei Mono" "PingFang SC" "sans-serif"))
+        (when (find-font (font-spec :family font))
+          (set-fontset-font t 'han (font-spec :family font))
+          (throw 'font-found t)))))
   (set-chinese-font-for-han)
 
   ;; --- 加载主题 (Theme) ---
-  ;; 使用 doom-one 主题，这是一个流行的暗色、低饱和度主题
-  (use-package doom-themes
-    :config
-    (load-theme 'doom-one t)))
+  ;; 确保 doom-themes 插件被 use-package 管理
+  (use-package doom-themes)
+
+  ;; 使用 with-eval-after-load 来确保在主题加载后进行自定义
+  ;; 这是最可靠的方式，可以防止设置被覆盖
+  (with-eval-after-load 'doom-themes
+    ;; 首先加载主题
+    (load-theme 'doom-one t)
+    ;; 然后修改行高亮颜色为低饱和度的深灰色
+    (set-face-background 'hl-line "#353a42")))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
