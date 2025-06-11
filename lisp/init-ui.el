@@ -20,6 +20,9 @@
 ;; 仅在图形界面 (GUI) 下生效的配置
 ;; ----------------------------------------------------------------------
 (when (display-graphic-p)
+  ;; --- 禁用菜单栏 ---
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
   ;; --- 设置字体 (Font Settings) ---
   (defun set-chinese-font-for-han ()
     "为中文字符集寻找并设置一个合适的字体。"

@@ -4,25 +4,25 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Vertico: 一个高性能、极简的迷你缓冲区补全界面
-(use-package vertico
-  :init
-  (vertico-mode))
+;; 1. 声明需要 ivy 和 counsel 插件。
+;;    这会确保它们被 Emacs 识别，但我们不在这里做任何配置。
+(use-package ivy)
+(use-package counsel)
 
-;; Marginalia: 为迷你缓冲区中的补全项提供丰富的注解
-;; 例如，在切换缓冲区时，它会显示文件的路径
-(use-package marginalia
-  :after vertico
-  :init
-  (marginalia-mode))
+;; 2. 使用 with-eval-after-load 来进行配置。
+;;    这会保证在 'ivy' 包完全加载到内存之后，才执行里面的代码。
+;;    这是解决 "Cannot load" 问题的最可靠方法。
+(with-eval-after-load 'ivy
+  (message "Ivy has been loaded. Configuring...")
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
 
-;; Orderless: 提供更强大的模糊匹配和多词匹配功能
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
-
+  ;; 因为 counsel 依赖 ivy，所以我们将它的配置也放在这里。
+  (require 'counsel)
+  (global-set-key (kbd "M-x") #'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") #'counsel-find-file)
+  (global-set-key (kbd "C-x b") #'counsel-switch-buffer))
 
 (provide 'init-completion)
 ;;; init-completion.el ends here

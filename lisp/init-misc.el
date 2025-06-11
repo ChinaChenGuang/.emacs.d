@@ -5,17 +5,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package neotree
-  :config
-  (global-set-key [f8] 'neotree-toggle))
+  :bind ("<f8>" . neotree-toggle))
 
 (use-package window-numbering
-  :config
-  (window-numbering-mode 1))
+  :hook (after-init . window-numbering-mode))
 
-;; Avy 配置，用于在当前可视区域内快速跳转
 (use-package avy
-  :bind (("C-;" . avy-goto-char-timer) ; 使用 C-; 触发字符跳转
-	 ("M-g g" . avy-goto-line)))    ; 使用 M-g g 跳转到任意行
+  :bind (("C-;" . avy-goto-char-timer)
+         ("M-g g" . avy-goto-line)))
+
+;; 使用 symbol-overlay 替换旧的 symbol-highlight
+;; 它会在光标停留时自动高亮同名符号
+(use-package symbol-overlay
+  :ensure t
+  :hook (prog-mode . symbol-overlay-mode)
+  :config
+  (define-key symbol-overlay-mode-map (kbd "M-n") #'symbol-overlay-jump-next)
+  (define-key symbol-overlay-mode-map (kbd "M-p") #'symbol-overlay-jump-prev))
 
 (provide 'init-misc)
 ;;; init-misc.el ends here
