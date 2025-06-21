@@ -15,7 +15,7 @@
 (require 'init-completion) ; <-- 新增：加载补全框架配置
 (require 'init-dev)
 (require 'init-misc)
-
+(require 'init-dashboard)
 ;; 加载 Emacs 通过 `M-x customize` 保存的自定义设置
 ;; 将其放在最后，以确保它能覆盖其他设置
 (setq custom-file (locate-user-emacs-file "custom.el"))
