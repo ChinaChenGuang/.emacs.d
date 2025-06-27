@@ -9,7 +9,7 @@
 ;; -- 基础网络和签名设置 --
 (setq url-http-user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0")
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(setq package-check-signatures nil)
+;; (setq package-check-signatures nil)
 
 ;; 1. 设置包源 (使用清华 TUNA 镜像)
 ;; (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")

@@ -9,6 +9,7 @@
 (setq-default inhibit-splash-screen t)
 (setq-default inhibit-startup-message t)
 (setq-default initial-scratch-message nil)
+(setq package-check-signatures nil)
 
 ;; 调整垃圾回收阈值，在启动时减少卡顿
 ;; 启动后 Emacs 会根据使用情况自动调整
