@@ -12,10 +12,12 @@
 (setq package-check-signatures nil)
 
 ;; 1. 设置包源 (使用清华 TUNA 镜像)
-(setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-                         ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-
+;; (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+;;                          ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+(setq package-archives '(("gnu"    . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa"  . "https://melpa.org/packages/")))
 ;; 2. 初始化包系统并刷新包列表
 (package-initialize)
 (unless package-archive-contents
