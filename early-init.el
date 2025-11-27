@@ -1,25 +1,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; 早期初始化文件 (Early Init File) - early-init.el
-;; 这些设置在包系统初始化之前生效，主要用于优化启动性能和初始 UI。
+;; Early Initialization - Performance & UI Flicker Prevention
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 在启动时禁用文件处理器的提示，加快启动速度
-(setq-default inhibit-splash-screen t)
-(setq-default inhibit-startup-message t)
-(setq-default initial-scratch-message nil)
-(setq package-check-signatures nil)
+;; 1. Garbage Collection Optimization during startup
+;; Increase the GC threshold to 100MB to prevent GC from running during startup.
+;; It will be reset to a sane default in `init.el` after startup is complete.
+(setq gc-cons-threshold (* 100 1024 1024))
 
-;; 调整垃圾回收阈值，在启动时减少卡顿
-;; 启动后 Emacs 会根据使用情况自动调整
-(setq gc-cons-threshold (* 128 1024 1024))
-(setq read-process-output-max (* 1024 1024))
+;; 2. UI Pre-loading
+;; Disable GUI elements early to prevent "white flash" and UI resizing flicker.
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
 
-;; 仅在图形界面模式下禁用 UI 元素，避免在终端中产生不必要的设置
-(when (display-graphic-p)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1))
-
-;;; early-init.el ends here
+;; 3. Package Management
+;; Prevent package.el from initializing automatically. We will handle it
+;; explicitly in `init-packages.el` to ensure correct loading order.
+(setq package-enable-at-startup nil)

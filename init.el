@@ -1,25 +1,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; 主配置文件 (Main Configuration File) - init.el
-;; 这个文件是 Emacs 启动的入口，它的作用是加载其他配置文件。
+;; Emacs Configuration Entry Point
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 将 'lisp' 目录添加到加载路径中，以便 Emacs 能找到我们的模块化配置
+;; 1. Path Configuration
+;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; 依次加载各个配置模块
-(require 'init-packages)
-(require 'init-ui)
-(require 'init-core)
-(require 'init-completion) ; <-- 新增：加载补全框架配置
-(require 'init-dev)
-(require 'init-misc)
-(require 'init-dashboard)
-;; 加载 Emacs 通过 `M-x customize` 保存的自定义设置
-;; 将其放在最后，以确保它能覆盖其他设置
-(setq custom-file (locate-user-emacs-file "custom.el"))
+;; 2. Load Modules (Order Matters)
+(require 'init-packages)    ; Package manager setup (Must be first)
+(require 'init-core)        ; Core system settings
+(require 'init-ui)          ; Visuals, fonts, theme
+(require 'init-completion)  ; Completion framework
+(require 'init-dev)         ; Development tools
+(require 'init-misc)        ; Miscellaneous tools
+(require 'init-dashboard)   ; Startup dashboard
+
+;; 3. Startup Profiler
+;; Display startup time and reset GC threshold after initialization.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)
+            ;; Reset GC threshold to 2MB for normal operation
+            (setq gc-cons-threshold (* 2 1024 1024))))
+
+;; 4. Custom File
+;; Keep automatic custom settings in a separate file to keep init.el clean.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
-;;; init.el ends here
