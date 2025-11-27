@@ -1,54 +1,74 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; UI、字体和主题配置 (UI, Fonts, and Theme)
+;; UI/UX Configuration - Optimized
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; ----------------------------------------------------------------------
-;; 界面元素 (UI Elements)
+;; 1. Basic UI Cleanup
 ;; ----------------------------------------------------------------------
+;; Disable startup message, go directly to Scratch buffer
+(setq inhibit-startup-message t)
 
-;; 全局开启行高亮
+;; Turn off unnecessary GUI elements to maximize screen space
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))   ; Disable tool bar
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))   ; Disable menu bar (enable if needed)
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ; Disable scroll bar
+
+;; ----------------------------------------------------------------------
+;; 2. Line Numbers
+;; ----------------------------------------------------------------------
+;; Enable line numbers globally
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers in specific modes (e.g., shell, eshell, tree-sitter, etc.)
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; ----------------------------------------------------------------------
+;; 3. Font Configuration
+;; ----------------------------------------------------------------------
+;; Attempt to set a good programming font. If not installed on the system, this step is ignored.
+;; You can change "JetBrains Mono" or "Source Code Pro" to your preferred font.
+(let ((my-font "JetBrains Mono"))
+  (when (member my-font (font-family-list))
+    (set-face-attribute 'default nil :font (concat my-font " 13"))))
+
+;; ----------------------------------------------------------------------
+;; 4. Theme Configuration
+;; ----------------------------------------------------------------------
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings: Enable bold and italics
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  
+  ;; Load the doom-one theme
+  (load-theme 'doom-one t)
+
+  ;; Visual Bell: Flash the screen on error instead of making an audio beep
+  (doom-themes-visual-bell-config)
+  
+  ;; Org Mode beautification: Make Org headers and lists look modern
+  (doom-themes-org-config))
+
+;; ----------------------------------------------------------------------
+;; 5. Highlighting & Cursor
+;; ----------------------------------------------------------------------
+;; Enable current line highlighting
 (global-hl-line-mode 1)
 
-;; 显示行号
-(global-display-line-numbers-mode 1)
-(setq display-line-numbers-type 'relative)
+;; Customize highlight color (Nord dark grey)
+;; Note: If you switch to a Light Theme in the future, it is recommended to comment out the line below,
+;; because this dark grey will look stark on a white background.
+(set-face-background 'hl-line "#3B4252")
 
-
-;; ----------------------------------------------------------------------
-;; 仅在图形界面 (GUI) 下生效的配置
-;; ----------------------------------------------------------------------
-(when (display-graphic-p)
-  ;; --- 禁用菜单栏 ---
-  (menu-bar-mode -1)
-
-  ;; --- 设置字体 (Font Settings) ---
-  (defun set-chinese-font-for-han ()
-    "为中文字符集寻找并设置一个合适的字体，对 Windows 和其他系统分别处理。"
-    (catch 'font-found
-      ;; 根据操作系统类型，选择不同的字体列表进行尝试
-      (let ((fonts (if (eq system-type 'windows-nt)
-                       ;; Windows 字体列表
-                       '("Sarasa Mono SC" "Microsoft YaHei Mono" "SimSun" "sans-serif")
-                     ;; Linux/macOS 字体列表
-                     '("Sarasa Mono SC" "WenQuanYi Micro Hei Mono" "PingFang SC" "sans-serif"))))
-        (dolist (font fonts)
-          (when (find-font (font-spec :family font))
-            (set-fontset-font t 'han (font-spec :family font))
-            (throw 'font-found t))))))
-  (set-chinese-font-for-han)
-
-  ;; --- 加载主题 (Theme) ---
-  ;; 确保 doom-themes 插件被 use-package 管理
-  (use-package doom-themes)
-
-  ;; 使用 with-eval-after-load 来确保在主题加载后进行自定义
-  (with-eval-after-load 'doom-themes
-    ;; 首先加载主题
-    (load-theme 'doom-one t)
-    ;; 然后修改行高亮颜色为低饱和度的深灰色
-    (set-face-background 'hl-line "#353a42")))
+;; Enable parenthesis matching (highlight the matching parenthesis when cursor is on one)
+(show-paren-mode 1)
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
