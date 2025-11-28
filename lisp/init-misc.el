@@ -1,15 +1,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Development Tools
+;; Miscellaneous Tools
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 1. Magit: The best Git client ever
-(use-package magit
-  :bind ("C-x g" . magit-status))
+;; 1. Which-key: Displays available keybindings in popup
+(use-package which-key
+  :init (which-key-mode)
+  :config
+  (setq which-key-idle-delay 0.3))
 
-;; 2. Flycheck: On-the-fly syntax checking
-(use-package flycheck
-  :init (global-flycheck-mode))
+;; 2. Recentf: Track recent files
+(use-package recentf
+  :init (recentf-mode 1)
+  :config
+  (setq recentf-max-menu-items 25
+        recentf-max-saved-items 25))
 
-(provide 'init-dev)
+(provide 'init-misc)
