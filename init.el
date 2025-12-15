@@ -16,7 +16,8 @@
 (require 'init-dev)         ; Development tools
 (require 'init-misc)        ; Miscellaneous tools
 (require 'init-dashboard)   ; Startup dashboard
-
+(require 'init-markdown)    ; Startup markdown
+(require 'init-org)         ; Startup org-mode
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook
