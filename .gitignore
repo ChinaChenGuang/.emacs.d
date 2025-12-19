@@ -1,0 +1,28 @@
+# Emacs 备份和自动保存文件
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list/
+tramp
+.\#*
+
+# ELPA 包目录
+elpa/
+archives/
+
+# Org-persist 缓存
+org-persist/
+
+# Projectile
+projectile-bookmarks.eld
+
+# Transient (Magit 等用的历史)
+transient/
+
+# Recentf
+recentf
+
+# 其他临时目录
+tmp/

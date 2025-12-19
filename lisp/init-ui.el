@@ -61,7 +61,7 @@
           ;; Scale Chinese font by 1.25x to match JetBrains Mono's width.
           ;; If you use Consolas, 1.2 might work better.
           ;; If tables are still misaligned, tweak this number (e.g., 1.2, 1.3).
-          (add-to-list 'face-font-rescale-alist (cons font 1.25)))))))
+          (add-to-list 'face-font-rescale-alist (cons font 1.15)))))))
 
 ;; Apply fonts after UI init
 (add-hook 'after-init-hook #'my/setup-fonts)

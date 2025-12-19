@@ -9,9 +9,14 @@
 ;; 1. Package Repositories (Official)
 ;; Using official GNU and MELPA repositories via HTTPS.
 (setq package-archives
-      '(("gnu"    . "https://elpa.gnu.org/packages/")
+       '(("gnu"    . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("melpa"  . "https://melpa.org/packages/")))
+
+;; (setq package-archives
+;;      '(("melpa" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/melpa/")
+;;        ("org"   . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/org/")
+;;        ("gnu"   . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/")))
 
 ;; 2. Stability Settings
 ;; On Windows, GPG signature verification can sometimes fail even with official sources.
