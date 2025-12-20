@@ -13,7 +13,7 @@
   :type 'string
   :group 'my-proxy)
 
-(defcustom my-proxy-port "7897"  ;; <--- 请确认您的代理端口
+(defcustom my-proxy-port "7897"  ;; <--- Changed from 7890 to 7897
   "HTTP Port for the proxy server."
   :type 'string
   :group 'my-proxy)
@@ -82,8 +82,9 @@
     (my/enable-proxy)))
 
 ;; ----------------------------------------------------------------------------
-;; Network Speed/Latency Test
+;; Network Diagnostic Tools
 ;; ----------------------------------------------------------------------------
+
 (defun my/proxy-check-latency ()
   "Check latency to Google and update modeline."
   (interactive)
@@ -118,10 +119,29 @@
                                (speed-kb (/ (/ size 1024.0) duration)))
                           (message "Download Complete: %.2f KB in %.2fs (Speed: %.2f KB/s)"
                                    (/ size 1024.0) duration speed-kb)
-                          ;; Update modeline with latest latency info derived from this test
                           (when url-proxy-services
                              (my/update-proxy-modeline "ON" duration))))))
                   (list start-time))))
+
+;; NEW: Test Latency for all configured Package Archives
+(defun my/test-archives-latency ()
+  "Test connection latency to all configured package archives (GNU, MELPA, etc)."
+  (interactive)
+  (message "Starting latency test for package archives...")
+  (if (not (boundp 'package-archives))
+      (message "Error: package-archives is not defined yet.")
+    (dolist (archive package-archives)
+      (let* ((name (car archive))
+             (url (cdr archive))
+             (start-time (float-time)))
+        (url-retrieve url
+                      (lambda (status name url start)
+                        (let ((latency (- (float-time) start)))
+                          (kill-buffer (current-buffer)) ;; Cleanup temp buffer
+                          (if (plist-get status :error)
+                              (message "[%s] Connection Failed: %s" name (plist-get status :error))
+                            (message "[%s] Latency: %.3fs (%s)" name latency url))))
+                      (list name url start-time))))))
 
 ;; Bindings
 (global-set-key (kbd "C-c x") 'my/toggle-proxy)
@@ -130,7 +150,6 @@
 ;; Auto-Enable on Startup
 ;; ----------------------------------------------------------------------------
 (my/enable-proxy)
-;; Optionally check latency once on startup (delayed to not block init)
 (run-with-timer 5 nil #'my/proxy-check-latency)
 
 (provide 'init-proxy)

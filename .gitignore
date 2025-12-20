@@ -1,28 +1,41 @@
-# Emacs 备份和自动保存文件
+# ----------------------------------------------------------------------
+# Emacs Default Ignore Rules
+# ----------------------------------------------------------------------
+
+# 1. Package Management (Don't commit installed packages)
+/elpa/
+/eln-cache/
+/straight/
+
+# 2. Temporary & Backup Files
 *~
 \#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
+.#*
+*.tmp
+*.log
+/tmp/
+
+# 3. Emacs Auto-generated Files
+/auto-save-list/
+/transient/
+/var/
+/.org-id-locations
+*_archive
+/ac-comphist.dat
+/recentf
+/history
+/server/
+/image-dired/
+.ido.last
+
+# 4. Compiled Byte-code (Optional: keep if you want to verify compilation)
 *.elc
-auto-save-list/
-tramp
-.\#*
 
-# ELPA 包目录
-elpa/
-archives/
+# 5. OS Specific
+.DS_Store
+Thumbs.db
 
-# Org-persist 缓存
-org-persist/
-
-# Projectile
-projectile-bookmarks.eld
-
-# Transient (Magit 等用的历史)
-transient/
-
-# Recentf
-recentf
-
-# 其他临时目录
-tmp/
+# 6. Custom Settings
+# It is often recommended to ignore custom.el if it contains machine-specific
+# paths or sensitive data. If you want to sync it, comment out the line below.
+# custom.el
