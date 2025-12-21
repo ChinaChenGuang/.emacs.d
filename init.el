@@ -19,6 +19,7 @@
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
 (require 'init-proxy)         ; Startup proxy
+(require 'init-cpp)         ; Startup C++ Development
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook
