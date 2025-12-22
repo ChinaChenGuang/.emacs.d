@@ -4,24 +4,43 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 1. 使用 Emacs 30 内置的 Tree-sitter 模式以获得更强的性能
+;; 1. Tree-sitter 语法库源配置
+(setq treesit-language-source-alist
+      '((c "https://github.com/tree-sitter/tree-sitter-c")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
+
+;; 将传统的 c-mode 和 c++-mode 重定向到新的 ts-mode
 (setq major-mode-remap-alist
       '((c-mode . c-ts-mode)
         (c++-mode . c++-ts-mode)
         (c-or-c++-mode . c++-ts-mode)))
 
+;; ----------------------------------------------------------------------------
+;; 2. 智能编译配置 (Smart Compilation)
+;; ----------------------------------------------------------------------------
+(defun my/cpp-set-compile-command ()
+  "Determine the best compile command for the current buffer."
+  (unless (or (file-exists-p "Makefile") (file-exists-p "makefile"))
+    (let ((file (file-name-nondirectory buffer-file-name)))
+      (setq-local compile-command
+                  (format "g++ -g -Wall -Wextra %s -o %s"
+                          file
+                          (file-name-sans-extension file))))))
+
 (use-package cc-mode
   :ensure nil
-  :bind (:map c++-mode-map
-              ("C-c C-p" . compile)       ; 延续之前的编译快捷键
-         :map c++-ts-mode-map
-              ("C-c C-p" . compile))
+  :hook ((c-mode c++-mode c-ts-mode c++-ts-mode) . my/cpp-set-compile-command)
   :config
-  (setq-default c-basic-offset 4)
-  ;; Linux 下推荐使用项目根目录的 Makefile，如果没有则默认 g++
-  (setq compile-command "make -k"))
+  (setq-default c-basic-offset 4))
 
-;; 2. LSP 智能补全 (Arch 环境下配合 clangd)
+;; 快捷键绑定 (针对 Emacs 30 Tree-sitter 优化)
+(with-eval-after-load 'c-ts-mode
+  (define-key c-ts-mode-map (kbd "C-c C-p") #'compile)
+  (define-key c++-ts-mode-map (kbd "C-c C-p") #'compile))
+
+;; ----------------------------------------------------------------------------
+;; 3. LSP 智能补全
+;; ----------------------------------------------------------------------------
 (use-package lsp-mode
   :ensure t
   :hook ((c-ts-mode c++-ts-mode) . lsp-deferred)
@@ -30,7 +49,12 @@
   (setq lsp-idle-delay 0.1
         lsp-enable-symbol-highlighting t
         lsp-enable-indentation t
-        lsp-headerline-breadcrumb-enable t))
+        lsp-headerline-breadcrumb-enable t)
+  
+  (setq lsp-auto-guess-root t)
+  (setq lsp-file-watch-threshold 5000)
+  
+  (setq lsp-language-id-configuration (delete '(emacs-lisp-mode . "emacs-lisp") lsp-language-id-configuration)))
 
 (use-package lsp-ui
   :ensure t
@@ -40,24 +64,34 @@
         lsp-ui-doc-position 'at-point
         lsp-ui-sideline-enable t))
 
-;; 3. DAP-Mode 图形化调试 (Arch Linux 安装 gdb 即可使用)
+;; ----------------------------------------------------------------------------
+;; 4. DAP-Mode 图形化调试
+;; ----------------------------------------------------------------------------
 (use-package dap-mode
   :ensure t
+  :commands dap-debug
   :config
   (dap-auto-configure-mode)
-  (require 'dap-gdb-lldb)
-  ;; 如果是 Arch Linux, gdb 通常在 /usr/bin/gdb
-  (dap-gdb-lldb-setup)
+  (with-eval-after-load 'dap-mode
+    (require 'dap-gdb-lldb)
+    (condition-case nil
+        (dap-gdb-lldb-setup)
+      (error (message "DAP: Notice - Automatic gdb-lldb setup skipped, using system GDB."))))
+  
   :bind (:map c++-ts-mode-map
               ("<f5>" . dap-debug)
               ("C-c d b" . dap-breakpoint-toggle)))
 
-;; 4. 编译输出窗口优化
+;; ----------------------------------------------------------------------------
+;; 5. 编译输出窗口优化
+;; ----------------------------------------------------------------------------
 (setq compilation-scroll-output t)
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter))
 
-;; 5. CMake 支持
+;; ----------------------------------------------------------------------------
+;; 6. CMake 支持
+;; ----------------------------------------------------------------------------
 (use-package cmake-mode
   :ensure t)
 

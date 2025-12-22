@@ -28,14 +28,16 @@
 /image-dired/
 .ido.last
 
-# 4. Compiled Byte-code (Optional: keep if you want to verify compilation)
+# 4. LSP & Tree-sitter (Local & Binary files)
+.lsp-session*
+/tree-sitter/
+
+# 5. Compiled Byte-code
 *.elc
 
-# 5. OS Specific
+# 6. OS Specific
 .DS_Store
 Thumbs.db
 
-# 6. Custom Settings
-# It is often recommended to ignore custom.el if it contains machine-specific
-# paths or sensitive data. If you want to sync it, comment out the line below.
+# 7. Custom Settings
 # custom.el
