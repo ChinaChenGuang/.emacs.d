@@ -27,7 +27,7 @@
 /server/
 /image-dired/
 .ido.last
-
+projectile-bookmarks.eld
 # 4. LSP & Tree-sitter (Local & Binary files)
 .lsp-session*
 /tree-sitter/

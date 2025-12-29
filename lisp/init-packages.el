@@ -6,12 +6,12 @@
 
 (require 'package)
 
-;; 1. Package Repositories (Official)
-;; Using official GNU and MELPA repositories via HTTPS.
+;; 1. Package Repositories (Mirrors)
+;; Using USTC mirrors for better connectivity in China.
 (setq package-archives
-       '(("gnu"    . "https://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-        ("melpa"  . "https://melpa.org/packages/")))
+      '(("gnu"    . "http://mirrors.ustc.edu.cn/elpa/gnu/")
+        ("nongnu" . "http://mirrors.ustc.edu.cn/elpa/nongnu/")
+        ("melpa"  . "http://mirrors.ustc.edu.cn/elpa/melpa/")))
 
 ;; (setq package-archives
 ;;      '(("melpa" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/melpa/")

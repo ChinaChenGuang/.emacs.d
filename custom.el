@@ -14,4 +14,5 @@
  '(org-level-2 ((t (:height 1.15 :weight bold))))
  '(org-level-3 ((t (:height 1.05 :weight bold))))
  '(org-level-4 ((t (:height 1.0 :weight bold))))
+ '(org-table ((t (:foreground "#88C0D0"))))
  '(region ((t (:extend t :background "dark green" :foreground "orange" :weight bold)))))

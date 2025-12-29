@@ -78,9 +78,9 @@
         (dap-gdb-lldb-setup)
       (error (message "DAP: Notice - Automatic gdb-lldb setup skipped, using system GDB."))))
   
-  :bind (:map c++-ts-mode-map
-              ("<f5>" . dap-debug)
-              ("C-c d b" . dap-breakpoint-toggle)))
+  (with-eval-after-load 'c++-ts-mode
+    (define-key c++-ts-mode-map (kbd "<f5>") #'dap-debug)
+    (define-key c++-ts-mode-map (kbd "C-c d b") #'dap-breakpoint-toggle)))
 
 ;; ----------------------------------------------------------------------------
 ;; 5. 编译输出窗口优化
