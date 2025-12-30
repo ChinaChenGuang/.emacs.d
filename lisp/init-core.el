@@ -9,6 +9,13 @@
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
+;; 1.5. Path Setup
+;; Ensure local bin directory is in the path
+(add-to-list 'exec-path (expand-file-name "bin" user-emacs-directory))
+(setenv "PATH" (concat (expand-file-name "bin" user-emacs-directory)
+                       path-separator
+                       (getenv "PATH")))
+
 ;; 2. File Management
 ;; Auto-revert buffers when files change on disk.
 (global-auto-revert-mode t)

@@ -39,8 +39,9 @@
     - `LSP & DAP`: 完整的 C++ 语言服务器支持与图形化调试 (GDB/LLDB) 集成。
     - `CMake`: 完善的 CMake 项目支持。
 - **SystemVerilog**:
-    - **跳转**: 开箱即用的 `M-.` (定义) 和 `M-?` (引用) 支持 (基于 `dumb-jump`)。
-    - **性能**: 集成 `ripgrep` 以实现毫秒级的大型项目符号搜索。
+    - **LSP 支持**: 集成 **Verible** Language Server，提供精准的**定义跳转**、引用查找和错误提示。
+    - **工具路径**: Verible 二进制文件已自动安装至 `~/.emacs.d/bin/`。
+    - **备用方案**: 保留 `dumb-jump` + `ripgrep` 作为 LSP 未启动时的后备方案。
     - **结构**: 针对 SystemVerilog 的代码折叠与导航优化。
 - **Git**: 深度集成 `Magit`（Emacs 下最强 Git 客户端）。
 - **项目管理**: 使用 `treemacs` 进行文件树浏览。

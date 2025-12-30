@@ -133,7 +133,7 @@
 (global-set-key (kbd "M-n") 'my/search-next-symbol)        ; Alt+n: Next occurrence
 (global-set-key (kbd "M-p") 'my/search-prev-symbol)        ; Alt+p: Prev occurrence
 
-;; 5. Dumb Jump (Go to Definition)
+;; 5. Dumb Jump (Go to Definition) - Fallback
 (use-package dumb-jump
   :ensure t
   :init
@@ -141,7 +141,19 @@
   :config
   (setq xref-show-definitions-function #'xref-show-definitions-buffer-at-bottom))
 
-;; 6. Code Folding (Hideshow)
+;; 6. SystemVerilog LSP (Precise Navigation)
+;; Requires external server: 'verible-verilog-ls' (Recommended) or 'svls'
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(verilog-mode . "verilog"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "verible-verilog-ls")
+                    :major-modes '(verilog-mode)
+                    :priority -1
+                    :server-id 'verible-ls)))
+
+(add-hook 'verilog-mode-hook #'lsp-deferred)
+
+;; 7. Code Folding (Hideshow)
 (use-package hideshow
   :ensure nil
   :hook (prog-mode . hs-minor-mode)
