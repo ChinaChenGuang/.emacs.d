@@ -20,15 +20,24 @@ cd ~/.emacs.d
 ```
 
 ### 2. SystemVerilog 工程初始化 (修复跳转问题)
-对于多目录的 SystemVerilog/UVM 项目，**必须**生成文件索引列表 LSP 才能精准工作：
+SystemVerilog LSP (Verible) 需要知道项目的文件结构才能跨目录跳转。
 
-1. 进入你的工程根目录 (例如 `cd ~/my_uvm_project`)。
-2. 运行构建脚本：
+**场景：阅读 UVM 源码或多目录验证环境**
+如果遇到 `M-.` 无法跳转到基类定义，或提示 "File not found"：
+
+1. **进入工程/源码根目录**:
+   打开终端，cd 到您的项目根目录（如果是看 UVM 源码，就进入 UVM 的解压目录）。
+
+2. **生成索引文件**:
+   运行配置自带的脚本：
    ```bash
    ~/.emacs.d/bin/gen-verible-project.sh
    ```
-   这会生成 `verible.filelist` 文件，解决 "include not found" 和跨文件跳转失败的问题。
-3. 在 Emacs 中重启 LSP: `M-x lsp-workspace-restart`。
+   这会在当前目录下生成 `verible.filelist`，自动递归加入所有子目录到 Include Path。
+
+3. **生效**:
+   - 在 Emacs 中打开任意 `.sv` 文件。
+   - 如果 LSP 已经在运行，执行命令：`M-x lsp-workspace-restart`。
 
 ## ✨ 核心特性
 ...
