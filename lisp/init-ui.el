@@ -71,9 +71,11 @@
 (use-package nerd-icons
   :ensure t
   :config
-  ;; Fix for missing .svh icon (using FontAwesome microchip icon which is more stable)
+  ;; Fix for missing SystemVerilog icons (using FontAwesome microchip icon which is more stable)
   (add-to-list 'nerd-icons-extension-icon-alist
-               '("svh" nerd-icons-faicon "nf-fa-microchip" :face nerd-icons-blue)))
+               '("svh" nerd-icons-faicon "nf-fa-microchip" :face nerd-icons-blue))
+  (add-to-list 'nerd-icons-extension-icon-alist
+               '("sv"  nerd-icons-faicon "nf-fa-microchip" :face nerd-icons-blue)))
 
 ;; 6. Theme
 (use-package doom-themes
