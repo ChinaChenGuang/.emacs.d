@@ -51,7 +51,8 @@
         lsp-enable-indentation t
         lsp-headerline-breadcrumb-enable t)
   
-  (setq lsp-auto-guess-root t)
+  ;; Disable auto-guess-root so we can manually select 'src' folder for UVM/Verilog projects
+  (setq lsp-auto-guess-root nil)
   (setq lsp-file-watch-threshold 5000)
   
   (setq lsp-language-id-configuration (delete '(emacs-lisp-mode . "emacs-lisp") lsp-language-id-configuration)))
