@@ -83,5 +83,14 @@
          ("M-8" . winum-select-window-8)
          ("M-0" . winum-select-window-0-or-10)))
 
+;; ----------------------------------------------------------------------
+;; 6. Find File At Point (FFAP)
+;; ----------------------------------------------------------------------
+;; Automatically guesses the file path at cursor when running C-x C-f.
+;; Great for jumping to 'include "foo.svh"' files.
+(use-package ffap
+  :ensure nil
+  :bind ("C-c f" . ffap)) ; Bind C-c f to directly open file at point
+
 (provide 'init-misc)
 ;;; init-misc.el ends here
