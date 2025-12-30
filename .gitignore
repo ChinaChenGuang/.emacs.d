@@ -31,7 +31,7 @@ projectile-bookmarks.eld
 # 4. LSP & Tree-sitter (Local & Binary files)
 .lsp-session*
 /tree-sitter/
-/bin/
+/bin/verible-*
 
 # 5. Compiled Byte-code
 *.elc

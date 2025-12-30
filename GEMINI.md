@@ -11,14 +11,24 @@
 
 ## 📦 安装与初始化
 
-在一个新的 Linux 环境中，只需运行根目录下的初始化脚本即可自动安装所有依赖（包括 C++ 编译器、Ripgrep 和 Verible LSP）：
+### 1. 环境安装
+在一个新的 Linux 环境中，只需运行根目录下的初始化脚本即可自动安装所有依赖：
 
 ```bash
 cd ~/.emacs.d
 ./setup.sh
 ```
 
-脚本会自动检测系统包管理器 (apt/pacman) 并安装必要的软件。
+### 2. SystemVerilog 工程初始化 (修复跳转问题)
+对于多目录的 SystemVerilog/UVM 项目，**必须**生成文件索引列表 LSP 才能精准工作：
+
+1. 进入你的工程根目录 (例如 `cd ~/my_uvm_project`)。
+2. 运行构建脚本：
+   ```bash
+   ~/.emacs.d/bin/gen-verible-project.sh
+   ```
+   这会生成 `verible.filelist` 文件，解决 "include not found" 和跨文件跳转失败的问题。
+3. 在 Emacs 中重启 LSP: `M-x lsp-workspace-restart`。
 
 ## ✨ 核心特性
 ...
