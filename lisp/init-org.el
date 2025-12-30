@@ -53,19 +53,35 @@
    '(org-document-title ((t (:height 1.5 :weight bold :underline nil))))))
 
 ;; --------------------------------------------------------------------------
-;; 5. Superstars (Bullets)
-;; Replaces the ugly asterisks (*) with beautiful unicode symbols.
+;; 5. Modern UI (Replacing Superstars with org-modern)
+;; This provides Notion-like badges, styled blocks, and clean bullets.
 ;; --------------------------------------------------------------------------
-(use-package org-superstar
+(use-package org-modern
   :ensure t
-  :hook (org-mode . org-superstar-mode)
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
   :config
-  (setq org-superstar-remove-leading-stars t)
-  (setq org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●"))
-  (setq org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?•))))
+  (setq org-modern-star '("◉" "○" "◈" "◇" "✳" "◆")
+        org-modern-hide-stars nil ; Keep the stars for structure, or set t to hide
+        org-modern-table nil      ; Let valign handle tables (it's better for mixed fonts)
+        org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+        org-modern-todo nil       ; Use our custom colored faces defined above
+        org-modern-tag t
+        org-modern-priority t
+        org-modern-block-fringe nil)) ; No extra fringe
 
 ;; --------------------------------------------------------------------------
-;; 6. Table Alignment (Valign) - PIXEL PERFECT
+;; 6. Reading Experience (Centered & Margins)
+;; --------------------------------------------------------------------------
+(use-package visual-fill-column
+  :ensure t
+  :hook (org-mode . visual-fill-column-mode)
+  :config
+  (setq visual-fill-column-center-text t
+        visual-fill-column-width 120))
+
+;; --------------------------------------------------------------------------
+;; 7. Table Alignment (Valign) - PIXEL PERFECT
 ;; --------------------------------------------------------------------------
 (use-package valign
   :ensure t
