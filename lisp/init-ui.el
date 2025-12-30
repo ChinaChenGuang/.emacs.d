@@ -69,7 +69,11 @@
 
 ;; 5. Icons Support
 (use-package nerd-icons
-  :ensure t)
+  :ensure t
+  :config
+  ;; Fix for missing .svh icon (using a generic chip icon)
+  (add-to-list 'nerd-icons-extension-icon-alist
+               '("svh" nerd-icons-mdicon "nf-md-chip" :face nerd-icons-blue)))
 
 ;; 6. Theme
 (use-package doom-themes
