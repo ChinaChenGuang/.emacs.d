@@ -2,49 +2,26 @@
 
 这是一个高度模块化、性能优化的 Emacs 配置方案，专注于现代开发体验（特别是 C++）和极致的 UI 美感。
 
-## 📂 项目结构
+## 🚀 项目结构
 
 配置采用模块化设计，所有的核心逻辑都位于 `lisp/` 目录下：
 
 - **`init.el`**: 配置入口，负责加载各模块并计算启动时间。
-- **`early-init.el`**: 早期初始化，用于优化启动性能（如禁用不必要的 UI 元素）。
-- **`lisp/`**: 核心模块目录：
-    - `init-packages.el`: 宏包管理与 `use-package` 配置。
-    - `init-ui.el`: 视觉效果、主题（Doom One）、字体对齐（中英等宽）。
-    - `init-completion.el`: 现代补全全家桶（Vertico + Consult + Orderless）。
-    - `init-dev.el` & `init-cpp.el`: 编程环境与 C++ 特化支持（LSP, DAP）。
-    - `init-org.el`: Org-mode 增强。
-    - `init-dashboard.el`: 个性化启动界面。
+...
+
+## 📦 安装与初始化
+
+在一个新的 Linux 环境中，只需运行根目录下的初始化脚本即可自动安装所有依赖（包括 C++ 编译器、Ripgrep 和 Verible LSP）：
+
+```bash
+cd ~/.emacs.d
+./setup.sh
+```
+
+脚本会自动检测系统包管理器 (apt/pacman) 并安装必要的软件。
 
 ## ✨ 核心特性
-
-### 🎨 极致视觉 (UI/UX)
-- **主题**: 使用 `doom-one` 主题搭配 `doom-modeline`。
-- **图标**: 全面集成 `nerd-icons`。
-- **字体**: 经过精心配置的中英文等宽对齐方案（默认 JetBrains Mono + 微软雅黑）。
-- **彩虹特效**: `rainbow-delimiters` 让括号嵌套一目了然。
-
-### 🔍 现代补全系统
-摒弃了臃肿的 Ivy/Helm，采用了轻量且强大的现代堆栈：
-- **Vertico**: 垂直交互式补全。
-- **Marginalia**: 在补全列表中显示丰富的元数据注解。
-- **Consult**: 提供极其强大的搜索与导航指令（如 `consult-line`, `consult-ripgrep`）。
-- **Orderless**: 灵活的模糊匹配算法。
-- **Company**: 极速的代码内补全。
-
-### 🛠 开发者工具
-- **Tree-sitter**: 深度集成 Emacs 30 的原生语法解析库，提供更精准的代码高亮与跳转。
-- **C++ 特化**: 
-    - 自动识别 `Makefile` 或生成智能编译指令。
-    - `LSP & DAP`: 完整的 C++ 语言服务器支持与图形化调试 (GDB/LLDB) 集成。
-    - `CMake`: 完善的 CMake 项目支持。
-- **SystemVerilog**:
-    - **LSP 支持**: 集成 **Verible** Language Server，提供精准的**定义跳转**、引用查找和错误提示。
-    - **工具路径**: Verible 二进制文件已自动安装至 `~/.emacs.d/bin/`。
-    - **备用方案**: 保留 `dumb-jump` + `ripgrep` 作为 LSP 未启动时的后备方案。
-    - **结构**: 针对 SystemVerilog 的代码折叠与导航优化。
-- **Git**: 深度集成 `Magit`（Emacs 下最强 Git 客户端）。
-- **项目管理**: 使用 `treemacs` 进行文件树浏览。
+...
 
 ## ⌨️ 常用快捷键 (部分)
 
