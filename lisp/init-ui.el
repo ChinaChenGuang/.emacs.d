@@ -71,9 +71,9 @@
 (use-package nerd-icons
   :ensure t
   :config
-  ;; Fix for missing .svh icon (using a generic chip icon)
+  ;; Fix for missing .svh icon (using FontAwesome microchip icon which is more stable)
   (add-to-list 'nerd-icons-extension-icon-alist
-               '("svh" nerd-icons-mdicon "nf-md-chip" :face nerd-icons-blue)))
+               '("svh" nerd-icons-faicon "nf-fa-microchip" :face nerd-icons-blue)))
 
 ;; 6. Theme
 (use-package doom-themes
