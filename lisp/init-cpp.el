@@ -4,17 +4,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 1. Tree-sitter 语法库源配置
-(setq treesit-language-source-alist
-      '((c "https://github.com/tree-sitter/tree-sitter-c")
-        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
-
-;; 将传统的 c-mode 和 c++-mode 重定向到新的 ts-mode
-(setq major-mode-remap-alist
-      '((c-mode . c-ts-mode)
-        (c++-mode . c++-ts-mode)
-        (c-or-c++-mode . c++-ts-mode)))
-
 ;; ----------------------------------------------------------------------------
 ;; 2. 智能编译配置 (Smart Compilation)
 ;; ----------------------------------------------------------------------------
