@@ -9,9 +9,9 @@
 ;; 1. Package Repositories (Mirrors)
 ;; Using USTC mirrors for better connectivity in China.
 (setq package-archives
-      '(("gnu"    . "http://mirrors.ustc.edu.cn/elpa/gnu/")
-        ("nongnu" . "http://mirrors.ustc.edu.cn/elpa/nongnu/")
-        ("melpa"  . "http://mirrors.ustc.edu.cn/elpa/melpa/")))
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")))
 
 ;; (setq package-archives
 ;;      '(("melpa" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/melpa/")

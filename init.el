@@ -21,6 +21,7 @@
 (require 'init-proxy)         ; Startup proxy
 (require 'init-treesit)     ; Startup Tree-sitter
 (require 'init-cpp)         ; Startup C++ Development
+(require 'init-rust)        ; Startup Rust Development
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook

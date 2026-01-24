@@ -13,7 +13,9 @@
         (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")
         (json "https://github.com/tree-sitter/tree-sitter-json")
-        (python "https://github.com/tree-sitter/tree-sitter-python")))
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")))
 
 ;; 2. Mode Remapping
 ;; Automatically use tree-sitter modes when available.
