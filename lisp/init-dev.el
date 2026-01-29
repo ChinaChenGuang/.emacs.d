@@ -145,13 +145,15 @@
 ;; Requires external server: 'verible-verilog-ls' (Recommended) or 'svls'
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(verilog-mode . "verilog"))
+  (add-to-list 'lsp-language-id-configuration '(verilog-ts-mode . "verilog"))
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection "verible-verilog-ls")
-                    :major-modes '(verilog-mode)
+                    :major-modes '(verilog-mode verilog-ts-mode)
                     :priority -1
                     :server-id 'verible-ls)))
 
 (add-hook 'verilog-mode-hook #'lsp-deferred)
+(add-hook 'verilog-ts-mode-hook #'lsp-deferred)
 
 ;; 7. Code Folding (Hideshow)
 (use-package hideshow

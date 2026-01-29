@@ -5,6 +5,12 @@ DIST_DIR="emacs_dist"
 EMACS_D="$HOME/.emacs.d"
 BIN_DIR="$EMACS_D/bin"
 
+# Version Config
+EMACS_VERSION="30.2"
+TREESITTER_VERSION="0.26.3"
+EMACS_URL="https://ftpmirror.gnu.org/emacs/emacs-${EMACS_VERSION}.tar.xz"
+TREESITTER_URL="https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v${TREESITTER_VERSION}.tar.gz"
+
 echo ">>> Starting Offline Package Build..."
 
 # 0. Strict Pre-flight Check
@@ -64,7 +70,43 @@ echo ">>> All critical dependencies found. Proceeding..."
 rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 mkdir -p "$DIST_DIR/bin"
+mkdir -p "$DIST_DIR/deps"
 mkdir -p "$DIST_DIR/fonts"
+
+# 1.5 Download/Cache Source Code
+LOCAL_DEPS_CACHE="$EMACS_D/deps"
+mkdir -p "$LOCAL_DEPS_CACHE"
+
+EMACS_TARBALL_NAME="emacs-${EMACS_VERSION}.tar.xz"
+TS_TARBALL_NAME="tree-sitter-${TREESITTER_VERSION}.tar.gz"
+
+echo ">>> Checking Source Code Cache..."
+
+# Emacs Source
+if [ -f "$LOCAL_DEPS_CACHE/$EMACS_TARBALL_NAME" ]; then
+    echo ">>> Found $EMACS_TARBALL_NAME in cache, skipping download."
+else
+    echo ">>> Downloading Emacs ${EMACS_VERSION} Source..."
+    if wget -q --spider "$EMACS_URL"; then
+        wget -q --show-progress -O "$LOCAL_DEPS_CACHE/$EMACS_TARBALL_NAME" "$EMACS_URL"
+    else
+        echo "!!! Warning: Could not download Emacs source."
+    fi
+fi
+[ -f "$LOCAL_DEPS_CACHE/$EMACS_TARBALL_NAME" ] && cp "$LOCAL_DEPS_CACHE/$EMACS_TARBALL_NAME" "$DIST_DIR/deps/"
+
+# Tree-sitter Source
+if [ -f "$LOCAL_DEPS_CACHE/$TS_TARBALL_NAME" ]; then
+    echo ">>> Found $TS_TARBALL_NAME in cache, skipping download."
+else
+    echo ">>> Downloading Tree-sitter ${TREESITTER_VERSION} Source..."
+    if wget -q --spider "$TREESITTER_URL"; then
+        wget -q --show-progress -O "$LOCAL_DEPS_CACHE/$TS_TARBALL_NAME" "$TREESITTER_URL"
+    else
+         echo "!!! Warning: Could not download Tree-sitter source."
+    fi
+fi
+[ -f "$LOCAL_DEPS_CACHE/$TS_TARBALL_NAME" ] && cp "$LOCAL_DEPS_CACHE/$TS_TARBALL_NAME" "$DIST_DIR/deps/"
 
 # 2. Copy .emacs.d (Clean)
 echo ">>> Copying configuration..."
@@ -123,20 +165,124 @@ cat > "$DIST_DIR/install.sh" << 'EOF'
 #!/bin/bash
 set -e
 
+# ==============================================================================
+# Gemini Offline Emacs Installer (Local Compilation Support)
+# ==============================================================================
+
 INSTALL_DIR="$HOME/.emacs.d"
 BACKUP_DIR="$HOME/.emacs.d.bak.$(date +%s)"
+LOCAL_DIR="$HOME/.local"
 BIN_DIR="$HOME/bin"
 FONT_DIR="$HOME/.local/share/fonts"
+DEPS_DIR="$(pwd)/deps"
 
-echo ">>> Installing Offline Emacs Environment..."
+# Check if we need to build from source
+FORCE_BUILD=0
+if [ "$1" == "--build" ]; then
+    FORCE_BUILD=1
+fi
 
-# 1. Backup existing
+echo ">>> Starting Gemini Offline Installation..."
+
+# 0. Environment Setup (Local Build)
+# ----------------------------------
+install_emacs_locally() {
+    echo ">>> Building Emacs and Tree-sitter locally (Non-root)..."
+    
+    BUILD_DIR="$HOME/emacs-build-temp"
+    JOBS=$(nproc)
+    mkdir -p "$LOCAL_DIR/bin" "$LOCAL_DIR/lib" "$LOCAL_DIR/include" "$BUILD_DIR"
+
+    export PATH="$LOCAL_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$LOCAL_DIR/lib:$LD_LIBRARY_PATH"
+    export LIBRARY_PATH="$LOCAL_DIR/lib:$LIBRARY_PATH"
+    export C_INCLUDE_PATH="$LOCAL_DIR/include:$C_INCLUDE_PATH"
+    export CPLUS_INCLUDE_PATH="$LOCAL_DIR/include:$CPLUS_INCLUDE_PATH"
+    export PKG_CONFIG_PATH="$LOCAL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+    # Find tarballs
+    EMACS_TARBALL=$(find "$DEPS_DIR" -name "emacs-*.tar.xz" | head -n 1)
+    TREESITTER_TARBALL=$(find "$DEPS_DIR" -name "tree-sitter-*.tar.gz" | head -n 1)
+
+    if [ -z "$EMACS_TARBALL" ]; then
+        echo "!!! Error: Emacs tarball not found in deps/."
+        return 1
+    fi
+
+    # Force GCC 12 (or system default) and suppress all warnings (-w) to avoid -Werror failures
+    export CC=gcc
+    export CXX=g++
+    export CFLAGS="-O3 -w -fPIC -mtune=native -march=native"
+    export CXXFLAGS="-O3 -w -fPIC -mtune=native -march=native"
+
+    # Build Tree-sitter
+    if pkg-config --exists tree-sitter; then
+        echo "[Skip] Tree-sitter already installed."
+    else
+        echo "[Build] Building Tree-sitter..."
+        if [ -z "$TREESITTER_TARBALL" ]; then
+            echo "!!! Error: Tree-sitter tarball not found."
+            return 1
+        fi
+        
+        cd "$BUILD_DIR"
+        rm -rf tree-sitter-*
+        tar -xf "$TREESITTER_TARBALL"
+        cd tree-sitter-*
+        
+        # Override CFLAGS explicitly for Make to ensure it picks up the change
+        echo "   (Building with CFLAGS=$CFLAGS)"
+        make -j"$JOBS" CFLAGS="$CFLAGS"
+        make install PREFIX="$LOCAL_DIR"
+        cd ..
+    fi
+
+    # Build Emacs
+    echo "[Build] Building Emacs..."
+    cd "$BUILD_DIR"
+    rm -rf emacs-*/
+    tar -xf "$EMACS_TARBALL"
+    cd emacs-*
+    
+    echo "Configuring..."
+    ./configure \
+        --prefix="$LOCAL_DIR" \
+        --with-tree-sitter \
+        --with-modules \
+        --with-json \
+        --without-dbus \
+        --without-pop \
+        --with-mailutils \
+        --without-gconf \
+        --without-gsettings \
+        --with-native-compilation=aot \
+        --enable-checking=release \
+        CFLAGS="$CFLAGS" \
+        CXXFLAGS="$CXXFLAGS"
+
+    echo "Compiling (Jobs: $JOBS)..."
+    make -j"$JOBS"
+    make install
+    
+    echo "[Success] Emacs installed to $LOCAL_DIR/bin/emacs"
+    cd "$OLDPWD" # Return to installer root
+}
+
+# Check existence or force build
+if ! command -v emacs &> /dev/null || [ "$FORCE_BUILD" -eq 1 ]; then
+    echo ">>> Emacs not found in PATH or --build requested."
+    install_emacs_locally
+else
+    echo ">>> Emacs found at $(which emacs). Skipping build."
+fi
+
+# 1. Backup existing config
 if [ -d "$INSTALL_DIR" ]; then
     echo ">>> Backing up existing .emacs.d to $BACKUP_DIR"
     mv "$INSTALL_DIR" "$BACKUP_DIR"
 fi
 
-# 2. Deploy
+# 2. Deploy Configuration
 echo ">>> Deploying configuration..."
 cp -r .emacs.d "$HOME/"
 
@@ -166,11 +312,12 @@ echo ""
 echo "============================================================"
 echo "INSTALLATION COMPLETE"
 echo "============================================================"
-echo "Please add the following to your ~/.bashrc (or ~/.zshrc):"
+echo "Critical: Add the following to your ~/.bashrc or ~/.zshrc:"
 echo ""
-echo "  export PATH="\$HOME/bin:\$PATH""
+echo "  export PATH=\"$LOCAL_DIR/bin:\$HOME/bin:\$PATH\""
+echo "  export LD_LIBRARY_PATH=\"$LOCAL_DIR/lib:\$LD_LIBRARY_PATH\""
 echo ""
-echo "Then restart your shell."
+echo "Then restart your shell and run 'emacs'."
 echo "============================================================"
 EOF
 

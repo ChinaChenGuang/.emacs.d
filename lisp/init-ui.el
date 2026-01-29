@@ -41,7 +41,8 @@
       
       (if found-font
           (set-face-attribute 'default nil :font (format "%s-%d" found-font font-size))
-        (message "Warning: No preferred English font found.")))
+        (when (display-graphic-p)
+          (message "Warning: No preferred English font found."))))
 
     ;; B. Chinese Font (Fallback for Han characters)
     ;; We set a specific font for Chinese and a 'rescale' ratio to ensure
@@ -92,7 +93,8 @@
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-height 30
-        doom-modeline-icon t))
+        doom-modeline-icon t
+        doom-modeline-checker-simple-format t)) ;; Use text for flycheck instead of icons to avoid font issues
 
 ;; 8. Rainbow Colors
 (use-package rainbow-delimiters
