@@ -54,8 +54,15 @@
           (error
            (message "[Treesit] Failed to install %s: %S" lang err)))))))
 
-;; 4. Load Custom Tree-sitter Modes
-(require 'verilog-ts-mode)
+;; 4. Custom Tree-sitter Modes
+(use-package verilog-ts-mode
+  :ensure t
+  :config
+  ;; Emacs convention expects 'verilog' instead of 'systemverilog' for `verilog-ts-mode':
+  ;;  - https://www.gnu.org/software/emacs/manual/html_node/elisp/Language-Grammar.html
+  (when (boundp 'treesit-load-name-override-list)
+    (add-to-list 'treesit-load-name-override-list 
+                 '(verilog "libtree-sitter-systemverilog" "tree_sitter_systemverilog"))))
 
 ;; 5. Mode Remapping (Re-enable Verilog)
 (add-to-list 'major-mode-remap-alist '(verilog-mode . verilog-ts-mode))
