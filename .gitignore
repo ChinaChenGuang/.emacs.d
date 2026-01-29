@@ -32,6 +32,8 @@ projectile-bookmarks.eld
 .lsp-session*
 /tree-sitter/
 /bin/verible-*
+/.cache/
+/.extension/
 
 # 5. Compiled Byte-code
 *.elc
@@ -42,3 +44,7 @@ Thumbs.db
 
 # 7. Custom Settings
 # custom.el
+
+# 8. Offline Deployment
+emacs_offline_deploy.tar.gz*
+emacs_dist/

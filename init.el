@@ -8,8 +8,13 @@
 ;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+;; 1.5 Offline Check
+(when (file-exists-p (expand-file-name "offline" user-emacs-directory))
+  (require 'init-offline))
+
 ;; 2. Load Modules (Order Matters)
-(require 'init-packages)    ; Package manager setup (Must be first)
+(require 'init-proxy)       ; Network proxy setup (Must be early)
+(require 'init-packages)    ; Package manager setup
 (require 'init-core)        ; Core system settings
 (require 'init-ui)          ; Visuals, fonts, theme
 (require 'init-completion)  ; Completion framework
@@ -18,7 +23,6 @@
 (require 'init-dashboard)   ; Startup dashboard
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
-(require 'init-proxy)         ; Startup proxy
 (require 'init-treesit)     ; Startup Tree-sitter
 (require 'init-cpp)         ; Startup C++ Development
 (require 'init-rust)        ; Startup Rust Development

@@ -6,12 +6,12 @@
 
 (require 'package)
 
-;; 1. Package Repositories (Mirrors)
-;; Using USTC mirrors for better connectivity in China.
-(setq package-archives
-      '(("gnu"    . "https://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-        ("melpa"  . "https://melpa.org/packages/")))
+;; 1. Package Repositories (Official)
+(unless (featurep 'init-offline)
+  (setq package-archives
+        '(("gnu"    . "https://elpa.gnu.org/packages/")
+          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+          ("melpa"  . "https://melpa.org/packages/"))))
 
 ;; (setq package-archives
 ;;      '(("melpa" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/melpa/")
@@ -27,8 +27,13 @@
 ;; 3. Initialize Package System
 (package-initialize)
 
+;; Ensure we have the archive contents
+(unless (or (featurep 'init-offline) package-archive-contents)
+  (message "Refreshing package contents...")
+  (package-refresh-contents))
+
 ;; 4. Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
+(unless (or (featurep 'init-offline) (package-installed-p 'use-package))
   (message "Refreshing package contents...")
   (package-refresh-contents)
   (message "Installing use-package...")
@@ -38,8 +43,8 @@
 (eval-when-compile
   (require 'use-package))
 
-;; Always ensure packages are installed by default.
-(setq use-package-always-ensure t)
+;; Always ensure packages are installed by default (unless offline).
+(setq use-package-always-ensure (not (featurep 'init-offline)))
 
 ;; 6. Auto Update
 (use-package auto-package-update
