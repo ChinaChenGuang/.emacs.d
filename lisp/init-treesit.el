@@ -15,7 +15,8 @@
         (json "https://github.com/tree-sitter/tree-sitter-json")
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
-        (toml "https://github.com/tree-sitter/tree-sitter-toml")))
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (verilog "https://github.com/tree-sitter/tree-sitter-verilog")))
 
 ;; 2. Mode Remapping
 ;; Automatically use tree-sitter modes when available.
@@ -25,7 +26,8 @@
         (c-or-c++-mode . c++-ts-mode)
         (yaml-mode . yaml-ts-mode)
         (json-mode . json-ts-mode)
-        (python-mode . python-ts-mode)))
+        (python-mode . python-ts-mode)
+        (verilog-mode . verilog-ts-mode)))
 
 ;; 3. Helper to install all configured grammars
 (defun my/treesit-install-all-grammars ()
