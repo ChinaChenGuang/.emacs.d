@@ -37,4 +37,10 @@
 ;; Answer "y" or "n" instead of "yes" or "no".
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; 5. Indentation
+;; Use spaces instead of tabs and set default width to 4.
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq-default standard-indent 4)
+
 (provide 'init-core)
