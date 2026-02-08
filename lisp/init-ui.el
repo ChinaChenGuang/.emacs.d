@@ -93,7 +93,8 @@
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-height 30
-        doom-modeline-icon t
+        ;; Only show icons in GUI mode to prevent garbled text in remote terminals
+        doom-modeline-icon (display-graphic-p)
         doom-modeline-checker-simple-format t)) ;; Use text for flycheck instead of icons to avoid font issues
 
 ;; 8. Rainbow Colors
@@ -101,6 +102,19 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode))
+
+;; 9. Tech Stack Status (Tree-sitter & LSP)
+(defun my/get-tech-stack-status ()
+  "Return a formatted string showing Tree-sitter and LSP status."
+  (let ((ts (if (and (fboundp 'treesit-parser-list) (treesit-parser-list)) 
+                (propertize "TS" 'face '(:inherit success :weight bold))
+              (propertize "TS" 'face '(:inherit shadow))))
+        (lsp (if (bound-and-true-p lsp-mode)
+                 (propertize "LSP" 'face '(:inherit success :weight bold))
+               (propertize "LSP" 'face '(:inherit shadow)))))
+    (format " [%s|%s] " ts lsp)))
+
+(add-to-list 'global-mode-string '(:eval (my/get-tech-stack-status)) t)
 
 (provide 'init-ui)
 ;;; init-ui.el ends here

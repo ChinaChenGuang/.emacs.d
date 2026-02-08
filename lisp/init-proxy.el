@@ -149,8 +149,10 @@
 ;; ----------------------------------------------------------------------------
 ;; Auto-Enable on Startup
 ;; ----------------------------------------------------------------------------
-;; (my/enable-proxy)
-;; (run-with-timer 5 nil #'my/proxy-check-latency)
+(unless (featurep 'init-offline)
+  (my/enable-proxy))
+
+(run-with-timer 5 nil #'my/proxy-check-latency)
 
 (provide 'init-proxy)
 ;;; init-proxy.el ends here

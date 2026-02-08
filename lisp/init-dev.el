@@ -174,5 +174,26 @@
                    nil
                    verilog-forward-sexp-function))))
 
+;; 8. Vimish Fold (Arbitrary Region Folding)
+;; Usage:
+;; 1. Select a region (e.g., C-SPC and move cursor).
+;; 2. C-c v f to fold it.
+;; 3. C-c v u to unfold.
+;; 4. C-c v d to delete the fold.
+(use-package vimish-fold
+  :ensure t
+  :after (hideshow)
+  :hook (prog-mode . vimish-fold-mode)
+  :config
+  ;; vimish-fold-global-mode automatically handles persistence
+  ;; (saving folds to ~/.emacs.d/vimish-fold/ by default)
+  (vimish-fold-global-mode 1)
+  :bind (("C-c v f" . vimish-fold)
+         ("C-c v t" . vimish-fold-toggle)
+         ("C-c v u" . vimish-fold-unfold)
+         ("C-c v d" . vimish-fold-delete)
+         ("C-c v a" . vimish-fold-unfold-all)
+         ("C-c v D" . vimish-fold-delete-all)))
+
 (provide 'init-dev)
 ;;; init-dev.el ends here
