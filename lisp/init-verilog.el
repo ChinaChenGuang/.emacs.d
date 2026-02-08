@@ -14,6 +14,7 @@
   (setq-local verilog-indent-level-directive 2)
   (setq-local verilog-case-indent 2)
   (setq-local verilog-cexp-indent 2)
+  (setq-local verilog-indent-lists 2)
   
   ;; Ensure spaces instead of tabs
   (setq-local indent-tabs-mode nil)
