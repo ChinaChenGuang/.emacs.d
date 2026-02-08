@@ -142,8 +142,11 @@
   (setq xref-show-definitions-function #'xref-show-definitions-buffer-at-bottom))
 
 ;; 6. SystemVerilog LSP (Precise Navigation)
-;; Requires external server: 'verible-verilog-ls' (Recommended) or 'svls'
+;; ----------------------------------------------------------------------------
 (with-eval-after-load 'lsp-mode
+  ;; CRITICAL: Disable LSP folding to avoid conflicts with yafolding
+  (setq lsp-enable-folding nil)
+  
   (add-to-list 'lsp-language-id-configuration '(verilog-mode . "verilog"))
   (add-to-list 'lsp-language-id-configuration '(verilog-ts-mode . "verilog"))
   (lsp-register-client
@@ -155,45 +158,21 @@
 (add-hook 'verilog-mode-hook #'lsp-deferred)
 (add-hook 'verilog-ts-mode-hook #'lsp-deferred)
 
-;; 7. Code Folding (Hideshow)
-(use-package hideshow
-  :ensure nil
-  :hook (prog-mode . hs-minor-mode)
-  :bind (:map prog-mode-map
-              ("C-c <tab>" . hs-toggle-hiding)
-              ("C-c +" . hs-show-all)
-              ("C-c -" . hs-hide-all))
-  :config
-  (setq hs-isearch-open t)
-
-  (with-eval-after-load 'verilog-mode
-    (add-to-list 'hs-special-modes-alist
-                 '(verilog-mode
-                   "\\b\\(begin\\|case\\|class\\|covergroup\\|fork\\|function\\|generate\\|interface\\|module\\|package\\|program\\|property\\|sequence\\|task\\|uvm_component\\|uvm_object\\)\\b"
-                   "\\b\\(end\\|endcase\\|endclass\\|endgroup\\|join\\|join_any\\|join_none\\|endfunction\\|endgenerate\\|endinterface\\|endmodule\\|endpackage\\|endprogram\\|endproperty\\|endsequence\\|endtask\\)\\b"
-                   nil
-                   verilog-forward-sexp-function))))
-
-;; 8. Vimish Fold (Arbitrary Region Folding)
-;; Usage:
-;; 1. Select a region (e.g., C-SPC and move cursor).
-;; 2. C-c v f to fold it.
-;; 3. C-c v u to unfold.
-;; 4. C-c v d to delete the fold.
-(use-package vimish-fold
+;; 7. Yafolding (The ONLY folding system)
+;; ----------------------------------------------------------------------------
+(use-package yafolding
   :ensure t
-  :after (hideshow)
-  :hook (prog-mode . vimish-fold-mode)
-  :config
-  ;; vimish-fold-global-mode automatically handles persistence
-  ;; (saving folds to ~/.emacs.d/vimish-fold/ by default)
-  (vimish-fold-global-mode 1)
-  :bind (("C-c v f" . vimish-fold)
-         ("C-c v t" . vimish-fold-toggle)
-         ("C-c v u" . vimish-fold-unfold)
-         ("C-c v d" . vimish-fold-delete)
-         ("C-c v a" . vimish-fold-unfold-all)
-         ("C-c v D" . vimish-fold-delete-all)))
+  :hook (prog-mode . yafolding-mode)
+  :init
+  ;; Disable hs-minor-mode globally to prevent any conflicts
+  (add-hook 'prog-mode-hook (lambda () (hs-minor-mode -1)))
+  :bind (:map yafolding-mode-map
+              ("C-c TAB" . yafolding-toggle-element)
+              ("<C-c tab>" . yafolding-toggle-element)
+              ("C-c v f" . yafolding-hide-parent-element)
+              ("C-c v d" . yafolding-show-element)
+              ("C-c v a" . yafolding-show-all)
+              ("C-c v D" . yafolding-hide-all)))
 
 (provide 'init-dev)
 ;;; init-dev.el ends here
