@@ -16,15 +16,16 @@
   (setq-local verilog-cexp-indent 2)
   (setq-local verilog-indent-lists 2)
   
+  ;; verilog-ts-mode specific (Tree-sitter)
+  (setq-local verilog-ts-indent-level 2)
+  
   ;; Ensure spaces instead of tabs
   (setq-local indent-tabs-mode nil)
   (setq-local tab-width 2)
+  (setq-local backward-delete-char-untabify-method 'hungry)
 
   ;; 2. Disable Auto-newline after semicolon
-  ;; In verilog-mode, this is controlled by verilog-auto-newline
   (setq-local verilog-auto-newline nil)
-  
-  ;; If using electric features, disable the specific ones that cause jumps
   (setq-local verilog-auto-lineup nil))
 
 ;; Apply to Classic Verilog Mode
@@ -35,10 +36,12 @@
 ;; Apply to Modern Tree-sitter Verilog Mode
 (use-package verilog-ts-mode
   :ensure t
-  :hook (verilog-ts-mode . my/verilog-style-setup)
-  :config
-  ;; verilog-ts-mode specific indentation
-  (setq-local verilog-ts-indent-level 2))
+  :hook (verilog-ts-mode . my/verilog-style-setup))
+
+;; 3. Global LSP Indentation Disable
+(with-eval-after-load 'lsp-mode
+  ;; Prevent LSP from overriding our 2-space indentation
+  (setq lsp-enable-indentation nil))
 
 (provide 'init-verilog)
 ;;; init-verilog.el ends here
