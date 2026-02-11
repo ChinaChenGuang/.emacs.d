@@ -48,3 +48,7 @@ Thumbs.db
 # 8. Offline Deployment
 emacs_offline_deploy.tar.gz*
 emacs_dist/
+
+# 9. Local Dependencies & Cache
+/deps/
+/vimish-fold/
