@@ -4,9 +4,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(if (not (and (fboundp 'treesit-available-p)
-              (treesit-available-p)))
-    (message "Warning: Tree-sitter is not available in this Emacs build. Skipping configuration.")
+;; 0. Early Version Check
+(if (or (version< emacs-version "29.1")
+        (not (and (fboundp 'treesit-available-p)
+                  (treesit-available-p))))
+    (message ">>> Skipping Native Tree-sitter: Emacs version %s is too old (Requires 29.1+) or not compiled with support." emacs-version)
 
   (require 'treesit)
   

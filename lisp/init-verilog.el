@@ -33,10 +33,13 @@
   :ensure nil ; Built-in
   :hook (verilog-mode . my/verilog-style-setup))
 
-;; Apply to Modern Tree-sitter Verilog Mode
-(use-package verilog-ts-mode
-  :ensure t
-  :hook (verilog-ts-mode . my/verilog-style-setup))
+;; Apply to Modern Tree-sitter Verilog Mode (Emacs 29.1+ only)
+(when (and (version<= "29.1" emacs-version)
+           (fboundp 'treesit-available-p)
+           (treesit-available-p))
+  (use-package verilog-ts-mode
+    :ensure t
+    :hook (verilog-ts-mode . my/verilog-style-setup)))
 
 ;; 3. Global LSP Indentation Disable
 (with-eval-after-load 'lsp-mode

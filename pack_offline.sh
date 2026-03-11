@@ -28,6 +28,12 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'emacs_offline_deploy.tar.gz' \
     --exclude 'deps' # Exclude large source files
 
+# 2.1 Compatibility Cleanup (Remove compiled files)
+echo ">>> Cleaning compiled files (.elc, .eln) for version compatibility..."
+find "$DIST_DIR/.emacs.d/" -name "*.elc" -delete
+find "$DIST_DIR/.emacs.d/" -name "*.eln" -delete
+rm -rf "$DIST_DIR/.emacs.d/eln-cache" 2>/dev/null || true
+
 # Ensure elpa directory is present
 if [ ! -d "$EMACS_D/elpa" ]; then
     echo "!!! Warning: 'elpa' directory not found. Configuration might be broken in offline mode."

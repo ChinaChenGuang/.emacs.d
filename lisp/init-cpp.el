@@ -32,7 +32,7 @@
 ;; ----------------------------------------------------------------------------
 (use-package lsp-mode
   :ensure t
-  :hook ((c-ts-mode c++-ts-mode) . lsp-deferred)
+  :hook ((c-mode c++-mode c-ts-mode c++-ts-mode) . lsp-deferred)
   :commands lsp
   :config
   (setq lsp-idle-delay 0.1
