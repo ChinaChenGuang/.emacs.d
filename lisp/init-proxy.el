@@ -147,10 +147,10 @@
 (global-set-key (kbd "C-c x") 'my/toggle-proxy)
 
 ;; ----------------------------------------------------------------------------
-;; Auto-Enable on Startup
+;; Auto-Enable on Startup (DISABLED by default)
 ;; ----------------------------------------------------------------------------
-(unless (featurep 'init-offline)
-  (my/enable-proxy))
+;; (unless (featurep 'init-offline)
+;;   (my/enable-proxy))
 
 (run-with-timer 5 nil #'my/proxy-check-latency)
 
