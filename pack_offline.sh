@@ -28,6 +28,11 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'emacs_offline_deploy.tar.gz' \
     --exclude 'deps' # Exclude large source files
 
+# Ensure elpa directory is present
+if [ ! -d "$EMACS_D/elpa" ]; then
+    echo "!!! Warning: 'elpa' directory not found. Configuration might be broken in offline mode."
+fi
+
 # 3. Collect Tree-sitter Grammars (Pre-compiled)
 TS_DIR="$HOME/.emacs.d/tree-sitter"
 if [ -d "$TS_DIR" ]; then
