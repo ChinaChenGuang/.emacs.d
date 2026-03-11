@@ -50,6 +50,10 @@ curl -L "$COMPAT_BASE/compat-28.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-28
 curl -L "$COMPAT_BASE/compat-29.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-29.el"
 curl -L "$COMPAT_BASE/compat-30.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-30.el"
 
+# Which-key is built-in for Emacs 30+, but needed for older versions
+echo ">>> Downloading which-key for compatibility (Emacs < 30)..."
+curl -L https://raw.githubusercontent.com/justbur/emacs-which-key/master/which-key.el -o "$DIST_DIR/.emacs.d/lisp/compat/which-key.el"
+
 # 2.1 Compatibility Cleanup (Remove compiled files)
 echo ">>> Cleaning compiled files (.elc, .eln) for version compatibility..."
 find "$DIST_DIR/.emacs.d/" -name "*.elc" -delete
