@@ -11,15 +11,43 @@
 
 ## 📦 安装与初始化
 
-### 1. 环境安装
-在一个新的 Linux 环境中，只需运行根目录下的初始化脚本即可自动安装所有依赖：
-
+### 1. 联网安装 (Arch Linux/Ubuntu)
+在一个新的联网环境中，只需运行根目录下的初始化脚本：
 ```bash
 cd ~/.emacs.d
 ./setup.sh
 ```
 
-### 2. SystemVerilog 工程初始化 (修复跳转问题)
+### 2. 离线环境移植 (重点)
+如果您需要将配置迁移到内网离线服务器：
+- **第一步 (联网机器)**: 在联网机器上运行打包脚本：
+  ```bash
+  ./pack_offline.sh
+  ```
+  该脚本会自动清理二进制缓存（确保跨版本兼容），并生成 `emacs_config_deploy.tar.gz`。
+- **第二步 (离线机器)**: 将压缩包拷贝到目标机器并解压运行：
+  ```bash
+  tar -xzvf emacs_config_deploy.tar.gz
+  ./install.sh
+  ```
+- **特性**: 
+  - 自动创建 `~/.emacs.d/offline` 标记文件，使 Emacs 进入**静默离线模式**（禁用联网更新）。
+  - 打包已包含所有 `elpa` 插件和字体。
+
+### 3. 版本适配 (Emacs 27.2+)
+本配置已针对不同版本的 Emacs 做了自动适配：
+- **Emacs 29.1+**: 默认开启原生 **Tree-sitter** (`-ts-mode`)，提供极速语法高亮。
+- **Emacs 27.2 - 28.x**: 自动回退到传统的 `cc-mode` 和 `verilog-mode`，同时保持 LSP (Language Server Protocol) 功能可用。
+
+## 🌐 网络与仓库管理
+
+- **代理切换**: 按 `C-c x` 可在 Emacs 中快速开启/关闭代理（默认指向 `127.0.0.1:7897`）。
+- **国内镜像**: 
+  - 在 `lisp/init-packages.el` 中可以手动切换官方源与**清华大学 (TUNA) 镜像站**。
+  - 目前默认已切换回官方源以适应特定环境。
+- **连通性测试**: `M-x my/test-archives-latency` 可测试各包仓库的连接延迟。
+
+## 🚀 SystemVerilog 工程初始化 (修复跳转问题)
 SystemVerilog LSP (Verible) 需要知道项目的文件结构才能跨目录跳转。
 
 **场景：阅读 UVM 源码或多目录验证环境**

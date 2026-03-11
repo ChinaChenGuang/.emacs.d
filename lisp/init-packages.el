@@ -23,28 +23,31 @@
 ;; Keeping this disabled ensures smoother installation.
 (setq package-check-signature nil)
 (setq url-queue-timeout 30)
-
 ;; 3. Initialize Package System
 (package-initialize)
 
-;; Ensure we have the archive contents
-(unless (or (featurep 'init-offline) package-archive-contents)
-  (message "Refreshing package contents...")
-  (package-refresh-contents))
-
 ;; 4. Bootstrap `use-package`
-(unless (or (featurep 'init-offline) (package-installed-p 'use-package))
-  (message "Refreshing package contents...")
-  (package-refresh-contents)
-  (message "Installing use-package...")
-  (package-install 'use-package))
+;; Add compat path to load-path for manual use-package bundle
+(let ((compat-path (expand-file-name "lisp/compat" user-emacs-directory)))
+  (when (file-directory-p compat-path)
+    (add-to-list 'load-path compat-path)))
+
+(unless (package-installed-p 'use-package)
+  (if (or (featurep 'init-offline) 
+          (not (bound-and-true-p package-archives)))
+      (unless (locate-library "use-package")
+        (warn "Warning: use-package not installed, not in compat folder, and we are offline."))
+    (message "Installing use-package...")
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'use-package)))
 
 ;; 5. Configure `use-package`
-(eval-when-compile
-  (require 'use-package))
+(require 'use-package)
 
 ;; Always ensure packages are installed by default (unless offline).
 (setq use-package-always-ensure (not (featurep 'init-offline)))
+
 
 ;; 6. Auto Update
 (use-package auto-package-update

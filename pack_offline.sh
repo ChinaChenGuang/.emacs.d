@@ -28,6 +28,13 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'emacs_offline_deploy.tar.gz' \
     --exclude 'deps' # Exclude large source files
 
+# 2.2 Download use-package for Emacs < 29 (Manual Bundle)
+echo ">>> Downloading use-package and bind-key for compatibility (Emacs < 29)..."
+mkdir -p "$DIST_DIR/.emacs.d/lisp/compat"
+# Use-package and bind-key are essential for older Emacs versions
+curl -L https://raw.githubusercontent.com/jwiegley/use-package/master/use-package.el -o "$DIST_DIR/.emacs.d/lisp/compat/use-package.el"
+curl -L https://raw.githubusercontent.com/jwiegley/use-package/master/bind-key.el -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
+
 # 2.1 Compatibility Cleanup (Remove compiled files)
 echo ">>> Cleaning compiled files (.elc, .eln) for version compatibility..."
 find "$DIST_DIR/.emacs.d/" -name "*.elc" -delete
