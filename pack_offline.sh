@@ -44,6 +44,7 @@ curl -L "$UP_BASE/bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
 # Compat library is required by doom-modeline and many others on Emacs < 30
 COMPAT_BASE="https://raw.githubusercontent.com/emacs-compat/compat/main"
 curl -L "$COMPAT_BASE/compat.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat.el"
+curl -L "$COMPAT_BASE/compat-macs.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-macs.el"
 curl -L "$COMPAT_BASE/compat-27.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-27.el"
 curl -L "$COMPAT_BASE/compat-28.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-28.el"
 curl -L "$COMPAT_BASE/compat-29.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-29.el"
