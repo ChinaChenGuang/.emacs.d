@@ -32,7 +32,7 @@
   "Setup English and Chinese fonts with proper alignment."
   (when (display-graphic-p)
     ;; A. English Font (Default)
-    (let ((font-candidates '("JetBrains Mono" "Cascadia Code" "Consolas" "Monospace"))
+    (let ((font-candidates '("JetBrainsMono Nerd Font Mono" "JetBrains Mono" "Cascadia Code" "Consolas" "Monospace"))
           (font-size 16) ;; Customize size here
           (found-font nil))
       (dolist (font font-candidates)
@@ -47,22 +47,28 @@
     ;; B. Chinese Font (Fallback for Han characters)
     ;; We set a specific font for Chinese and a 'rescale' ratio to ensure
     ;; 1 Chinese char = 2 English chars (for Org tables alignment).
-    (let ((zh-candidates '("Microsoft YaHei" "SimHei" "Noto Sans CJK SC" "PingFang SC"))
+    (let ((zh-candidates '("Noto Sans CJK SC" "Microsoft YaHei" "SimHei" "PingFang SC"))
           (zh-found nil))
       (dolist (font zh-candidates)
         (when (and (not zh-found) (member font (font-family-list)))
           (setq zh-found font)
           ;; Set this font for CJK characters
           (set-fontset-font t 'han (font-spec :family font))
-          (set-fontset-font t 'symbol (font-spec :family font))
           (set-fontset-font t 'cjk-misc (font-spec :family font))
           (set-fontset-font t 'bopomofo (font-spec :family font))
           
           ;; Alignment Magic:
-          ;; Scale Chinese font by 1.25x to match JetBrains Mono's width.
-          ;; If you use Consolas, 1.2 might work better.
-          ;; If tables are still misaligned, tweak this number (e.g., 1.2, 1.3).
-          (add-to-list 'face-font-rescale-alist (cons font 1.15)))))))
+          ;; Scale Chinese font to match JetBrains Mono's width.
+          (add-to-list 'face-font-rescale-alist (cons font 1.2))))
+
+    ;; C. Emoji & Symbols (Fix garbled icons like Rocket 🚀)
+    (let ((emoji-font (cond ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+                           ((member "JetBrainsMono Nerd Font Mono" (font-family-list)) "JetBrainsMono Nerd Font Mono"))))
+      (when emoji-font
+        (set-fontset-font t 'symbol (font-spec :family emoji-font) nil 'prepend)
+        ;; 'emoji script was introduced in Emacs 28.1
+        (when (>= emacs-major-version 28)
+          (set-fontset-font t 'emoji (font-spec :family emoji-font) nil 'prepend)))))))
 
 ;; Apply fonts after UI init
 (add-hook 'after-init-hook #'my/setup-fonts)
