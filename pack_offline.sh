@@ -28,8 +28,8 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'emacs_offline_deploy.tar.gz' \
     --exclude 'deps' # Exclude large source files
 
-# 2.2 Download use-package for Emacs < 29 (Manual Bundle)
-echo ">>> Downloading use-package bundle for compatibility (Emacs < 29)..."
+# 2.2 Download use-package and compat for Emacs < 29 (Manual Bundle)
+echo ">>> Downloading compatibility bundle (use-package, compat) for older Emacs..."
 mkdir -p "$DIST_DIR/.emacs.d/lisp/compat"
 UP_BASE="https://raw.githubusercontent.com/jwiegley/use-package/master"
 curl -L "$UP_BASE/use-package.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package.el"
@@ -40,6 +40,14 @@ curl -L "$UP_BASE/use-package-delight.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use
 curl -L "$UP_BASE/use-package-diminish.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-diminish.el"
 curl -L "$UP_BASE/use-package-jump.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-jump.el"
 curl -L "$UP_BASE/bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
+
+# Compat library is required by doom-modeline and many others on Emacs < 30
+COMPAT_BASE="https://raw.githubusercontent.com/emacs-compat/compat/main"
+curl -L "$COMPAT_BASE/compat.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat.el"
+curl -L "$COMPAT_BASE/compat-27.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-27.el"
+curl -L "$COMPAT_BASE/compat-28.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-28.el"
+curl -L "$COMPAT_BASE/compat-29.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-29.el"
+curl -L "$COMPAT_BASE/compat-30.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-30.el"
 
 # 2.1 Compatibility Cleanup (Remove compiled files)
 echo ">>> Cleaning compiled files (.elc, .eln) for version compatibility..."
@@ -80,11 +88,15 @@ find_and_copy "fd"
 find_and_copy "verible-verilog-ls"
 
 # 5. Bundle Fonts
-echo ">>> Bundling Fonts..."
+echo ">>> Bundling Fonts (Nerd Fonts & JetBrains Mono)..."
 JB_REG="$HOME/.local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf"
 JB_BOLD="$HOME/.local/share/fonts/JetBrainsMonoNerdFontMono-Bold.ttf"
 if [ -f "$JB_REG" ]; then cp "$JB_REG" "$DIST_DIR/fonts/"; fi
 if [ -f "$JB_BOLD" ]; then cp "$JB_BOLD" "$DIST_DIR/fonts/"; fi
+# Include the Nerd Font Icons required by nerd-icons/doom-modeline
+if [ -f "fonts/NFM.ttf" ]; then
+    cp "fonts/NFM.ttf" "$DIST_DIR/fonts/"
+fi
 
 # 6. Create Install Script (No Compilation)
 cat > "$DIST_DIR/install.sh" << 'EOF'

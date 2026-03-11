@@ -26,11 +26,13 @@
 ;; 3. Initialize Package System
 (package-initialize)
 
-;; 4. Bootstrap `use-package`
-;; Add compat path to load-path for manual use-package bundle
+;; 4. Bootstrap `use-package` & `compat`
+;; Add compat path to load-path for manual bundle
 (let ((compat-path (expand-file-name "lisp/compat" user-emacs-directory)))
   (when (file-directory-p compat-path)
-    (add-to-list 'load-path compat-path)))
+    (add-to-list 'load-path compat-path)
+    ;; Load compat library early as it's required by many modern packages
+    (require 'compat nil t)))
 
 (unless (package-installed-p 'use-package)
   (if (or (featurep 'init-offline) 

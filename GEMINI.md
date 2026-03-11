@@ -33,7 +33,8 @@ cd ~/.emacs.d
 - **特性**: 
   - 自动创建 `~/.emacs.d/offline` 标记文件，使 Emacs 进入**静默离线模式**（禁用联网更新）。
   - 打包已包含所有 `elpa` 插件和字体。
-  - **兼容性补丁**: 针对 Emacs < 29 自动下载并集成完整的 `use-package` 核心包（位于 `lisp/compat/`），解决离线环境下“找不到 use-package-core”的问题。
+  - **兼容性补丁**: 针对 Emacs < 29 自动下载并集成完整的 `use-package` 和 `compat` 核心包（位于 `lisp/compat/`），解决离线环境下“找不到 use-package-core”或 `doom-modeline` 启动失败的问题。
+  - **图标字体补全**: 打包已包含 `NFM.ttf` (Nerd Font Icons)，支持 `nerd-icons` 和 `doom-modeline` 的图标显示，无需离线下载。
 
 
 ### 3. 版本适配 (Emacs 27.2+)

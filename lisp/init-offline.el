@@ -32,4 +32,10 @@
 (setq network-security-level 'low) ; Avoid GnuTLS checks that might hang
 (setq warning-suppress-types '((comp) (ad-handle-definition))) ; Suppress compilation warnings
 
+;; 5. Mock Icon Downloads
+(with-eval-after-load 'nerd-icons
+  (defun nerd-icons-install-fonts (&optional _confirm)
+    (interactive)
+    (message ">>> Offline Mode: Fonts should be installed manually from the 'fonts/' directory of the deployment package.")))
+
 (provide 'init-offline)
