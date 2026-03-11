@@ -43,10 +43,12 @@
     (package-install 'use-package)))
 
 ;; 5. Configure `use-package`
-(require 'use-package)
-
-;; Always ensure packages are installed by default (unless offline).
-(setq use-package-always-ensure (not (featurep 'init-offline)))
+(if (locate-library "use-package")
+    (progn
+      (require 'use-package)
+      ;; Always ensure packages are installed by default (unless offline).
+      (setq use-package-always-ensure (not (featurep 'init-offline))))
+  (warn "Critical: use-package not found. Most of the configuration will not be loaded correctly."))
 
 
 ;; 6. Auto Update

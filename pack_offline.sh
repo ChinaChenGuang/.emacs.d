@@ -29,11 +29,17 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'deps' # Exclude large source files
 
 # 2.2 Download use-package for Emacs < 29 (Manual Bundle)
-echo ">>> Downloading use-package and bind-key for compatibility (Emacs < 29)..."
+echo ">>> Downloading use-package bundle for compatibility (Emacs < 29)..."
 mkdir -p "$DIST_DIR/.emacs.d/lisp/compat"
-# Use-package and bind-key are essential for older Emacs versions
-curl -L https://raw.githubusercontent.com/jwiegley/use-package/master/use-package.el -o "$DIST_DIR/.emacs.d/lisp/compat/use-package.el"
-curl -L https://raw.githubusercontent.com/jwiegley/use-package/master/bind-key.el -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
+UP_BASE="https://raw.githubusercontent.com/jwiegley/use-package/master"
+curl -L "$UP_BASE/use-package.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package.el"
+curl -L "$UP_BASE/use-package-core.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-core.el"
+curl -L "$UP_BASE/use-package-bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-bind-key.el"
+curl -L "$UP_BASE/use-package-ensure.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-ensure.el"
+curl -L "$UP_BASE/use-package-delight.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-delight.el"
+curl -L "$UP_BASE/use-package-diminish.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-diminish.el"
+curl -L "$UP_BASE/use-package-jump.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-jump.el"
+curl -L "$UP_BASE/bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
 
 # 2.1 Compatibility Cleanup (Remove compiled files)
 echo ">>> Cleaning compiled files (.elc, .eln) for version compatibility..."
