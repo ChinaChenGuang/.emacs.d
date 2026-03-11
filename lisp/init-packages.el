@@ -24,7 +24,27 @@
 (setq package-check-signature nil)
 (setq url-queue-timeout 30)
 ;; 3. Initialize Package System
+(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
+
+;; Initialize package.el
 (package-initialize)
+
+;; In offline mode, sometimes package-initialize doesn't activate all packages
+;; correctly if the elpa directory was simply copied.
+(when (featurep 'init-offline)
+  ;; Ensure all packages in elpa/ are added to load-path and their autoloads loaded
+  (let ((default-directory package-user-dir))
+    (when (file-directory-p default-directory)
+      (normal-top-level-add-subdirs-to-load-path)
+      ;; Force load all -autoloads.el files in subdirectories
+      (dolist (dir (directory-files package-user-dir t "^[^.]"))
+        (when (file-directory-p dir)
+          (let ((autoloads (directory-files dir t "-autoloads.el$")))
+            (dolist (file autoloads)
+              (load file t)))))))
+  
+  (unless package-activated-list
+    (package-activate-all)))
 
 ;; 4. Bootstrap `use-package` & `compat`
 ;; Add compat path to load-path for manual bundle

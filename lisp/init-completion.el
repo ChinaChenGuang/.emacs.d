@@ -6,7 +6,7 @@
 
 ;; 1. Vertico: Vertical interactive completion (Minibuffer)
 (use-package vertico
-  :init
+  :config
   (vertico-mode))
 
 ;; 2. Orderless: Fuzzy matching for completion
@@ -17,7 +17,7 @@
 
 ;; 3. Marginalia: Rich annotations in the minibuffer (e.g., file descriptions)
 (use-package marginalia
-  :init
+  :config
   (marginalia-mode))
 
 ;; 4. Consult: Search and navigation commands (replace built-in switch-to-buffer, etc.)

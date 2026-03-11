@@ -96,7 +96,11 @@
 ;; 7. Modeline (Status Bar)
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1)
+  :init
+  ;; For older Emacs, sometimes we need to manually require before calling functions
+  (unless (fboundp 'doom-modeline-mode)
+    (autoload 'doom-modeline-mode "doom-modeline" nil t))
+  :hook (after-init . doom-modeline-mode)
   :config
   (setq doom-modeline-height 30
         ;; Only show icons in GUI mode to prevent garbled text in remote terminals

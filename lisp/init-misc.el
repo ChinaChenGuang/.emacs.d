@@ -6,8 +6,8 @@
 
 ;; 1. Which-key: Displays available keybindings in popup
 (use-package which-key
-  :init (which-key-mode)
   :config
+  (which-key-mode)
   (setq which-key-idle-delay 0.3))
 
 ;; 2. Recentf: Track recent files
