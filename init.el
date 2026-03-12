@@ -8,6 +8,9 @@
 ;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+;; 1.1 Compatibility Layer (Backports & Polyfills)
+(require 'init-compat)
+
 ;; 1.5 Offline Check
 (when (file-exists-p (expand-file-name "offline" user-emacs-directory))
   (require 'init-offline))
