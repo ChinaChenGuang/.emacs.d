@@ -28,18 +28,23 @@
             (python "https://github.com/tree-sitter/tree-sitter-python")
             (rust "https://github.com/tree-sitter/tree-sitter-rust")
             (toml "https://github.com/tree-sitter/tree-sitter-toml")
-            (verilog "https://github.com/tree-sitter/tree-sitter-verilog")
+            (verilog "https://github.com/gmlarumbe/tree-sitter-systemverilog") ; Use systemverilog grammar for verilog-ts-mode
             (systemverilog "https://github.com/gmlarumbe/tree-sitter-systemverilog"))))
 
-  ;; 2. Mode Remapping
+  ;; 2. Mode Remapping Helper
+  (defun my/treesit-remap-if-available (old-mode new-mode lang)
+    "Remap OLD-MODE to NEW-MODE if LANG grammar is available."
+    (if (treesit-language-available-p lang)
+        (add-to-list 'major-mode-remap-alist (cons old-mode new-mode))
+      (message "[Treesit] Grammar for %s not found, skipping remap of %s to %s." lang old-mode new-mode)))
+
   ;; Automatically use tree-sitter modes when available.
-  (setq major-mode-remap-alist
-        '((c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (c-or-c++-mode . c++-ts-mode)
-          (yaml-mode . yaml-ts-mode)
-          (json-mode . json-ts-mode)
-          (python-mode . python-ts-mode)))
+  (my/treesit-remap-if-available 'c-mode 'c-ts-mode 'c)
+  (my/treesit-remap-if-available 'c++-mode 'c++-ts-mode 'cpp)
+  (my/treesit-remap-if-available 'c-or-c++-mode 'c++-ts-mode 'cpp)
+  (my/treesit-remap-if-available 'yaml-mode 'yaml-ts-mode 'yaml)
+  (my/treesit-remap-if-available 'json-mode 'json-ts-mode 'json)
+  (my/treesit-remap-if-available 'python-mode 'python-ts-mode 'python)
 
   ;; 3. Helper to install all configured grammars
   (defun my/treesit-install-all-grammars ()
@@ -50,8 +55,8 @@
         (unless (treesit-language-available-p lang)
           (treesit-install-language-grammar lang)))))
 
-  (defun my/treesit-install-grammer ()
-    "Install all grammars and print logs. (Requested by user with specific name)"
+  (defun my/treesit-install-grammar ()
+    "Install all grammars and print logs."
     (interactive)
     (dolist (grammar treesit-language-source-alist)
       (let ((lang (car grammar)))
@@ -70,7 +75,7 @@
     :ensure t)
 
   ;; 5. Mode Remapping (Re-enable Verilog)
-  (add-to-list 'major-mode-remap-alist '(verilog-mode . verilog-ts-mode)))
+  (my/treesit-remap-if-available 'verilog-mode 'verilog-ts-mode 'verilog))
 
 (provide 'init-treesit)
 ;;; init-treesit.el ends here
