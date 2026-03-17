@@ -1,9 +1,6 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Tree-sitter Configuration (Modern Parsing)
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-treesit.el --- Tree-sitter Disabled -*- lexical-binding: t -*-
 
+<<<<<<< HEAD
 ;; 0. Early Version Check
 (if (or (version< emacs-version "29.1")
         (not (and (fboundp 'treesit-available-p)
@@ -76,6 +73,10 @@
 
   ;; 5. Mode Remapping (Re-enable Verilog)
   (my/treesit-remap-if-available 'verilog-mode 'verilog-ts-mode 'verilog))
+=======
+;; Tree-sitter 动态编译和重定向已禁用。
+;; 回归到传统的内置语法高亮模式。
+>>>>>>> dd5389e (config: simplify development environment and add basic Tcl/Perl support)
 
 (provide 'init-treesit)
 ;;; init-treesit.el ends here

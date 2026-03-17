@@ -31,7 +31,12 @@
 (require 'init-systemc)     ; Startup SystemC Development
 (require 'init-rust)        ; Startup Rust Development
 (require 'init-yaml)        ; Startup YAML Development
+<<<<<<< HEAD
 (require 'init-verilog)     ; Startup Verilog Development
+=======
+(require 'init-tcl)         ; Startup Tcl Development
+(require 'init-perl)        ; Startup Perl Development
+>>>>>>> dd5389e (config: simplify development environment and add basic Tcl/Perl support)
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook

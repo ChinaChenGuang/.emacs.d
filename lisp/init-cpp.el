@@ -1,27 +1,12 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; C/C++ Development Configuration (Arch Linux Optimized)
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; ----------------------------------------------------------------------------
-;; 2. 智能编译配置 (Smart Compilation)
-;; ----------------------------------------------------------------------------
-(defun my/cpp-set-compile-command ()
-  "Determine the best compile command for the current buffer."
-  (unless (or (file-exists-p "Makefile") (file-exists-p "makefile"))
-    (let ((file (file-name-nondirectory buffer-file-name)))
-      (setq-local compile-command
-                  (format "g++ -g -Wall -Wextra %s -o %s"
-                          file
-                          (file-name-sans-extension file))))))
+;;; init-cpp.el --- Basic C/C++ support -*- lexical-binding: t -*-
 
 (use-package cc-mode
   :ensure nil
-  :hook ((c-mode c++-mode c-ts-mode c++-ts-mode) . my/cpp-set-compile-command)
   :config
-  (setq-default c-basic-offset 4))
+  (setq-default c-basic-offset 4)
+  (setq c-default-style "linux"))
 
+<<<<<<< HEAD
 ;; 快捷键绑定 (针对 Emacs 30 Tree-sitter 优化)
 (with-eval-after-load 'c-ts-mode
   (define-key c-ts-mode-map (kbd "C-c C-p") #'compile)
@@ -84,6 +69,10 @@
 ;; ----------------------------------------------------------------------------
 (use-package cmake-mode
   :ensure t)
+=======
+;; SystemC 关联到 C++ 模式
+(add-to-list 'auto-mode-alist '("\\.systemc\\'" . c++-mode))
+>>>>>>> dd5389e (config: simplify development environment and add basic Tcl/Perl support)
 
 (provide 'init-cpp)
 ;;; init-cpp.el ends here
