@@ -8,9 +8,6 @@
 ;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; 1.1 Compatibility Layer (Backports & Polyfills)
-(require 'init-compat)
-
 ;; 1.5 Offline Check
 (when (file-exists-p (expand-file-name "offline" user-emacs-directory))
   (require 'init-offline))
@@ -28,15 +25,11 @@
 (require 'init-org)         ; Startup org-mode
 (require 'init-treesit)     ; Startup Tree-sitter
 (require 'init-cpp)         ; Startup C++ Development
-(require 'init-systemc)     ; Startup SystemC Development
 (require 'init-rust)        ; Startup Rust Development
 (require 'init-yaml)        ; Startup YAML Development
-<<<<<<< HEAD
-(require 'init-verilog)     ; Startup Verilog Development
-=======
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)        ; Startup Perl Development
->>>>>>> dd5389e (config: simplify development environment and add basic Tcl/Perl support)
+
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook
