@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; UI/UX Configuration - Windows Optimized
+;; UI/UX Configuration - Adaptable for Terminal & GUI
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -25,7 +25,6 @@
 
 (global-hl-line-mode 1)
 (show-paren-mode 1)
-(set-face-background 'hl-line "#3B4252")
 
 ;; 4. Fonts Configuration (English + Chinese Alignment)
 (defun my/setup-fonts ()
@@ -33,7 +32,7 @@
   (when (display-graphic-p)
     ;; A. English Font (Default)
     (let ((font-candidates '("JetBrainsMono Nerd Font Mono" "JetBrains Mono" "Cascadia Code" "Consolas" "Monospace"))
-          (font-size 16) ;; Customize size here
+          (font-size 16)
           (found-font nil))
       (dolist (font font-candidates)
         (when (and (not found-font) (member font (font-family-list)))
@@ -41,34 +40,18 @@
       
       (if found-font
           (set-face-attribute 'default nil :font (format "%s-%d" found-font font-size))
-        (when (display-graphic-p)
-          (message "Warning: No preferred English font found."))))
+        (message "Warning: No preferred English font found.")))
 
-    ;; B. Chinese Font (Fallback for Han characters)
-    ;; We set a specific font for Chinese and a 'rescale' ratio to ensure
-    ;; 1 Chinese char = 2 English chars (for Org tables alignment).
+    ;; B. Chinese Font (Alignment Magic)
     (let ((zh-candidates '("Noto Sans CJK SC" "Microsoft YaHei" "SimHei" "PingFang SC"))
           (zh-found nil))
       (dolist (font zh-candidates)
         (when (and (not zh-found) (member font (font-family-list)))
           (setq zh-found font)
-          ;; Set this font for CJK characters
           (set-fontset-font t 'han (font-spec :family font))
           (set-fontset-font t 'cjk-misc (font-spec :family font))
           (set-fontset-font t 'bopomofo (font-spec :family font))
-          
-          ;; Alignment Magic:
-          ;; Scale Chinese font to match JetBrains Mono's width.
-          (add-to-list 'face-font-rescale-alist (cons font 1.2))))
-
-    ;; C. Emoji & Symbols (Fix garbled icons like Rocket 🚀)
-    (let ((emoji-font (cond ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-                           ((member "JetBrainsMono Nerd Font Mono" (font-family-list)) "JetBrainsMono Nerd Font Mono"))))
-      (when emoji-font
-        (set-fontset-font t 'symbol (font-spec :family emoji-font) nil 'prepend)
-        ;; 'emoji script was introduced in Emacs 28.1
-        (when (>= emacs-major-version 28)
-          (set-fontset-font t 'emoji (font-spec :family emoji-font) nil 'prepend)))))))
+          (add-to-list 'face-font-rescale-alist (cons font 1.2)))))))
 
 ;; Apply fonts after UI init
 (add-hook 'after-init-hook #'my/setup-fonts)
@@ -78,7 +61,7 @@
 (use-package nerd-icons
   :ensure t
   :config
-  ;; Fix for missing SystemVerilog icons (using FontAwesome microchip icon which is more stable)
+  ;; Fallback mapping for SystemVerilog
   (add-to-list 'nerd-icons-extension-icon-alist
                '("svh" nerd-icons-faicon "nf-fa-microchip" :face nerd-icons-blue))
   (add-to-list 'nerd-icons-extension-icon-alist
@@ -96,16 +79,12 @@
 ;; 7. Modeline (Status Bar)
 (use-package doom-modeline
   :ensure t
-  :init
-  ;; For older Emacs, sometimes we need to manually require before calling functions
-  (unless (fboundp 'doom-modeline-mode)
-    (autoload 'doom-modeline-mode "doom-modeline" nil t))
   :hook (after-init . doom-modeline-mode)
   :config
   (setq doom-modeline-height 30
-        ;; Only show icons in GUI mode to prevent garbled text in remote terminals
+        ;; Automatically disable icons in terminal to prevent garbled text
         doom-modeline-icon (display-graphic-p)
-        doom-modeline-checker-simple-format t)) ;; Use text for flycheck instead of icons to avoid font issues
+        doom-modeline-checker-simple-format t))
 
 ;; 8. Rainbow Colors
 (use-package rainbow-delimiters
@@ -113,16 +92,13 @@
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode))
 
-;; 9. Tech Stack Status (Tree-sitter & LSP)
+;; 9. Tech Stack Status (Tree-sitter Focused)
 (defun my/get-tech-stack-status ()
-  "Return a formatted string showing Tree-sitter and LSP status."
+  "Return a formatted string showing Tree-sitter status."
   (let ((ts (if (and (fboundp 'treesit-parser-list) (treesit-parser-list)) 
                 (propertize "TS" 'face '(:inherit success :weight bold))
-              (propertize "TS" 'face '(:inherit shadow))))
-        (lsp (if (bound-and-true-p lsp-mode)
-                 (propertize "LSP" 'face '(:inherit success :weight bold))
-               (propertize "LSP" 'face '(:inherit shadow)))))
-    (format " [%s|%s] " ts lsp)))
+              (propertize "TS" 'face '(:inherit shadow)))))
+    (format " [%s] " ts)))
 
 (add-to-list 'global-mode-string '(:eval (my/get-tech-stack-status)) t)
 

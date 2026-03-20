@@ -1,26 +1,53 @@
 # 🚀 Gemini Emacs Configuration
 
-这是一个高度模块化、性能优化的 Emacs 配置方案，专注于现代开发体验（特别是 C++）和极致的 UI 美感。
+这是一个高度模块化、性能优化的 Emacs 配置方案，专注于现代开发体验和跨环境（GUI 与终端）的一致性。
 
-## 🚀 项目结构
+## ✨ 现代化编辑器特性
 
-配置采用模块化设计，所有的核心逻辑都位于 `lisp/` 目录下：
+本配置旨在提供媲美现代 IDE 的流畅体验，同时保持 Emacs 的极致灵活性：
 
-- **`init.el`**: 配置入口，负责加载各模块并计算启动时间。
-...
+### 🔍 现代补全堆栈 (Vertico + Consult)
+摒弃了臃肿的传统方案，采用了轻量且强大的现代补全体系：
+- **Vertico**: 极简且高效的垂直补全界面。
+- **Orderless**: 灵活的模糊匹配算法，支持多模式过滤。
+- **Consult**: 提供极其强大的搜索与导航指令（如 `consult-line`, `consult-ripgrep`）。
+- **Marginalia**: 在补全列表中实时显示丰富的元数据（如文件大小、函数定义等）。
+- **Company**: 极速的代码内补全，支持智能提示。
 
-## 📦 安装与初始化
+### 🎨 深度语法支持 (Tree-sitter)
+- **原生加速**: 在 Emacs 29+ 环境下自动启用原生 **Tree-sitter** (`-ts-mode`)，提供更精准的语法解析、更快速的高亮以及稳定的结构化编辑。
+- **多语言适配**: 针对 C/C++, SystemVerilog, Rust, YAML 等现代开发语言进行了深度优化。
+
+### 🛠 开发者生产力
+- **Magit**: 深度集成 Emacs 下最强 Git 客户端，大幅提升 Git 操作效率。
+- **Org Mode**: 集成 `org-modern`，提供美观的笔记与项目管理界面。
+- **Flycheck**: 实时语法错误检查，确保代码质量。
+
+## 🖥 终端 (-nw) 与 GUI 深度适配
+
+无论是在图形界面还是通过 SSH 连接的终端中，Gemini 都能为您提供一致且舒适的操作体验：
+
+### 🎨 图形化界面 (GUI)
+- **精致 UI**: 采用 `doom-one` 主题与 `doom-modeline` 状态栏，兼顾美感与功能。
+- **字体优化**: 预设中英文等宽对齐方案（推荐 JetBrains Mono + 微软雅黑），确保表格与布局完美对齐。
+- **图标增强**: 全面集成 `nerd-icons`，在文件管理、补全列表和状态栏中展示精美图标。
+
+### ⌨️ 终端模式 (Terminal)
+- **轻量稳定**: 针对终端模式（`emacs -nw`）自动禁用重量级视觉特效，确保即使在低带宽或高延迟的 SSH 环境下也能丝滑操作。
+- **智能降级**: 自动检测环境并切换图标与字体显示方案，防止在不支持 Nerd Fonts 的终端中出现乱码。
+- **快捷交互**: 所有现代化补全与搜索功能在终端中保持完全一致。
+
+## 📦 离线移植与安装
+
+本配置专为离线环境和多机协作设计：
 
 ### 1. 联网安装 (Arch Linux/Ubuntu)
-在一个新的联网环境中，只需运行根目录下的初始化脚本：
 ```bash
-cd ~/.emacs.d
-./setup.sh
+cd ~/.emacs.d && ./setup.sh
 ```
 
-### 2. 离线环境移植 (重点)
-如果您需要将配置迁移到内网离线服务器：
-- **第一步 (联网机器)**: 在联网机器上运行打包脚本：
+### 2. 离线环境移植
+- **第一步 (联网机器)**: 运行打包脚本生成部署包：
   ```bash
   ./pack_offline.sh
   ```
@@ -32,103 +59,18 @@ cd ~/.emacs.d
   ```
 - **特性**: 
   - 自动创建 `~/.emacs.d/offline` 标记文件，使 Emacs 进入**静默离线模式**（禁用联网更新）。
-  - 打包已包含所有 `elpa` 插件和字体。
-  - **兼容性补丁**: 针对 Emacs < 29 自动下载并集成完整的 `use-package` 和 `compat` 核心包（位于 `lisp/compat/`），解决离线环境下“找不到 use-package-core”或 `doom-modeline` 启动失败的问题。
-  - **图标字体补全**: 打包已包含 `NFM.ttf` (Nerd Font Icons)，支持 `nerd-icons` 和 `doom-modeline` 的图标显示，无需离线下载。
+  - 打包已包含所有 `elpa` 插件、兼容性补丁及 `NFM.ttf` 图标字体。
 
-
-### 3. 版本适配 (Emacs 27.2+)
-本配置已针对不同版本的 Emacs 做了自动适配：
-- **Emacs 29.1+**: 默认开启原生 **Tree-sitter** (`-ts-mode`)，提供极速语法高亮。
-- **Emacs 27.2 - 28.x**: 自动回退到传统的 `cc-mode` 和 `verilog-mode`，同时保持 LSP (Language Server Protocol) 功能可用。
-
-## 🌐 网络与仓库管理
-
-- **代理切换**: 按 `C-c x` 可在 Emacs 中快速开启/关闭代理（默认指向 `127.0.0.1:7897`）。
-- **国内镜像**: 
-  - 在 `lisp/init-packages.el` 中可以手动切换官方源与**清华大学 (TUNA) 镜像站**。
-  - 目前默认已切换回官方源以适应特定环境。
-- **连通性测试**: `M-x my/test-archives-latency` 可测试各包仓库的连接延迟。
-
-## 🚀 SystemVerilog 工程初始化 (修复跳转问题)
-SystemVerilog LSP (Verible) 需要知道项目的文件结构才能跨目录跳转。
-
-**场景：阅读 UVM 源码或多目录验证环境**
-如果遇到 `M-.` 无法跳转到基类定义，或提示 "File not found"：
-
-1. **进入工程/源码根目录**:
-   打开终端，cd 到您的项目根目录（如果是看 UVM 源码，就进入 UVM 的解压目录）。
-
-2. **生成索引文件**:
-   运行配置自带的脚本：
-   ```bash
-   ~/.emacs.d/bin/gen-verible-project.sh
-   ```
-   这会在当前目录下生成 `verible.filelist`，自动递归加入所有子目录到 Include Path。
-
-3. **生效**:
-   - 在 Emacs 中打开任意 `.sv` 文件。
-   - 如果 LSP 已经在运行，执行命令：`M-x lsp-workspace-restart`。
-
-### 3. LSP Workspace 管理与 Include 跳转
-
-**Q: 如何管理 LSP Workspace?**
-LSP 会自动识别项目根目录，但如果需要手动管理（例如添加外部库目录）：
-- `M-x lsp-workspace-folders-add`: 添加新的根目录到当前会话。
-- `M-x lsp-workspace-folders-remove`: 移除根目录。
-- `M-x lsp-describe-session`: 查看当前 LSP 连接状态和 Workspace 信息。
-
-**Q: 如何跳转进入 include 文件?**
-- **方法 1 (推荐)**: 光标移动到文件名上，按 `M-.` (Go to definition)。如果 `verible.filelist` 配置正确，LSP 会处理。
-- **方法 2 (备用)**: 按 `C-c f` (Find File At Point)。这是 Emacs 原生功能，会自动识别光标下的路径并打开。
-
-## ✨ 核心特性
-
-### 🎨 极致视觉 (UI/UX)
-- **主题**: 使用 `doom-one` 主题搭配 `doom-modeline`。
-- **图标**: 全面集成 `nerd-icons` (含 SystemVerilog 图标支持)。
-- **字体**: 经过精心配置的中英文等宽对齐方案（默认 JetBrains Mono + 微软雅黑）。
-- **彩虹特效**: `rainbow-delimiters` 让括号嵌套一目了然。
-- **Org 笔记**: 
-    - 集成 `org-modern`，提供 Notion 风格的标题、列表和元数据徽章。
-    - 使用 `visual-fill-column` 提供舒适的居中阅读体验。
-    - `valign` 完美解决中英文混排表格对齐问题。
-
-### 🔍 现代补全系统
-摒弃了臃肿的 Ivy/Helm，采用了轻量且强大的现代堆栈：
-- **Vertico**: 垂直交互式补全。
-- **Marginalia**: 在补全列表中显示丰富的元数据注解。
-- **Consult**: 提供极其强大的搜索与导航指令（如 `consult-line`, `consult-ripgrep`）。
-- **Orderless**: 灵活的模糊匹配算法。
-- **Company**: 极速的代码内补全。
-
-### 🛠 开发者工具
-- **Tree-sitter**: 深度集成 Emacs 30 的原生语法解析库，提供更精准的代码高亮与跳转。
-- **C++ 特化**: 
-    - 自动识别 `Makefile` 或生成智能编译指令。
-    - `LSP & DAP`: 完整的 C++ 语言服务器支持与图形化调试 (GDB/LLDB) 集成。
-    - `CMake`: 完善的 CMake 项目支持。
-- **SystemVerilog**:
-    - **LSP 支持**: 集成 **Verible** Language Server，提供精准的**定义跳转**、引用查找和错误提示。
-    - **工具路径**: Verible 二进制文件已自动安装至 `~/.emacs.d/bin/`。
-    - **备用方案**: 保留 `dumb-jump` + `ripgrep` 作为 LSP 未启动时的后备方案。
-    - **结构**: 针对 SystemVerilog 的代码折叠与导航优化。
-- **Git**: 深度集成 `Magit`（Emacs 下最强 Git 客户端）。
-
-## ⌨️ 常用快捷键 (部分)
+## ⌨️ 常用快捷键
 
 | 快捷键 | 功能 |
 | :--- | :--- |
-| `M-s r` | 全局搜索 (Ripgrep) - **SystemVerilog 推荐** |
+| `M-s r` | 全局搜索 (Ripgrep) |
 | `M-s l` | 当前 Buffer 搜索 (Consult line) |
-| `M-.` | 跳转到定义 (Go to definition) |
-| `M-?` | 查找引用 (Find references) |
 | `M-g i` | 跳转到符号 (Imenu) |
 | `C-x b` | 切换缓冲区 (Consult buffer) |
-| `C-c C-p` | 快速编译 (C++ 模式下) |
-| `<f5>` | 启动 DAP 调试 |
-| `C-c d b` | 切换断点 |
-| `C-c h` | 历史记录检索 |
+| `C-x g` | 打开 Magit (Git Status) |
+| `C-c x` | 快速切换网络代理 |
 
 ---
 *Created by Gemini for your ultimate Emacs experience.*

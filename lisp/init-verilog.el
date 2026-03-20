@@ -28,23 +28,19 @@
   (setq-local verilog-auto-newline nil)
   (setq-local verilog-auto-lineup nil))
 
-;; Apply to Classic Verilog Mode
+;; Apply to Classic Verilog Mode (Stable & Basic)
 (use-package verilog-mode
   :ensure nil ; Built-in
-  :hook (verilog-mode . my/verilog-style-setup))
-
-;; Apply to Modern Tree-sitter Verilog Mode (Emacs 29.1+ only)
-(when (and (version<= "29.1" emacs-version)
-           (fboundp 'treesit-available-p)
-           (treesit-available-p))
-  (use-package verilog-ts-mode
-    :ensure t
-    :hook (verilog-ts-mode . my/verilog-style-setup)))
-
-;; 3. Global LSP Indentation Disable
-(with-eval-after-load 'lsp-mode
-  ;; Prevent LSP from overriding our 2-space indentation
-  (setq lsp-enable-indentation nil))
+  :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
+  :hook (verilog-mode . my/verilog-style-setup)
+  :config
+  (setq verilog-indent-level 2)
+  (setq verilog-indent-level-module 2)
+  (setq verilog-indent-level-declaration 2)
+  (setq verilog-indent-level-behavioral 2)
+  (setq verilog-indent-level-directive 2)
+  (setq verilog-case-indent 2)
+  (setq verilog-auto-newline nil))
 
 (provide 'init-verilog)
 ;;; init-verilog.el ends here

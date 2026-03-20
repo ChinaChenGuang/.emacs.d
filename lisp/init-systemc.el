@@ -7,9 +7,14 @@
 (require 'init-cpp)
 
 ;; 1. File Associations
-;; Treat .sc and .cpp files in SystemC projects as C++
-(add-to-list 'auto-mode-alist '("\.sc\'" . c++-ts-mode))
-(add-to-list 'auto-mode-alist '("\.h\'" . c++-ts-mode))
+;; Prefer Treesit modes if available
+(if (and (fboundp 'treesit-available-p) (treesit-available-p))
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.sc\\'" . c++-ts-mode))
+      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode)))
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.sc\\'" . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))))
 
 ;; 2. SystemC Compilation Helper
 (defun my/systemc-compile-command ()
@@ -23,14 +28,10 @@
     (compile compile-command)))
 
 ;; 3. Keybindings for SystemC
-;; Bind C-c C-s to SystemC compile in C++ modes
 (with-eval-after-load 'c++-ts-mode
   (define-key c++-ts-mode-map (kbd "C-c C-s") #'my/systemc-compile-command))
-
-;; 4. LSP/Clangd Configuration for SystemC
-;; Clangd usually finds system libraries automatically.
-;; If your SystemC is installed in a non-standard location (e.g., /opt/systemc),
-;; you might need to create a .clangd file or compile_commands.json.
+(with-eval-after-load 'cc-mode
+  (define-key c++-mode-map (kbd "C-c C-s") #'my/systemc-compile-command))
 
 (provide 'init-systemc)
 ;;; init-systemc.el ends here
