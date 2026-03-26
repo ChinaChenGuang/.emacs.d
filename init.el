@@ -1,3 +1,6 @@
+;;; package --- Summary
+;;; Commentary:
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Emacs Configuration Entry Point
@@ -5,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; 1. Path Configuration
-;; Add the 'lisp' directory to the load path so we can require our modules.
+;;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; 1.5 Offline Check
@@ -17,6 +20,7 @@
 (require 'init-packages)    ; Package manager setup
 (require 'init-core)        ; Core system settings
 (require 'init-ui)          ; Visuals, fonts, theme
+(require 'init-chinese)     ; Chinese Input Method (Pyim)
 (require 'init-completion)  ; Completion framework
 (require 'init-dev)         ; Development tools
 (require 'init-misc)        ; Miscellaneous tools
@@ -29,6 +33,7 @@
 (require 'init-yaml)        ; Startup YAML Development
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)        ; Startup Perl Development
+(require 'init-latex)       ; Startup LaTeX Development
 
 ;; 3. Startup Profiler
 ;; Display startup time and reset GC threshold after initialization.
@@ -46,4 +51,5 @@
 ;; Keep automatic custom settings in a separate file to keep init.el clean.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
-  (load custom-file))
+(load custom-file))
+;;; init.el ends here
