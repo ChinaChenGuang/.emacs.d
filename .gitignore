@@ -44,6 +44,7 @@ Thumbs.db
 
 # 7. Custom Settings
 # custom.el
+local.el
 
 # 8. Offline Deployment
 emacs_offline_deploy.tar.gz*
@@ -53,3 +54,4 @@ emacs_dist/
 # 9. Local Dependencies & Cache
 /deps/
 /vimish-fold/
+/pyim/
