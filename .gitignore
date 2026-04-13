@@ -55,3 +55,7 @@ emacs_dist/
 /deps/
 /vimish-fold/
 /pyim/
+# 10. Eshell & Project Specific
+/eshell/history
+/eshell/lastdir
+/bin/verible.filelist
