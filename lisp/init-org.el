@@ -1,99 +1,83 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Org Mode Configuration - Visual Beautification
+;; Org Mode Configuration - Clean & Stable Modern Setup
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
-  :hook ((org-mode . org-indent-mode)      ; Auto indentation (cleaner look)
-         (org-mode . visual-line-mode))    ; Soft wrapping for long lines
+  :hook ((org-mode . org-indent-mode)      ; Built-in stable indentation
+         (org-mode . visual-line-mode))    ; Soft wrapping
   :config
-  ;; --------------------------------------------------------------------------
-  ;; 1. Core Visual Tweaks
-  ;; --------------------------------------------------------------------------
-  (setq org-ellipsis " ▾")                 ; Replace the "..." at end of folded headers
-  (setq org-hide-emphasis-markers t)       ; Hide markers! *bold* -> bold, /italic/ -> italic
-  (setq org-pretty-entities t)             ; Render \alpha as α, \to as →
-  (setq org-image-actual-width nil)        ; Allow resizing images in org buffers
+  ;; --- 1. Core Stability Settings ---
+  (setq org-ellipsis " ▾"                  ; Clean folding symbol
+        org-hide-emphasis-markers t        ; Hide * / _ markers
+        org-pretty-entities t              ; Show \alpha as α
+        org-hide-leading-stars t           ; Hide redundant stars for a clean look
+        org-image-actual-width nil         ; Smart image resizing
+        org-use-sub-superscripts '{})      ; Don't auto-subscript underscores
 
-  ;; CRITICAL FIX FOR PROGRAMMERS (SystemVerilog, Python, etc.)
-  ;; Prevent underscores from creating subscripts (e.g., m_sequencer).
-  (setq org-use-sub-superscripts '{})
+  ;; --- 2. Code Blocks ---
+  (setq org-src-fontify-natively t
+        org-src-tab-acts-natively t
+        org-edit-src-content-indentation 0
+        org-confirm-babel-evaluate nil)
 
-  ;; --------------------------------------------------------------------------
-  ;; 2. Source Code Blocks (The "IDE" feel)
-  ;; --------------------------------------------------------------------------
-  (setq org-src-fontify-natively t)        ; Syntax highlighting inside code blocks
-  (setq org-src-tab-acts-natively t)       ; Tab works as expected inside blocks
-  (setq org-edit-src-content-indentation 0); Align code with the block header (no extra indent)
-  (setq org-confirm-babel-evaluate nil)    ; Run code blocks without annoying confirmation
-
-  ;; --------------------------------------------------------------------------
-  ;; 3. Task Workflow (Geek Style)
-  ;; --------------------------------------------------------------------------
+  ;; --- 3. Task Workflow ---
   (setq org-todo-keywords
         '((sequence "TODO(t)" "PROG(p!)" "WAIT(w@)" "|" "DONE(d!)" "CANC(k@)")))
 
-  ;; Custom colors for TODO keywords to make them pop
+  ;; Clean & Stable Colors for TODOs (No hacks, just colors)
   (setq org-todo-keyword-faces
-        '(("PROG" . (:foreground "#EBCB8B" :weight bold))  ; Yellow
-          ("WAIT" . (:foreground "#BF616A" :weight bold))  ; Red
-          ("CANC" . (:foreground "#4C566A" :weight bold))  ; Grey
-          ("DONE" . (:foreground "#A3BE8C" :weight bold)))); Green
+        '(("TODO" . (:foreground "#5E81AC" :weight bold))
+          ("PROG" . (:foreground "#EBCB8B" :weight bold))
+          ("WAIT" . (:foreground "#BF616A" :weight bold))
+          ("DONE" . (:foreground "#A3BE8C" :weight bold))
+          ("CANC" . (:foreground "#4C566A" :weight bold))))
 
-  ;; --------------------------------------------------------------------------
-  ;; 4. Typography (Font Sizes)
-  ;; --------------------------------------------------------------------------
-  ;; Make headings larger to create a document structure hierarchy
-  (custom-set-faces
-   '(org-level-1 ((t (:height 1.3 :weight bold))))
-   '(org-level-2 ((t (:height 1.15 :weight bold))))
-   '(org-level-3 ((t (:height 1.05 :weight bold))))
-   '(org-level-4 ((t (:height 1.0 :weight bold))))
-   '(org-document-title ((t (:height 1.5 :weight bold :underline nil))))))
+  ;; --- 4. Progress Tracking ---
+  (setq org-hierarchical-todo-statistics nil
+        org-checkbox-hierarchical-statistics nil))
 
 ;; --------------------------------------------------------------------------
-;; 5. Modern UI (Replacing Superstars with org-modern)
-;; This provides Notion-like badges, styled blocks, and clean bullets.
+;; 5. Org-Modern: Single Source for Modern UI
 ;; --------------------------------------------------------------------------
+;; This handles Stars, Checkboxes, and Statistics in one unified engine.
 (use-package org-modern
   :ensure t
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
   :config
-  (setq org-modern-star '("◉" "○" "◈" "◇" "✳" "◆")
-        org-modern-hide-stars nil ; Keep the stars for structure, or set t to hide
-        org-modern-table nil      ; Let valign handle tables (it's better for mixed fonts)
-        org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
-        org-modern-todo nil       ; Use our custom colored faces defined above
-        org-modern-tag t
-        org-modern-priority t
-        org-modern-block-fringe nil)) ; No extra fringe
+  (setq 
+   ;; Headlines (Bullets)
+   org-modern-star '("◉" "○" "◈" "◇" "✳" "◆")
+   ;; Checkboxes
+   org-modern-checkbox '((?X . "☑") (?  . "☐") (?- . "❍"))
+   ;; Progress Cookies (Visual Badges)
+   org-modern-statistics t
+   org-modern-progress '("○" "◔" "◑" "◕" "●")
+   ;; Lists and Tables
+   org-modern-list '((43 . "➤") (45 . "–") (42 . "•"))
+   org-modern-table nil ; Valign is better for tables
+   ;; Minimalist Labels (Optional: Set to nil if you want zero labels)
+   org-modern-todo t
+   org-modern-tag t
+   org-modern-priority t))
 
 ;; --------------------------------------------------------------------------
-;; 6. Reading Experience (Centered & Margins)
+;; 6. Layout & Table Alignment (The Professional Essentials)
 ;; --------------------------------------------------------------------------
 (use-package visual-fill-column
   :ensure t
   :hook (org-mode . visual-fill-column-mode)
   :config
   (setq visual-fill-column-center-text t
-        visual-fill-column-width 120))
+        visual-fill-column-width 100))
 
-;; --------------------------------------------------------------------------
-;; 7. Table Alignment (Valign) - PIXEL PERFECT
-;; --------------------------------------------------------------------------
 (use-package valign
   :ensure t
   :hook (org-mode . valign-mode)
   :config
-  ;; Disable fancy-bar to ensure borders are visible (Fixes "No Border" issue)
-  ;; When enabled on Windows, the separator line sometimes becomes invisible.
-  (setq valign-fancy-bar nil)
-  
-  ;; Force the table lines to be visible and colored (Cyan)
-  (custom-set-faces
-   '(org-table ((t (:foreground "#88C0D0"))))))
+  (setq valign-fancy-bar nil))
 
 (provide 'init-org)
 ;;; init-org.el ends here

@@ -21,5 +21,24 @@
 (use-package flycheck
   :init (global-flycheck-mode))
 
+;; 4. yafolding: 基于缩进的折叠工具
+(use-package yafolding
+  :ensure t
+  :bind (("C-c f" . yafolding-toggle-element)
+         ("C-c F" . yafolding-toggle-all))
+  :hook (prog-mode . yafolding-mode))
+
+;; 5. Sidebar & Code Map: 全局函数/标题侧边栏
+(use-package imenu-list
+  :ensure t
+  :bind (("C-c t" . imenu-list-smart-toggle)
+         :map imenu-list-major-mode-map
+         ("f" . imenu-list-goto-entry)) ; 'f' 键跳转并自动收起侧边栏
+  :config
+  (setq imenu-list-size 30
+        imenu-list-position 'left
+        imenu-list-auto-resize t       ; 自动根据内容微调宽度
+        imenu-list-focus-after-activation t))
+
 (provide 'init-dev)
 ;;; init-dev.el ends here
