@@ -24,9 +24,9 @@
 ;; 4. yafolding: 基于缩进的折叠工具
 (use-package yafolding
   :ensure t
-  :bind (("C-c f" . yafolding-toggle-element)
-         ("C-c F" . yafolding-toggle-all))
-  :hook (prog-mode . yafolding-mode))
+  :bind (("C-c y" . yafolding-toggle-element)
+         ("C-c Y" . yafolding-toggle-all))
+  :hook ((prog-mode text-mode conf-mode) . yafolding-mode))
 
 ;; 5. Sidebar & Code Map: 全局函数/标题侧边栏
 (use-package imenu-list
