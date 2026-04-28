@@ -13,8 +13,13 @@
          ("C-c l" . org-store-link)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
-         ("C-c n l" . org-roam-buffer-toggle))
+         ("C-c n l" . org-roam-buffer-toggle)
+         ;; 快捷跳转：跳回上一个位置
+         ("M-[" . org-mark-ring-goto)
+         ("M-]" . org-open-at-point))
   :config
+  ;; 让跳转更顺滑：如果是链接则跳转，如果是目录则折叠
+  (setq org-return-follows-link t)
   ;; --- 1. Core Directory ---
   (setq org-directory "~/org"
         org-roam-directory (expand-file-name "roam" org-directory)
@@ -78,6 +83,11 @@
   (org-roam-completion-everywhere t)
   :config
   (org-roam-db-autosync-mode)
+  
+  ;; 让搜索界面显示标签 (Tags)
+  (setq org-roam-node-display-template
+        (concat "${title:*} " (propertize "${tags:30}" 'face 'org-tag)))
+
   ;; Templates for different types of notes
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
