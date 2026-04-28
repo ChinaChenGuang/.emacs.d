@@ -23,6 +23,7 @@
 (require 'init-chinese)     ; Chinese Input Method (Pyim)
 (require 'init-completion)  ; Completion framework
 (require 'init-dev)         ; Development tools
+(require 'init-pi)          ; AI Assistant (Pi & GPTel)
 (require 'init-misc)        ; Miscellaneous tools
 (require 'init-dashboard)   ; Startup dashboard
 (require 'init-markdown)    ; Startup markdown
