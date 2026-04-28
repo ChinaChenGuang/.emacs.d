@@ -19,7 +19,11 @@
 
 ;; 3. 基础语法检查 (如果有外部工具如 cppcheck/flake8)
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config
+  ;; 禁用 flycheck 中的 org-lint 检查器，避免报错和兼容性问题
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers '(org-lint))))
 
 ;; 4. yafolding: 基于缩进的折叠工具
 (use-package yafolding
