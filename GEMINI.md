@@ -67,10 +67,17 @@ cd ~/.emacs.d && ./setup.sh
 | :--- | :--- |
 | `M-s r` | 全局搜索 (Ripgrep) |
 | `M-s l` | 当前 Buffer 搜索 (Consult line) |
+| `M-i`   | 符号高亮 (Symbol Overlay: 开启/关闭当前词高亮) |
+| `M-n` / `M-p` | 在高亮的符号间跳转 (后一个/前一个) |
+| `M-j`   | 快速跳转 (Avy Timer) |
+| `M-s j` | 字符跳转 (Avy Char: 输入1个字符后跳转) |
 | `M-g i` | 跳转到符号 (Imenu) |
 | `C-x b` | 切换缓冲区 (Consult buffer) |
 | `C-x g` | 打开 Magit (Git Status) |
 | `C-c x` | 快速切换网络代理 |
+| `C->` / `C-.` | 多光标：选中下个相同单词 (自动选中当前词) |
+| `C-<` / `C-,` | 多光标：选中上个相同单词 (自动选中当前词) |
+| `C-c C-<` | 多光标：选中所有相同单词 |
 
 ---
 *Created by Gemini for your ultimate Emacs experience.*

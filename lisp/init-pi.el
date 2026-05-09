@@ -27,16 +27,16 @@
     :endpoint "/chat/completions"
     :stream t
     :key (bound-and-true-p my-deepseek-api-key)
-    :models '(deepseek-chat deepseek-coder))
+    :models '(deepseek-v4-flash deepseek-v4-pro))
 
-  ;; --- OpenRouter 备选 (保留用于访问其他模型) ---
-  (gptel-make-openai "OpenRouter"
-    :host "openrouter.ai"
-    :endpoint "/api/v1/chat/completions"
-    :stream t
-    :key "YOUR_OPENROUTER_API_KEY"
-    :models '(inflection/inflection-3-pi
-              anthropic/claude-3.5-sonnet))
+  ;; ;; --- OpenRouter 备选 (保留用于访问其他模型) ---
+  ;; (gptel-make-openai "OpenRouter"
+  ;;   :host "openrouter.ai"
+  ;;   :endpoint "/api/v1/chat/completions"
+  ;;   :stream t
+  ;;   :key "YOUR_OPENROUTER_API_KEY"
+  ;;   :models '(inflection/inflection-3-pi
+  ;;             anthropic/claude-3.5-sonnet))
 
   ;; 默认设置
   (setq-default gptel-model 'deepseek-chat
