@@ -7,6 +7,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; 0. Warning Suppression
+(setq native-comp-async-report-warnings-errors nil
+      byte-compile-warnings nil
+      warning-suppress-types '((bytecomp) (native-compiler)))
+
 ;; 1. Path Configuration
 ;;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))

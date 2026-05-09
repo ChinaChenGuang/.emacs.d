@@ -20,6 +20,7 @@
 /transient/
 /var/
 /.org-id-locations
+org-roam.db
 *_archive
 /ac-comphist.dat
 /recentf
