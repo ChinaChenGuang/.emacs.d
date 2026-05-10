@@ -87,8 +87,8 @@
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   
-  ;; Load the default theme (doom-one is highly popular)
-  (load-theme 'doom-one t)
+  ;; Load the default theme (doom-nord is muted and low-saturation)
+  (load-theme 'doom-nord t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
