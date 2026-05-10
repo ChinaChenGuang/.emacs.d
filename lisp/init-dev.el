@@ -2,30 +2,46 @@
 
 ;; 1. Magit: 基础 Git 客户端
 (use-package magit
-  :bind ("C-x g" . magit-status))
-
-;; 2. SystemVerilog 基础配置
-(use-package verilog-mode
-  :ensure nil ; 内置
-  :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
+  :bind ("C-x g" . magit-status)
   :config
-  (setq verilog-indent-level 4)
-  (setq verilog-indent-level-module 4)
-  (setq verilog-indent-level-declaration 4)
-  (setq verilog-indent-level-behavioral 4)
-  (setq verilog-indent-level-directive 4)
-  (setq verilog-case-indent 4)
-  (setq verilog-auto-newline nil))
+  ;; 集成 Magit-todos: 在 Git 状态界面直接显示代码里的 TODO
+  (use-package magit-todos
+    :ensure t
+    :init
+    (magit-todos-mode 1)))
 
-;; 3. 基础语法检查 (如果有外部工具如 cppcheck/flake8)
+;; 2. Yasnippet: 代码模板
+(use-package yasnippet
+  :ensure t
+  :hook (after-init . yas-global-mode)
+  :config
+  (use-package yasnippet-snippets :ensure t)
+  ;; 在 Corfu 补全列表中集成 Yasnippet
+  (with-eval-after-load 'cape
+    (add-to-list 'completion-at-point-functions #'cape-dict)
+    (add-to-list 'completion-at-point-functions #'yas-capf)))
+
+;; 3. 基础语法检查
 (use-package flycheck
-  :init (global-flycheck-mode)
+  :init 
+  ;; 默认不全局开启，避免满屏波浪线。可以根据需要在使用的地方局部开启 (flycheck-mode)
+  ;; (global-flycheck-mode)
   :config
   ;; 禁用 flycheck 中的 org-lint 检查器，避免报错和兼容性问题
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers '(org-lint))))
 
-;; 4. yafolding: 基于缩进的折叠工具
+;; 4. Apheleia: 异步自动格式化 (保存时自动对齐)
+(use-package apheleia
+  :ensure t
+  :init
+  (apheleia-global-mode +1)
+  :config
+  ;; 配置 Verilog 格式化器 (优先使用 verible-verilog-format)
+  (setf (alist-get 'verilog-ts-mode apheleia-mode-alist) 'verible-verilog-format)
+  (setf (alist-get 'verilog-mode apheleia-mode-alist) 'verible-verilog-format))
+
+;; 5. yafolding: 基于缩进的折叠工具
 (use-package yafolding
   :ensure t
   :bind (("C-c y" . yafolding-toggle-element)
@@ -35,7 +51,7 @@
 ;; 5. Sidebar & Code Map: 全局函数/标题侧边栏
 (use-package imenu-list
   :ensure t
-  :bind (("C-c t" . imenu-list-smart-toggle)
+  :bind (("C-c i" . imenu-list-smart-toggle)
          :map imenu-list-major-mode-map
          ("f" . imenu-list-goto-entry)) ; 'f' 键跳转并自动收起侧边栏
   :config

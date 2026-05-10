@@ -34,14 +34,19 @@
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
 (require 'init-treesit)     ; Startup Tree-sitter
+(require 'init-lsp)         ; Startup LSP (Eglot)
+(require 'init-debug)       ; Startup Debugging (Dape)
 (require 'init-cpp)         ; Startup C++ Development
 (require 'init-rust)        ; Startup Rust Development
 (require 'init-yaml)        ; Startup YAML Development
 (require 'init-tcl)         ; Startup Tcl Development
-(require 'init-perl)        ; Startup Perl Development
-(require 'init-latex)       ; Startup LaTeX Development
+(require 'init-perl)         ; Startup Perl Development
+(require 'init-latex)        ; Startup LaTeX Development
+(require 'init-verilog)      ; Startup Verilog Development
+(require 'init-systemc)      ; Startup SystemC Development
 
 ;; 3. Startup Profiler
+
 ;; Display startup time and reset GC threshold after initialization.
 (add-hook 'emacs-startup-hook
           (lambda ()

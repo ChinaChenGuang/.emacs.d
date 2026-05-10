@@ -54,10 +54,6 @@
 ;; ----------------------------------------------------------------------
 ;; 4. Avy: Fast Cursor Movement (Jump to anywhere)
 ;; ----------------------------------------------------------------------
-;; Usage:
-;; 1. Press M-j (Jump to char timer - search as you type)
-;; 2. Press M-s j (Jump to a single char)
-;; 3. Press M-s w (Jump to a word start)
 (use-package avy
   :ensure t
   :bind (("M-j"   . avy-goto-char-timer)
@@ -66,18 +62,14 @@
          ("M-g l" . avy-goto-line))
   :config
   (setq avy-timeout-seconds 0.3
-        avy-all-windows t)) ;; 允许跨窗口跳转
+        avy-all-windows t))
 
 ;; ----------------------------------------------------------------------
-;; 5. Winum: Window Switching with Alt + Number
+;; 5. Winum & Window Management
 ;; ----------------------------------------------------------------------
-;; Usage: M-1 selects window 1, M-2 selects window 2, etc.
 (use-package winum
   :ensure t
   :init (winum-mode)
-  :config
-  ;; Allow M-0 to select window 10 (or 0 if exists)
-  (setq winum-auto-assign-0-to-10 t)
   :bind (("M-1" . winum-select-window-1)
          ("M-2" . winum-select-window-2)
          ("M-3" . winum-select-window-3)
@@ -89,71 +81,75 @@
          ("M-0" . winum-select-window-0-or-10)))
 
 ;; ----------------------------------------------------------------------
-;; 6. Find File At Point (FFAP)
+;; 6. Crux: A collection of Ridiculously Useful eXtensions
 ;; ----------------------------------------------------------------------
-;; Automatically guesses the file path at cursor when running C-x C-f.
-;; Great for jumping to 'include "foo.svh"' files.
-(use-package ffap
-  :ensure nil
-  :bind ("C-c f" . ffap)) ; Bind C-c f to directly open file at point
+(use-package crux
+  :ensure t
+  :bind (("C-a"   . crux-move-beginning-of-line)
+         ("C-c d" . crux-duplicate-current-line-or-region)
+         ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
+         ("C-c k" . crux-kill-whole-line)
+         ("C-c o" . crux-smart-open-line-above)
+         ("C-c O" . crux-smart-open-line)
+         ("C-c r" . crux-rename-file-and-buffer)
+         ("C-c t" . crux-visit-term-buffer)
+         ("C-c N" . crux-cleanup-buffer-or-region)
+         ("C-c f" . crux-recentf-find-file)
+         ("C-c D" . crux-delete-file-and-buffer)))
 
 ;; ----------------------------------------------------------------------
-;; 7. Multiple Cursors: Edit multiple lines/matches simultaneously
+;; 7. Expand Region: Semantic selection
 ;; ----------------------------------------------------------------------
-;; Usage:
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
 ;; ----------------------------------------------------------------------
-;; 7. Multiple Cursors: Edit multiple lines/matches simultaneously
+;; 8. Dirvish: Modern File Manager (Dired Enhancement)
 ;; ----------------------------------------------------------------------
-;; Usage:
-;; - C-> / C-. : Mark next instance of current word/region (Smart)
-;; - C-< / C-, : Mark previous instance (Smart)
-;; - C-c C-< : Mark all instances
-;; - C-S-c C-S-c : Edit all lines in the current region
+(use-package dirvish
+  :ensure t
+  :init
+  (dirvish-override-dired-mode)
+  :custom
+  (dirvish-quick-access-entries
+   '(("h" "~/"                          "Home")
+     ("d" "~/Downloads"                "Downloads")
+     ("o" "~/org"                      "Org")
+     ("p" "~/projects"                 "Projects")))
+  (dirvish-mode-line-format
+   '(:left (sort symlink) :right (omit yank index)))
+  (dirvish-attributes
+   '(nerd-icons file-size collapse git-msg))
+  :bind
+  ;; 代替传统的 dired-jump，现在按 C-x C-j 会打开一个华丽的 Dirvish 窗口
+  (("C-x C-j" . dirvish-dwim)
+   ("C-x j"   . dirvish-dwim)
+   :map dirvish-mode-map ; Dirvish 内部快捷键
+   ("a"   . dirvish-quick-access)
+   ("f"   . dirvish-file-info-menu)
+   ("y"   . dirvish-yank-menu)
+   ("N"   . dirvish-narrow)
+   ("^"   . dirvish-history-last)
+   ("h"   . dirvish-history-jump) ; 最近访问的目录
+   ("s"   . dirvish-quicksort)    ; 排序
+   ("TAB" . dirvish-subtree-toggle) ;; 像侧边栏一样展开目录
+   ("M-t" . dirvish-layout-toggle)))
 
-(require 'thingatpt)
-
-(defun my/mc-mark-next-like-this ()
-  "Select word at point if no region is active, then mark next like this.
-If no word is found, just add a cursor at the next line."
-  (interactive)
-  (if (region-active-p)
-      (mc/mark-next-like-this 1)
-    (let ((range (bounds-of-thing-at-point 'word)))
-      (if range
-          (progn
-            (set-mark (car range))
-            (goto-char (cdr range))
-            (mc/mark-next-like-this 1))
-        ;; Fallback: if no word, just use the default behavior (add cursor below)
-        (mc/mark-next-like-this 1)))))
-
-(defun my/mc-mark-previous-like-this ()
-  "Select word at point if no region is active, then mark previous like this.
-If no word is found, just add a cursor at the previous line."
-  (interactive)
-  (if (region-active-p)
-      (mc/mark-previous-like-this 1)
-    (let ((range (bounds-of-thing-at-point 'word)))
-      (if range
-          (progn
-            (set-mark (car range))
-            (goto-char (cdr range))
-            (mc/mark-previous-like-this 1))
-        ;; Fallback
-        (mc/mark-previous-like-this 1)))))
-
+;; ----------------------------------------------------------------------
+;; 9. Multiple Cursors: Edit multiple lines/matches simultaneously
+;; ----------------------------------------------------------------------
+;; 使用官方推荐的 symbol 系列命令，可以精确匹配整个单词/符号，避免误选子字符串
 (use-package multiple-cursors
   :ensure t
-  :commands (mc/edit-lines mc/mark-all-like-this mc/mark-all-dwim)
   :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-c C-<"     . mc/mark-all-symbols-like-this)
          ("C-M-m"       . mc/mark-all-dwim)
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click)
-         ;; Bind the smart versions
-         ("C->" . my/mc-mark-next-like-this)
-         ("C-<" . my/mc-mark-previous-like-this)
-         ("C-." . my/mc-mark-next-like-this)
-         ("C-," . my/mc-mark-previous-like-this)))
+         ("C->"         . mc/mark-next-symbol-like-this)
+         ("C-<"         . mc/mark-previous-symbol-like-this)
+         ("C-."         . mc/mark-next-symbol-like-this)
+         ("C-,"         . mc/mark-previous-symbol-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 ;; ----------------------------------------------------------------------
 ;; 8. Symbol Overlay: Highlight symbols and jump between them
@@ -170,6 +166,132 @@ If no word is found, just add a cursor at the previous line."
          ("M-s n" . symbol-overlay-switch-forward)
          ("M-s p" . symbol-overlay-switch-backward))
   :hook (prog-mode . symbol-overlay-mode))
+
+;; ----------------------------------------------------------------------
+;; 10. Vundo: Visual Undo Tree
+;; ----------------------------------------------------------------------
+(use-package vundo
+  :ensure t
+  :bind ("C-x u" . vundo)
+  :config
+  (setq vundo-glyph-alist vundo-unicode-symbols)
+  ;; 限制 vundo 窗口高度，保持极简
+  (setq vundo-window-side 'bottom))
+
+;; ----------------------------------------------------------------------
+;; 11. wgrep: Writable Grep buffers
+;; ----------------------------------------------------------------------
+(use-package wgrep
+  :ensure t
+  :config
+  (setq wgrep-auto-save-buffer t)
+  (setq wgrep-change-readonly-file t))
+
+;; ----------------------------------------------------------------------
+;; 12. Eat: Modern Terminal Emulator (Emulate A Terminal)
+;; ----------------------------------------------------------------------
+(use-package eat
+  :ensure t
+  :bind (("C-c t" . eat)
+         :map eat-mode-map
+         ("M-j" . avy-goto-char-timer)) ;; 允许在终端内使用 avy
+  :config
+  (setq eat-kill-buffer-on-exit t)
+  (setq eat-term-name "xterm-256color")
+  ;; 启用 Corfu 支持
+  (add-hook 'eat-mode-hook #'corfu-mode))
+
+;; ----------------------------------------------------------------------
+;; 13. diff-hl: Show Git changes in the fringe
+;; ----------------------------------------------------------------------
+(use-package diff-hl
+  :ensure t
+  :hook ((after-init . global-diff-hl-mode)
+         (dired-mode . diff-hl-dired-mode-everywhere)
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  ;; 如果在终端下，自动切换到 margin 模式显示
+  (unless (display-graphic-p)
+    (diff-hl-margin-mode 1)))
+
+;; ----------------------------------------------------------------------
+;; 14. Ace-window: Better window navigation
+;; ----------------------------------------------------------------------
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+        aw-scope 'frame))
+
+;; ----------------------------------------------------------------------
+;; 15. Helpful: A better help system
+;; ----------------------------------------------------------------------
+(use-package helpful
+  :ensure t
+  :bind (([remap describe-function] . helpful-callable)
+         ([remap describe-command]  . helpful-command)
+         ([remap describe-variable] . helpful-variable)
+         ([remap describe-key]      . helpful-key)
+         ([remap describe-symbol]   . helpful-symbol)
+         ("C-c C-d" . helpful-at-point)))
+
+;; ----------------------------------------------------------------------
+;; 16. Jinx: High-performance spell checker
+;; ----------------------------------------------------------------------
+(use-package jinx
+  :ensure t
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages))
+  :init
+  ;; 默认不全局开启拼写检查，避免满屏幕波浪线。
+  ;; (global-jinx-mode 1)
+  )
+
+;; ----------------------------------------------------------------------
+;; 17. Dogears: Location history (The modern "Jump Back")
+;; ----------------------------------------------------------------------
+(use-package dogears
+  :ensure t
+  :hook (after-init . dogears-mode)
+  :bind (("M-g d" . dogears-go)
+         ("M-g p" . dogears-prev)
+         ("M-g n" . dogears-next)
+         ("M-g l" . dogears-list))
+  :config
+  (setq dogears-limit 200) ;; 记录最近 200 个位置
+  (setq dogears-idle 1))   ;; 闲置 1 秒后记录当前位置
+
+;; 6. Embark: Actions at point (The contextual "Right Click")
+;; 已在 init-completion.el 中配置
+
+;; ----------------------------------------------------------------------
+;; 18. Iedit: Simultaneous editing (Local refactoring)
+;; ----------------------------------------------------------------------
+(use-package iedit
+  :ensure t
+  :bind (("C-;" . iedit-mode)    ;; 全文相同符号同时编辑
+         ("C-x r ;" . iedit-rectangle-mode))) ;; 矩形区域编辑
+
+;; ----------------------------------------------------------------------
+;; 19. Custom Editing Utilities (Move Lines)
+;; ----------------------------------------------------------------------
+(defun my/move-line-up ()
+  "Move the current line up."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2))
+
+(defun my/move-line-down ()
+  "Move the current line down."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1))
+
+(global-set-key (kbd "M-<up>") 'my/move-line-up)
+(global-set-key (kbd "M-<down>") 'my/move-line-down)
 
 (provide 'init-misc)
 ;;; init-misc.el ends here

@@ -55,7 +55,16 @@
         org-adapt-indentation t
         org-use-sub-superscripts '{})
 
-  ;; --- 4. Capture Templates (Workflow Oriented) ---
+;; --- 3.5 Org-Appear: 智能显示/隐藏标记 ---
+(use-package org-appear
+  :ensure t
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t   ;; 自动显示加粗/斜体标记
+        org-appear-autolinks t     ;; 自动显示链接源码
+        org-appear-autosubmarkers t)) ;; 自动显示下标标记
+
+;; --- 4. Capture Templates (Workflow Oriented) ---
   (setq org-capture-templates
         `(("t" "Todo [待办]" entry (file+headline "inbox.org" "Tasks")
            "* TODO %?\n  SCHEDULED: %t\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a" :empty-lines 1)

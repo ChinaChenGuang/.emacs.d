@@ -6,8 +6,28 @@
 
 ;; 1. Vertico: Vertical interactive completion (Minibuffer)
 (use-package vertico
+  :init
+  (vertico-mode)
   :config
-  (vertico-mode))
+  ;; 优化：在 Minibuffer 中按 Backspace 自动删除一级目录
+  :bind (:map vertico-map
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word)
+              ("M-q" . vertico-quick-insert)    ;; M-q: 快速插入
+              ("C-q" . vertico-quick-exit)))    ;; C-q: 快速选中并退出
+
+;; 1.5 Vertico-Multiform: 自适应布局 (Emacs 30 推荐)
+(use-package vertico-multiform
+  :ensure nil
+  :after vertico
+  :init
+  (vertico-multiform-mode)
+  :config
+  ;; 为不同命令设置专属布局
+  (setq vertico-multiform-commands
+        '((consult-line buffer)           ;; 搜索行时使用列表模式
+          (consult-ripgrep buffer)        ;; 全局搜索时使用列表模式
+          (consult-find grid))))             ;; 找文件时使用网格模式
 
 ;; 2. Orderless: Fuzzy matching for completion
 (use-package orderless
@@ -47,6 +67,7 @@
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
+         ("M-g f" . consult-flycheck)              ;; 新增：快速跳转错误
          ;; M-s bindings (search-map)
          ("M-s d" . consult-find)
          ("M-s D" . consult-locate)
@@ -59,13 +80,71 @@
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
          ;; Isearch integration
-         ("M-s e" . consult-isearch-history)))
+         ("M-s e" . consult-isearch-history)
+         ;; 项目集成
+         ("C-x p b" . consult-project-buffer))
+  :init
+  ;; 优化 Xref：使用 Consult 界面查找引用和定义 (硬件大规模工程必备)
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
 
-;; 5. Company: In-buffer code completion
-(use-package company
-  :hook (after-init . global-company-mode)
+;; 5. Corfu: In-buffer completion popup (Modern & Minimalist)
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)                 ;; 开启自动补全
+  (corfu-auto-prefix 2)          ;; 输入 2 个字符后开始
+  (corfu-auto-delay 0.1)         ;; 延迟 0.1s
+  (corfu-quit-at-boundary 'separator) ;; 遇到分隔符时退出
+  (corfu-echo-documentation t)   ;; 在回显区显示文档
+  :bind (:map corfu-map
+              ("TAB" . corfu-next)
+              ([tab] . corfu-next)
+              ("S-TAB" . corfu-previous)
+              ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode)
   :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.0))
+  ;; 添加图标支持 (Kind-icon: 自动适配主题色的 SVG 图标)
+  (use-package kind-icon
+    :ensure t
+    :after corfu
+    :custom
+    (kind-icon-default-face 'corfu-default)
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
+
+;; 补全后端扩展 (Cape)
+(use-package cape
+  :ensure t
+  :init
+  ;; 增加补全后端：文件名、关键词、Dict 等
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+;; 6. Embark: Actions at point (The contextual "Right Click")
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)         ;; 核心：执行动作
+   ("M-." . embark-dwim)        ;; 重新绑定：智能动作 (代替 M-. 以提供增强版跳转)
+   ("C-h B" . embark-bindings)) ;; 显示当前模式下的所有按键
+  :init
+  ;; 替换内置的 help-for-help-map
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; 隐藏一些不需要的动作
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; 集成 Consult 与 Embark
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 (provide 'init-completion)

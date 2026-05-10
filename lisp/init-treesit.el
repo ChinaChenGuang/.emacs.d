@@ -18,7 +18,9 @@
           (bash-mode       . bash-ts-mode)
           (typescript-mode . typescript-ts-mode)
           (rust-mode       . rust-ts-mode)
-          (yaml-mode       . yaml-ts-mode)))
+          (yaml-mode       . yaml-ts-mode)
+          (verilog-mode    . verilog-ts-mode)
+          (tcl-mode        . tcl-ts-mode)))
 
   ;; 3. SystemVerilog TS 支持
   ;; 需要安装 verilog-ts-mode 包
@@ -48,7 +50,15 @@
             (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
             (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
             (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-            (verilog "https://github.com/guregu/tree-sitter-verilog")))))
+            (verilog "https://github.com/guregu/tree-sitter-verilog")
+            (systemverilog "https://github.com/tree-sitter-grammars/tree-sitter-systemverilog")
+            (tcl "https://github.com/tree-sitter-grammars/tree-sitter-tcl"))))
+
+
+  ;; 5. 快捷键与实用工具
+  (with-eval-after-load 'treesit
+    (define-key global-map (kbd "C-c T e") #'treesit-explore-mode)
+    (define-key global-map (kbd "C-c T i") #'treesit-inspect-mode)))
 
 (provide 'init-treesit)
 ;;; init-treesit.el ends here

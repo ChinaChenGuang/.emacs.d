@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Dashboard Configuration - Geek Style
@@ -8,30 +9,30 @@
   :ensure t
   :config
   ;; 1. Initialize
+  (setq inhibit-startup-screen t)
   (dashboard-setup-startup-hook)
 
-  ;; 2. Banner & Title (The "Geek" Look)
-  ;; Use a built-in ASCII logo (2 or 3 are great choices for text art)
-  ;; 2 = Classic Emacs logo in text
-  ;; 3 = GNU logo in text
-  (setq dashboard-startup-banner 2)
+  ;; 2. Banner & Title (Minimalist Style)
+  (setq dashboard-startup-banner 'logo) ; 使用文字 Logo
   
-  ;; A cool status message instead of "Welcome"
-  (setq dashboard-banner-logo-title "[ SYSTEM ONLINE :: WAITING FOR INPUT ]")
+  ;; 标题改为简洁风格
+  (setq dashboard-banner-logo-title "Emacs :: Minimalist Workspace")
 
   ;; 3. Content & Layout
-  (setq dashboard-center-content t)           ; Center horizontally
-  (setq dashboard-vertically-center-content t); Center vertically (like a screensaver)
+  (setq dashboard-center-content t)
+  (setq dashboard-vertically-center-content t)
+  (setq dashboard-show-shortcuts t)            ; 显示快捷键提示
   
-  (setq dashboard-items '((recents  . 8)      ; Show 8 recent files
-                          (projects . 5)      ; Show 5 recent projects
-                          (bookmarks . 3)))   ; Show 3 bookmarks
+  (setq dashboard-items '((recents  . 10)
+                          (projects . 5)
+                          (bookmarks . 5)))
 
-  ;; 4. Icons (Requires Nerd Fonts)
+  ;; 4. Icons (Aesthetics)
   (setq dashboard-display-icons-p t) 
   (setq dashboard-icon-type 'nerd-icons) 
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
+  (setq dashboard-set-navigator t)
 
   ;; 5. Info & Footer
   (setq dashboard-set-init-info t)            ; Show "Loaded in X.XX seconds"
