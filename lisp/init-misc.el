@@ -207,8 +207,7 @@
 (use-package diff-hl
   :ensure t
   :hook ((after-init . global-diff-hl-mode)
-         (dired-mode . diff-hl-dired-mode-everywhere)
-         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (dired-mode . diff-hl-dired-mode)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
   ;; 如果在终端下，自动切换到 margin 模式显示
