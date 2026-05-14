@@ -16,6 +16,8 @@
   :hook (after-init . yas-global-mode)
   :config
   (use-package yasnippet-snippets :ensure t)
+  ;; 允许 Snippet 包裹选中区域 (使用 $1 或 $0 占位符)
+  (setq yas-wrap-around-region t)
   ;; 在 Corfu 补全列表中集成 Yasnippet
   (with-eval-after-load 'cape
     (add-to-list 'completion-at-point-functions #'cape-dict)

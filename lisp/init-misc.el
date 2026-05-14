@@ -23,19 +23,93 @@
   :hook (prog-mode . smartparens-mode)
   :config
   (require 'smartparens-config)
-  ;; SystemVerilog Support
-  (sp-with-modes '(verilog-mode)
-    (sp-local-pair "begin" "end"         :actions '(insert navigate))
-    (sp-local-pair "class" "endclass"    :actions '(insert navigate))
-    (sp-local-pair "module" "endmodule"  :actions '(insert navigate))
-    (sp-local-pair "task" "endtask"      :actions '(insert navigate))
-    (sp-local-pair "function" "endfunction" :actions '(insert navigate))
-    (sp-local-pair "covergroup" "endgroup" :actions '(insert navigate)))
+  
+  ;; 开启区域自动包裹：选中一段代码后，按下 { [ ( 会自动包裹而不是替换
+  (setq sp-autowrap-region t)
+  
+  ;; --- SystemVerilog / Verilog Specific Enhancements ---
+  
+  ;; Helper: Handle newline and indentation for keyword pairs
+  (defun my/sp-verilog-indent-post-handler (id action context)
+    (when (eq action 'insert)
+      (save-excursion
+        (newline-and-indent)
+        (forward-line -1)
+        (indent-according-to-mode))))
+
+  (sp-with-modes '(verilog-mode verilog-ts-mode)
+    ;; Basic Braces
+    (sp-local-pair "{" "}" :post-handlers '(("| " "SPC") ("|\\n[i]" "RET")))
+    (sp-local-pair "(" ")" :post-handlers '(("| " "SPC")))
+    (sp-local-pair "[" "]" :post-handlers '(("| " "SPC")))
+
+    ;; Keyword Pairs: Only for Wrapping and Navigation
+    ;; We remove 'insert' to avoid "beginend" jamming and conflicts with 
+    ;; verilog-mode's own abbrev/template system or yasnippet.
+    (sp-local-pair "begin" "end"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "class" "endclass"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "module" "endmodule"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "task" "endtask"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "function" "endfunction"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "covergroup" "endgroup"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+    
+    (sp-local-pair "fork" "join"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap))
+
+    (sp-local-pair "generate" "endgenerate"
+                   :when '(sp-in-code-p)
+                   :actions '(navigate wrap)))
+
   :bind
   (:map smartparens-mode-map
         ("C-M-f" . sp-forward-sexp)
         ("C-M-b" . sp-backward-sexp)
-        ("C-%" . my/smart-jump-match)))
+        ("C-%" . my/smart-jump-match)
+        ;; Wrapping Shortcuts
+        ("M-(" . sp-wrap-round)
+        ("M-[" . sp-wrap-square)
+        ("M-{" . sp-wrap-curly)
+        ;; SystemVerilog 特色包裹：选中区域按 C-c b 快速包裹 begin...end 并自动格式化
+        ("C-c b" . my/sp-wrap-with-begin-end)))
+
+;; Helper: Wrap region with begin/end and indent
+(defun my/sp-wrap-with-begin-end ()
+  "Wrap the current region with begin/end, ensuring they align and are correctly indented."
+  (interactive)
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (end-marker (copy-marker end t)))
+        (save-excursion
+          ;; 1. 处理结尾：插入换行与 end
+          (goto-char end-marker)
+          (unless (bolp) (insert "\n"))
+          (insert "end")
+          (let ((final-pos (point)))
+            ;; 2. 处理开头：插入 begin 与换行
+            (goto-char beg)
+            (insert "begin\n")
+            ;; 3. 对整个区域重新缩进，Verilog-mode 会自动对齐 begin/end
+            (indent-region beg final-pos))))
+    (message "No region selected to wrap.")))
 
 ;; Custom Helper Function for "Magic Jump" (C-%)
 (defun my/smart-jump-match ()

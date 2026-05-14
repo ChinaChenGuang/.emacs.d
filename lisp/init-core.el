@@ -42,6 +42,9 @@
 ;; Answer "y" or "n" instead of "yes" or "no".
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; 允许在选中区域直接输入来替换或包裹内容 (配合 smartparens)
+(delete-selection-mode 1)
+
 ;; Silence native-compilation warnings popup
 (setq native-comp-async-report-warnings-errors 'silent)
 
