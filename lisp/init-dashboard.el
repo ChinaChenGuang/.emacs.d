@@ -32,7 +32,6 @@
   (setq dashboard-icon-type 'nerd-icons) 
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-set-navigator t)
 
   ;; 5. Info & Footer
   (setq dashboard-set-init-info t)            ; Show "Loaded in X.XX seconds"

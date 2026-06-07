@@ -43,16 +43,5 @@
   :defer t
   :hook (LaTeX-mode . turn-on-cdlatex))
 
-;; Company-AUCTeX: Integration with Company
-(use-package company-auctex
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'company
-    (add-to-list 'company-backends 'company-auctex-labels)
-    (add-to-list 'company-backends 'company-auctex-bibs)
-    (add-to-list 'company-backends 'company-auctex-macros)
-    (add-to-list 'company-backends 'company-auctex-environments)))
-
 (provide 'init-latex)
 ;;; init-latex.el ends here

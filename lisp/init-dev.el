@@ -46,7 +46,7 @@
 ;; 5. yafolding: 基于缩进的折叠工具
 (use-package yafolding
   :ensure t
-  :bind (("C-c y" . yafolding-toggle-element)
+  :bind (("C-c RET" . yafolding-toggle-element)
          ("C-c Y" . yafolding-toggle-all))
   :hook ((prog-mode text-mode conf-mode) . yafolding-mode))
 

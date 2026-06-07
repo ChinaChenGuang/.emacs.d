@@ -47,8 +47,6 @@
   (setq dumb-jump-selector 'completing-read) ;; 使用 Vertico 界面
   (setq dumb-jump-prefer-searcher 'rg))       ;; 使用 Ripgrep 提升速度
 
-  (provide 'init-lsp)
-
 (with-eval-after-load 'eglot
   (setq completion-category-defaults nil))
 

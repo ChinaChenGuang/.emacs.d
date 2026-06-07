@@ -8,7 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; 0. Warning Suppression
-(setq native-comp-async-report-warnings-errors nil
+(setq native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings nil
       warning-suppress-types '((bytecomp) (native-compiler)))
 

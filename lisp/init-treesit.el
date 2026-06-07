@@ -22,12 +22,6 @@
           (verilog-mode    . verilog-ts-mode)
           (tcl-mode        . tcl-ts-mode)))
 
-  ;; 3. SystemVerilog TS 支持
-  ;; 需要安装 verilog-ts-mode 包
-  (use-package verilog-ts-mode
-    :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
-    :config
-    (setq verilog-ts-indent-level 2))
 
   ;; 4. 自动安装缺失的语言解析器 (仅限联网模式)
   (unless (file-exists-p (expand-file-name "offline" user-emacs-directory))

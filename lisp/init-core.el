@@ -45,9 +45,6 @@
 ;; 允许在选中区域直接输入来替换或包裹内容 (配合 smartparens)
 (delete-selection-mode 1)
 
-;; Silence native-compilation warnings popup
-(setq native-comp-async-report-warnings-errors 'silent)
-
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 2.
 (setq-default indent-tabs-mode nil)
