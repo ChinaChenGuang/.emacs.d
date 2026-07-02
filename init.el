@@ -15,6 +15,9 @@
 ;; 1. Path Configuration
 ;;; Add the 'lisp' directory to the load path so we can require our modules.
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+;;; Add the 'bin' directory to exec-path and PATH for portable executables.
+(add-to-list 'exec-path (expand-file-name "bin" user-emacs-directory))
+(setenv "PATH" (concat (expand-file-name "bin" user-emacs-directory) ":" (getenv "PATH")))
 
 ;; 1.5 Offline Check
 (when (file-exists-p (expand-file-name "offline" user-emacs-directory))
@@ -39,6 +42,7 @@
 (require 'init-cpp)         ; Startup C++ Development
 (require 'init-rust)        ; Startup Rust Development
 (require 'init-yaml)        ; Startup YAML Development
+(require 'init-toml)        ; Startup TOML Development
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)         ; Startup Perl Development
 (require 'init-latex)        ; Startup LaTeX Development

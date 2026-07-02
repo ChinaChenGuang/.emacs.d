@@ -44,8 +44,8 @@
             (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
             (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
             (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-            (verilog "https://github.com/guregu/tree-sitter-verilog")
-            (systemverilog "https://github.com/tree-sitter-grammars/tree-sitter-systemverilog")
+            (verilog "https://github.com/tree-sitter/tree-sitter-verilog")
+            (systemverilog "https://github.com/gmlarumbe/tree-sitter-systemverilog")
             (tcl "https://github.com/tree-sitter-grammars/tree-sitter-tcl"))))
 
 

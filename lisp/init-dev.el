@@ -47,6 +47,7 @@
 (use-package yafolding
   :ensure t
   :bind (("C-c RET" . yafolding-toggle-element)
+         ("C-c <return>" . yafolding-toggle-element)
          ("C-c Y" . yafolding-toggle-all))
   :hook ((prog-mode text-mode conf-mode) . yafolding-mode))
 
