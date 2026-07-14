@@ -11,6 +11,17 @@
   ;; 1. Initialize
   (setq inhibit-startup-screen t)
   (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+
+  ;; 确保最后只有一个 Dashboard 窗口 (解决部分环境下强行分屏的问题)
+  (add-hook 'window-setup-hook
+            (lambda ()
+              (when (get-buffer "*dashboard*")
+                (switch-to-buffer "*dashboard*")
+                (unless (one-window-p)
+                  (delete-other-windows))))
+            t)
+
 
   ;; 2. Banner & Title (Minimalist Style)
   (setq dashboard-startup-banner 'logo) ; 使用文字 Logo

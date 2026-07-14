@@ -36,6 +36,7 @@
 (require 'init-dashboard)   ; Startup dashboard
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
+(require 'init-denote)      ; Startup denote
 (require 'init-treesit)     ; Startup Tree-sitter
 (require 'init-lsp)         ; Startup LSP (Eglot)
 (require 'init-debug)       ; Startup Debugging (Dape)

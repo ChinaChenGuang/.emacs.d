@@ -11,6 +11,9 @@
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
+;; 默认最大化启动
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 ;; Enable CUA Selection Mode (Standard Copy/Paste & Rectangles)
 (cua-selection-mode 1)
 
