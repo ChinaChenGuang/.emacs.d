@@ -18,9 +18,7 @@
           (bash-mode       . bash-ts-mode)
           (typescript-mode . typescript-ts-mode)
           (rust-mode       . rust-ts-mode)
-          (yaml-mode       . yaml-ts-mode)
-          (verilog-mode    . verilog-ts-mode)
-          (tcl-mode        . tcl-ts-mode)))
+          (yaml-mode       . yaml-ts-mode)))
 
 
   ;; 4. 自动安装缺失的语言解析器 (仅限联网模式)

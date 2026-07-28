@@ -11,7 +11,7 @@
   (setq-local verilog-indent-level-module 2)
   (setq-local verilog-indent-level-declaration 2)
   (setq-local verilog-indent-level-behavioral 2)
-  (setq-local verilog-indent-level-directive 2)
+  (setq-local verilog-indent-level-directive 1) ; 宏指令缩进：1=跟随代码块，0=顶格(Column 0)
   (setq-local verilog-case-indent 2)
   (setq-local verilog-cexp-indent 2)
   (setq-local verilog-indent-lists 2)
@@ -41,7 +41,7 @@
   (setq verilog-indent-level-module 2)
   (setq verilog-indent-level-declaration 2)
   (setq verilog-indent-level-behavioral 2)
-  (setq verilog-indent-level-directive 2)
+  (setq verilog-indent-level-directive 1) ; 1=跟随缩进，0=顶格
   (setq verilog-case-indent 2)
   (setq verilog-auto-newline nil))
 

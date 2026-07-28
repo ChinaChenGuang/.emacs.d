@@ -68,6 +68,7 @@ find_and_copy() {
 }
 find_and_copy "rg"
 find_and_copy "fd"
+cp -r "$EMACS_D/bin/"* "$DIST_DIR/bin/" 2>/dev/null || true
 
 # 6. 包含终端/GUI 适配字体
 echo ">>> 🎨 打包适配字体 (Nerd Fonts)..."

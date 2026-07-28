@@ -4,6 +4,7 @@
 (add-to-list 'auto-mode-alist '("\\.tcl\\'" . tcl-mode))
 (add-to-list 'auto-mode-alist '("\\.exp\\'" . tcl-mode))
 (add-to-list 'auto-mode-alist '("\\.itcl\\'" . tcl-mode))
+(add-to-list 'auto-mode-alist '("\\.qel\\'" . tcl-mode))
 
 ;; 2. 基础配置
 (with-eval-after-load 'tcl

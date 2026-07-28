@@ -15,7 +15,7 @@
   ;; 配置 LSP 服务器
   ;; 为 Verilog/SystemVerilog 添加支持
   (add-to-list 'eglot-server-programs
-               '((verilog-mode verilog-ts-mode) . ("verible-verilog-ls" "--profpath" ".")))
+               '((verilog-mode verilog-ts-mode) . ("verible-verilog-ls")))
   
   ;; 性能优化
   (setq eglot-events-buffer-size 0)
