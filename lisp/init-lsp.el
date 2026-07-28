@@ -8,14 +8,12 @@
          (c-ts-mode       . eglot-ensure)
          (c++-ts-mode     . eglot-ensure)
          (rust-ts-mode    . eglot-ensure)
-         (python-ts-mode  . eglot-ensure)
-         (verilog-mode    . eglot-ensure)
-         (verilog-ts-mode . eglot-ensure))
+         (python-ts-mode  . eglot-ensure))
   :config
   ;; 配置 LSP 服务器
-  ;; 为 Verilog/SystemVerilog 添加支持
+  ;; 为 Verilog/SystemVerilog 添加支持 (关闭后台诊断推送以彻底消除卡顿)
   (add-to-list 'eglot-server-programs
-               '((verilog-mode verilog-ts-mode) . ("verible-verilog-ls")))
+               '((verilog-mode verilog-ts-mode) . ("verible-verilog-ls" "--push_diagnostic_notifications=false")))
   
   ;; 性能优化
   (setq eglot-events-buffer-size 0)
