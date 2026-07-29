@@ -6,22 +6,22 @@
 
 (defun my/verilog-style-setup ()
   "Custom style for Verilog and SystemVerilog."
-  ;; 1. Indentation Settings (Set to 4 for Tab width)
-  (setq-local verilog-indent-level 4)
-  (setq-local verilog-indent-level-module 4)
-  (setq-local verilog-indent-level-declaration 4)
-  (setq-local verilog-indent-level-behavioral 4)
+  ;; 1. Indentation Settings (Set to 2 spaces)
+  (setq-local verilog-indent-level 2)
+  (setq-local verilog-indent-level-module 2)
+  (setq-local verilog-indent-level-declaration 2)
+  (setq-local verilog-indent-level-behavioral 2)
   (setq-local verilog-indent-level-directive 1) ; 宏指令缩进：1=跟随代码块，0=顶格(Column 0)
-  (setq-local verilog-case-indent 4)
-  (setq-local verilog-cexp-indent 4)
-  (setq-local verilog-indent-lists 4)
+  (setq-local verilog-case-indent 2)
+  (setq-local verilog-cexp-indent 2)
+  (setq-local verilog-indent-lists 2)
   
   ;; verilog-ts-mode specific (Tree-sitter)
-  (setq-local verilog-ts-indent-level 4)
+  (setq-local verilog-ts-indent-level 2)
   
-  ;; 开启 Tab 缩进 (将所有的空格缩进转换为 Tab)
-  (setq-local indent-tabs-mode t)
-  (setq-local tab-width 4)
+  ;; Ensure spaces instead of tabs
+  (setq-local indent-tabs-mode nil)
+  (setq-local tab-width 2)
   (setq-local backward-delete-char-untabify-method 'hungry)
 
   ;; 2. Disable Auto-newline after semicolon
@@ -37,12 +37,12 @@
   :bind (:map verilog-mode-map
               ("C-c v" . my/verilog-menu)) ; 定义控制中心快捷键
   :config
-  (setq verilog-indent-level 4)
-  (setq verilog-indent-level-module 4)
-  (setq verilog-indent-level-declaration 4)
-  (setq verilog-indent-level-behavioral 4)
+  (setq verilog-indent-level 2)
+  (setq verilog-indent-level-module 2)
+  (setq verilog-indent-level-declaration 2)
+  (setq verilog-indent-level-behavioral 2)
   (setq verilog-indent-level-directive 1) ; 1=跟随缩进，0=顶格
-  (setq verilog-case-indent 4)
+  (setq verilog-case-indent 2)
   (setq verilog-auto-newline nil))
 
 ;; ----------------------------------------------------------------------
@@ -58,9 +58,8 @@ Provides transparent error reporting if syntax errors prevent formatting."
         (if (executable-find "verible-verilog-format")
             (let ((err-buf "*verible-error*"))
               (with-current-buffer (get-buffer-create err-buf) (erase-buffer))
-              (if (eq 0 (call-process-region start end "verible-verilog-format" t t nil "-" "--column_limit=100" "--indentation_spaces=4"))
+              (if (eq 0 (call-process-region start end "verible-verilog-format" t t nil "-" "--column_limit=100" "--indentation_spaces=2"))
                   (progn
-                    (when indent-tabs-mode (tabify start (region-end)))
                     (when (get-buffer err-buf) (kill-buffer err-buf))
                     (message "✅ 选区格式化成功 (Verible)!"))
                 (display-buffer err-buf)
@@ -73,11 +72,10 @@ Provides transparent error reporting if syntax errors prevent formatting."
               (line (line-number-at-pos))
               (col (current-column)))
           (with-current-buffer (get-buffer-create err-buf) (erase-buffer))
-          (if (eq 0 (call-process-region (point-min) (point-max) "verible-verilog-format" nil (list t err-buf) nil "-" "--column_limit=100" "--indentation_spaces=4"))
+          (if (eq 0 (call-process-region (point-min) (point-max) "verible-verilog-format" nil (list t err-buf) nil "-" "--column_limit=100" "--indentation_spaces=2"))
               (progn
                 (erase-buffer)
                 (insert-buffer-substring err-buf)
-                (when indent-tabs-mode (tabify (point-min) (point-max)))
                 (when (get-buffer err-buf) (kill-buffer err-buf))
                 (goto-char (point-min))
                 (forward-line (1- line))
@@ -131,7 +129,7 @@ Provides transparent error reporting if syntax errors prevent formatting."
 (use-package verilog-ts-mode
   :defer t
   :config
-  (setq verilog-ts-indent-level 4))
+  (setq verilog-ts-indent-level 2))
 
 (provide 'init-verilog)
 ;;; init-verilog.el ends here
