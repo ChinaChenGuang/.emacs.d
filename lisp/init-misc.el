@@ -179,44 +179,19 @@
   :bind ("C-=" . er/expand-region))
 
 ;; ----------------------------------------------------------------------
-;; 8. Dirvish / Dired: Modern File Manager
+;; 8. Dired: Robust Native File Manager (NFS Friendly)
 ;; ----------------------------------------------------------------------
-(if (display-graphic-p)
-    (use-package dirvish
-      :ensure t
-      :init
-      (dirvish-override-dired-mode)
-      :custom
-      (dirvish-quick-access-entries
-       '(("h" "~/"                          "Home")
-         ("d" "~/Downloads"                "Downloads")
-         ("o" "~/org"                      "Org")
-         ("p" "~/projects"                 "Projects")))
-      (dirvish-mode-line-format
-       '(:left (sort symlink) :right (omit yank index)))
-      (dirvish-attributes
-       '(nerd-icons file-size collapse git-msg))
-      :bind
-      (("C-x C-j" . dirvish-dwim)
-       ("C-x j"   . dirvish-dwim)
-       :map dirvish-mode-map
-       ("a"   . dirvish-quick-access)
-       ("f"   . dirvish-file-info-menu)
-       ("y"   . dirvish-yank-menu)
-       ("N"   . dirvish-narrow)
-       ("^"   . dirvish-history-last)
-       ("h"   . dirvish-history-jump)
-       ("s"   . dirvish-quicksort)
-       ("TAB" . dirvish-subtree-toggle)
-       ("M-t" . dirvish-layout-toggle)))
-  ;; 终端环境下退回到原生稳定的 Dired，防止 Dirvish 渲染崩溃导致 C-x C-j 失效
-  (use-package dired
-    :ensure nil
-    :bind (("C-x C-j" . dired-jump)
-           ("C-x j"   . dired-jump))
-    :config
-    (setq dired-dwim-target t)
-    (setq dired-listing-switches "-alh")))
+;; 在芯片开发/企业 NFS 存储环境下，高度并发和使用大量缓存的 Dirvish 容易
+;; 触发 "Stale file handle" 错误。因此我们使用最稳如老狗的原生 Dired。
+(use-package dired
+  :ensure nil
+  :bind (("C-x C-j" . dired-jump)
+         ("C-x j"   . dired-jump))
+  :config
+  (setq dired-dwim-target t)
+  (setq dired-listing-switches "-alh --group-directories-first")
+  ;; 开启 dired-x 增强特性
+  (require 'dired-x))
 
 ;; ----------------------------------------------------------------------
 ;; 9. Multiple Cursors: Edit multiple lines/matches simultaneously
