@@ -179,36 +179,44 @@
   :bind ("C-=" . er/expand-region))
 
 ;; ----------------------------------------------------------------------
-;; 8. Dirvish: Modern File Manager (Dired Enhancement)
+;; 8. Dirvish / Dired: Modern File Manager
 ;; ----------------------------------------------------------------------
-(use-package dirvish
-  :ensure t
-  :init
-  (dirvish-override-dired-mode)
-  :custom
-  (dirvish-quick-access-entries
-   '(("h" "~/"                          "Home")
-     ("d" "~/Downloads"                "Downloads")
-     ("o" "~/org"                      "Org")
-     ("p" "~/projects"                 "Projects")))
-  (dirvish-mode-line-format
-   '(:left (sort symlink) :right (omit yank index)))
-  (dirvish-attributes
-   '(nerd-icons file-size collapse git-msg))
-  :bind
-  ;; 代替传统的 dired-jump，现在按 C-x C-j 会打开一个华丽的 Dirvish 窗口
-  (("C-x C-j" . dirvish-dwim)
-   ("C-x j"   . dirvish-dwim)
-   :map dirvish-mode-map ; Dirvish 内部快捷键
-   ("a"   . dirvish-quick-access)
-   ("f"   . dirvish-file-info-menu)
-   ("y"   . dirvish-yank-menu)
-   ("N"   . dirvish-narrow)
-   ("^"   . dirvish-history-last)
-   ("h"   . dirvish-history-jump) ; 最近访问的目录
-   ("s"   . dirvish-quicksort)    ; 排序
-   ("TAB" . dirvish-subtree-toggle) ;; 像侧边栏一样展开目录
-   ("M-t" . dirvish-layout-toggle)))
+(if (display-graphic-p)
+    (use-package dirvish
+      :ensure t
+      :init
+      (dirvish-override-dired-mode)
+      :custom
+      (dirvish-quick-access-entries
+       '(("h" "~/"                          "Home")
+         ("d" "~/Downloads"                "Downloads")
+         ("o" "~/org"                      "Org")
+         ("p" "~/projects"                 "Projects")))
+      (dirvish-mode-line-format
+       '(:left (sort symlink) :right (omit yank index)))
+      (dirvish-attributes
+       '(nerd-icons file-size collapse git-msg))
+      :bind
+      (("C-x C-j" . dirvish-dwim)
+       ("C-x j"   . dirvish-dwim)
+       :map dirvish-mode-map
+       ("a"   . dirvish-quick-access)
+       ("f"   . dirvish-file-info-menu)
+       ("y"   . dirvish-yank-menu)
+       ("N"   . dirvish-narrow)
+       ("^"   . dirvish-history-last)
+       ("h"   . dirvish-history-jump)
+       ("s"   . dirvish-quicksort)
+       ("TAB" . dirvish-subtree-toggle)
+       ("M-t" . dirvish-layout-toggle)))
+  ;; 终端环境下退回到原生稳定的 Dired，防止 Dirvish 渲染崩溃导致 C-x C-j 失效
+  (use-package dired
+    :ensure nil
+    :bind (("C-x C-j" . dired-jump)
+           ("C-x j"   . dired-jump))
+    :config
+    (setq dired-dwim-target t)
+    (setq dired-listing-switches "-alh")))
 
 ;; ----------------------------------------------------------------------
 ;; 9. Multiple Cursors: Edit multiple lines/matches simultaneously
