@@ -141,7 +141,9 @@
   :hook (prog-mode . highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character) ;; 使用字符模式，最轻量
-  (setq highlight-indent-guides-responsive 'focused)) ;; 仅高亮当前代码块
+  (setq highlight-indent-guides-responsive 'focused) ;; 仅高亮当前代码块
+  (setq highlight-indent-guides-auto-enabled nil) ;; 避免 Daemon 模式报错
+  (set-face-foreground 'highlight-indent-guides-character-face "dimgray"))
 
 ;; 13. Breadcrumb: 面包屑导航 (在顶部显示当前函数/模块路径)
 (use-package breadcrumb

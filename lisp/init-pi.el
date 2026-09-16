@@ -9,7 +9,7 @@
 
 
 (use-package pi-coding-agent
-  :ensure t
+  :ensure nil
   :bind (("C-c p p" . pi-coding-agent)
          ("C-c p r" . pi-coding-agent-rewrite-region))
   :init
