@@ -137,7 +137,8 @@ EOF
 chmod +x "$DIST_DIR/install.sh"
 
 # 8.5 生成 Windows 版自动安装脚本 (install.ps1)
-cat > "$DIST_DIR/install.ps1" << 'EOF'
+printf "\xef\xbb\xbf" > "$DIST_DIR/install.ps1"
+cat >> "$DIST_DIR/install.ps1" << 'EOF'
 <#
 .SYNOPSIS
     Gemini Emacs Offline Installer for Windows
