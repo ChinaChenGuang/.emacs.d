@@ -63,7 +63,7 @@
 
 ;; 5. Icons Support
 (use-package nerd-icons
-  :ensure t
+  :ensure nil
   :config
   ;; Fallback mapping for SystemVerilog
   (add-to-list 'nerd-icons-extension-icon-alist
@@ -73,7 +73,7 @@
 
 ;; 5.5 Ligatures: 编程连字支持
 (use-package ligature
-  :ensure t
+  :ensure nil
   :config
   ;; 为所有编程模式启用连字 (适配 JetBrains Mono)
   (ligature-set-ligatures 'prog-mode '("--" "---" "==" "===" "==>" "=>" "=~"
@@ -84,7 +84,7 @@
 
 ;; 6. Theme (Doom Themes)
 (use-package doom-themes
-  :ensure t
+  :ensure nil
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -100,7 +100,7 @@
 
 ;; 7. Modeline (Status Bar)
 (use-package doom-modeline
-  :ensure t
+  :ensure nil
   :hook (after-init . doom-modeline-mode)
   :config
   (setq doom-modeline-height 30
@@ -110,7 +110,7 @@
 
 ;; 7.5 Minions: Hide minor modes for a cleaner look
 (use-package minions
-  :ensure t
+  :ensure nil
   :config
   (minions-mode 1))
 
@@ -137,7 +137,7 @@
 
 ;; 12. Highlight Indent Guides: 结构化缩进线
 (use-package highlight-indent-guides
-  :ensure t
+  :ensure nil
   :hook (prog-mode . highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character) ;; 使用字符模式，最轻量
@@ -147,20 +147,20 @@
 
 ;; 13. Breadcrumb: 面包屑导航 (在顶部显示当前函数/模块路径)
 (use-package breadcrumb
-  :ensure t
+  :ensure nil
   :init
   (breadcrumb-mode 1))
 
 ;; 14. Goggles: 编辑动作的视觉反馈
 (use-package goggles
-  :ensure t
+  :ensure nil
   :hook (prog-mode . goggles-mode)
   :config
   (setq goggles-pulse t))
 
 ;; 15. PDF Tools: 专业数据手册阅读器
 (use-package pdf-tools
-  :ensure t
+  :ensure nil
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install :no-query)
@@ -179,7 +179,7 @@
 ;; 10. Popper: Manage "Popup" windows (Help, Compilation, etc.)
 ;; 让临时窗口不会打乱您的极简布局
 (use-package popper
-  :ensure t
+  :ensure nil
   :bind (("C-`"   . popper-toggle)      ;; 一键开启/隐藏弹出窗口
          ("M-`"   . popper-cycle)       ;; 在多个弹出窗间循环
          ("C-M-`" . popper-toggle-type)) ;; 将普通窗口设为弹出窗

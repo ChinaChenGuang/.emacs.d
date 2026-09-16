@@ -105,7 +105,7 @@ Provides transparent error reporting if syntax errors prevent formatting."
 ;; Verilog Control Center (Transient)
 ;; ----------------------------------------------------------------------
 (use-package transient
-  :ensure t
+  :ensure nil
   :config
   (transient-define-prefix my/verilog-menu ()
     "Main Menu for Verilog Development."

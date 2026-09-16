@@ -6,7 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
-  :ensure t
+  :ensure nil
   :hook ((org-mode . org-indent-mode)
          (org-mode . visual-line-mode))
   :bind (("C-c a" . org-agenda)
@@ -58,7 +58,7 @@
 
 ;; --- 3.5 Org-Appear: 智能显示/隐藏标记 ---
 (use-package org-appear
-  :ensure t
+  :ensure nil
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t   ;; 自动显示加粗/斜体标记
@@ -76,7 +76,7 @@
 
 ;; --- 5. Org-Modern (Refined UI) ---
 (use-package org-modern
-  :ensure t
+  :ensure nil
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
   :config
@@ -87,7 +87,7 @@
 
 ;; --- 6. Org-Roam (The Second Brain) ---
 (use-package org-roam
-  :ensure t
+  :ensure nil
   :custom
   (org-roam-directory (file-truename "~/org/roam"))
   (org-roam-completion-everywhere t)
@@ -109,7 +109,7 @@
 
 ;; --- 7. Super Agenda (Task Management Master) ---
 (use-package org-super-agenda
-  :ensure t
+  :ensure nil
   :hook (org-agenda-mode . org-super-agenda-mode)
   :config
   (setq org-super-agenda-groups
@@ -125,25 +125,25 @@
 
 ;; --- 8. Consult & QL Integration ---
 (use-package consult-org-roam
-  :ensure t
+  :ensure nil
   :after org-roam
   :init (consult-org-roam-mode 1)
   :bind (("C-c n s" . consult-org-roam-search)
          ("C-c n b" . consult-org-roam-backlinks)))
 
 (use-package org-ql
-  :ensure t)
+  :ensure nil)
 
 ;; --- 9. Extra UI Helpers ---
 (use-package visual-fill-column
-  :ensure t
+  :ensure nil
   :hook (org-mode . visual-fill-column-mode)
   :config
   (setq visual-fill-column-center-text t
         visual-fill-column-width 110))
 
 (use-package valign
-  :ensure t
+  :ensure nil
   :hook (org-mode . valign-mode))
 
 (provide 'init-org)

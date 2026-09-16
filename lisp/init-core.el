@@ -67,16 +67,16 @@
 
 ;; 7. Performance & Cleanliness
 (use-package no-littering
-  :ensure t)
+  :ensure nil)
 
 ;; 持续撤销历史：即使重启 Emacs 也能撤销
 (use-package undo-fu-session
-  :ensure t
+  :ensure nil
   :init
   (undo-fu-session-global-mode 1))
 
 (use-package gcmh
-  :ensure t
+  :ensure nil
   :init
   (setq gcmh-idle-delay 5
         gcmh-high-threshold (* 64 1024 1024))
@@ -92,12 +92,12 @@
 ;; 9. 环境与会话管理
 ;; Envrc: 自动加载目录环境 (dirent 支持)
 (use-package envrc
-  :ensure t
+  :ensure nil
   :hook (after-init . envrc-global-mode))
 
 ;; Activities: 现代化的会话/布局管理
 (use-package activities
-  :ensure t
+  :ensure nil
   :init
   (activities-mode 1)
   (activities-tabs-mode 1)

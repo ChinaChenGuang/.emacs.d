@@ -91,7 +91,7 @@
 
 ;; 5. Corfu: In-buffer completion popup (Modern & Minimalist)
 (use-package corfu
-  :ensure t
+  :ensure nil
   :custom
   (corfu-auto t)                 ;; 开启自动补全
   (corfu-auto-prefix 2)          ;; 输入 2 个字符后开始
@@ -108,7 +108,7 @@
   :config
   ;; 添加图标支持 (Kind-icon: 自动适配主题色的 SVG 图标)
   (use-package kind-icon
-    :ensure t
+    :ensure nil
     :after corfu
     :custom
     (kind-icon-default-face 'corfu-default)
@@ -117,7 +117,7 @@
 
 ;; 补全后端扩展 (Cape)
 (use-package cape
-  :ensure t
+  :ensure nil
   :init
   ;; 用户要求：不想要智能补全，只在当前文件出现过的补全
   (setq-default completion-at-point-functions (list #'cape-dabbrev))
@@ -126,7 +126,7 @@
 
 ;; 6. Embark: Actions at point (The contextual "Right Click")
 (use-package embark
-  :ensure t
+  :ensure nil
   :bind
   (("C-." . embark-act)         ;; 核心：执行动作
    ("M-." . embark-dwim)        ;; 重新绑定：智能动作 (代替 M-. 以提供增强版跳转)
@@ -143,7 +143,7 @@
 
 ;; 集成 Consult 与 Embark
 (use-package embark-consult
-  :ensure t
+  :ensure nil
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))

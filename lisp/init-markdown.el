@@ -6,7 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :ensure t
+  :ensure nil
   :mode (("README\\.md\\'" . gfm-mode)   ; Use GitHub Flavored Markdown for READMEs
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))

@@ -60,3 +60,5 @@ emacs_dist/
 /eshell/history
 /eshell/lastdir
 /bin/verible.filelist
+*.zip
+*.tar.gz

@@ -3,7 +3,7 @@
 ;; 1. Dape (Debug Adapter Protocol for Emacs)
 ;; 现代化的调试客户端，类似 Eglot 的设计哲学
 (use-package dape
-  :ensure t
+  :ensure nil
   :bind (("<f5>" . dape-continue)
          ("<f9>" . dape-breakpoint-toggle)
          ("<f10>" . dape-next)

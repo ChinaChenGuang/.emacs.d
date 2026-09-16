@@ -1,7 +1,7 @@
 ;;; init-yaml.el --- Basic YAML support -*- lexical-binding: t -*-
 
 (use-package yaml-mode
-  :ensure t
+  :ensure nil
   :mode ("\\.yml\\'" "\\.yaml\\'"))
 
 (provide 'init-yaml)

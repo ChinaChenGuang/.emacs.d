@@ -1,7 +1,7 @@
 ;;; init-rust.el --- Basic Rust support -*- lexical-binding: t -*-
 
 (use-package rust-mode
-  :ensure t
+  :ensure nil
   :mode "\\.rs\\'"
   :config
   (setq rust-format-on-save nil))

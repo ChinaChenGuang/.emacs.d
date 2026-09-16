@@ -42,21 +42,13 @@
         (warn "Critical: use-package is missing in offline mode.")
       (progn
         (message "Installing use-package...")
-        (unless package-archive-contents (package-refresh-contents))
+        ;; Removed automatic package-refresh-contents to prevent network hangs
         (package-install 'use-package)))))
 
 ;; 6. Global use-package defaults
 (require 'use-package)
-;; Ensure packages are pre-installed in offline mode
-(setq use-package-always-ensure (not (featurep 'init-offline)))
-
-;; 7. Auto Update (Online only)
-(unless (featurep 'init-offline)
-  (use-package auto-package-update
-    :ensure t
-    :config
-    (setq auto-package-update-delete-old-versions t)
-    (setq auto-package-update-hide-results t)))
+;; 无论在线离线，启动时绝对不自动去外网下载缺失的包，防止网络卡死
+(setq use-package-always-ensure nil)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here

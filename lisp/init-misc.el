@@ -21,7 +21,7 @@
 
 ;; 3. Smartparens: Auto-pairing & Jumping
 (use-package smartparens
-  :ensure t
+  :ensure nil
   :hook (prog-mode . smartparens-mode)
   :config
   (require 'smartparens-config)
@@ -131,7 +131,7 @@
 ;; 4. Avy: Fast Cursor Movement (Jump to anywhere)
 ;; ----------------------------------------------------------------------
 (use-package avy
-  :ensure t
+  :ensure nil
   :bind (("M-j"   . avy-goto-char-timer)
          ("M-s j" . avy-goto-char)
          ("M-s w" . avy-goto-word-1)
@@ -144,7 +144,7 @@
 ;; 5. Winum & Window Management
 ;; ----------------------------------------------------------------------
 (use-package winum
-  :ensure t
+  :ensure nil
   :init (winum-mode)
   :bind (("M-1" . winum-select-window-1)
          ("M-2" . winum-select-window-2)
@@ -160,7 +160,7 @@
 ;; 6. Crux: A collection of Ridiculously Useful eXtensions
 ;; ----------------------------------------------------------------------
 (use-package crux
-  :ensure t
+  :ensure nil
   :bind (("C-a"   . crux-move-beginning-of-line)
          ("C-c d" . crux-duplicate-current-line-or-region)
          ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
@@ -177,7 +177,7 @@
 ;; 7. Expand Region: Semantic selection
 ;; ----------------------------------------------------------------------
 (use-package expand-region
-  :ensure t
+  :ensure nil
   :bind ("C-=" . er/expand-region))
 
 ;; ----------------------------------------------------------------------
@@ -200,7 +200,7 @@
 ;; ----------------------------------------------------------------------
 ;; 使用官方推荐的 symbol 系列命令，可以精确匹配整个单词/符号，避免误选子字符串
 (use-package multiple-cursors
-  :ensure t
+  :ensure nil
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-c C-<"     . mc/mark-all-symbols-like-this)
          ("C-M-m"       . mc/mark-all-dwim)
@@ -218,7 +218,7 @@
 ;; - n / p : Move to next/previous highlight (when overlay is active)
 ;; - M-s n / M-s p : Global jump to next/previous occurrence
 (use-package symbol-overlay
-  :ensure t
+  :ensure nil
   :bind (("M-i" . symbol-overlay-put)
          ("M-n" . symbol-overlay-jump-next)
          ("M-p" . symbol-overlay-jump-prev)
@@ -230,7 +230,7 @@
 ;; 10. Vundo: Visual Undo Tree
 ;; ----------------------------------------------------------------------
 (use-package vundo
-  :ensure t
+  :ensure nil
   :bind ("C-x u" . vundo)
   :config
   (setq vundo-glyph-alist vundo-unicode-symbols)
@@ -241,7 +241,7 @@
 ;; 11. wgrep: Writable Grep buffers
 ;; ----------------------------------------------------------------------
 (use-package wgrep
-  :ensure t
+  :ensure nil
   :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t))
@@ -250,7 +250,7 @@
 ;; 12. Eat: Modern Terminal Emulator (Emulate A Terminal)
 ;; ----------------------------------------------------------------------
 (use-package eat
-  :ensure t
+  :ensure nil
   :bind (("C-c t" . eat)
          :map eat-mode-map
          ("M-j" . avy-goto-char-timer)) ;; 允许在终端内使用 avy
@@ -264,7 +264,7 @@
 ;; 13. diff-hl: Show Git changes in the fringe
 ;; ----------------------------------------------------------------------
 (use-package diff-hl
-  :ensure t
+  :ensure nil
   :hook ((after-init . global-diff-hl-mode)
          (dired-mode . diff-hl-dired-mode)
          (magit-post-refresh . diff-hl-magit-post-refresh))
@@ -277,7 +277,7 @@
 ;; 14. Ace-window: Better window navigation
 ;; ----------------------------------------------------------------------
 (use-package ace-window
-  :ensure t
+  :ensure nil
   :bind ("M-o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
@@ -287,7 +287,7 @@
 ;; 15. Helpful: A better help system
 ;; ----------------------------------------------------------------------
 (use-package helpful
-  :ensure t
+  :ensure nil
   :bind (([remap describe-function] . helpful-callable)
          ([remap describe-command]  . helpful-command)
          ([remap describe-variable] . helpful-variable)
@@ -299,7 +299,7 @@
 ;; 17. Dogears: Location history (The modern "Jump Back")
 ;; ----------------------------------------------------------------------
 (use-package dogears
-  :ensure t
+  :ensure nil
   :hook (after-init . dogears-mode)
   :bind (("M-g d" . dogears-go)
          ("M-g p" . dogears-prev)
@@ -316,7 +316,7 @@
 ;; 18. Iedit: Simultaneous editing (Local refactoring)
 ;; ----------------------------------------------------------------------
 (use-package iedit
-  :ensure t
+  :ensure nil
   :bind (("C-;" . iedit-mode)    ;; 全文相同符号同时编辑
          ("C-x r ;" . iedit-rectangle-mode))) ;; 矩形区域编辑
 

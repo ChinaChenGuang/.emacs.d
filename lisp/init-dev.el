@@ -6,16 +6,16 @@
   :config
   ;; 集成 Magit-todos: 在 Git 状态界面直接显示代码里的 TODO
   (use-package magit-todos
-    :ensure t
+    :ensure nil
     :init
     (magit-todos-mode 1)))
 
 ;; 2. Yasnippet: 代码模板
 (use-package yasnippet
-  :ensure t
+  :ensure nil
   :hook (after-init . yas-global-mode)
   :config
-  (use-package yasnippet-snippets :ensure t)
+  (use-package yasnippet-snippets :ensure nil)
   (setq yas-wrap-around-region t))
 
 ;; 3. 基础语法检查
@@ -30,7 +30,7 @@
 
 ;; 4. Apheleia: 异步自动格式化 (保存时自动对齐)
 (use-package apheleia
-  :ensure t
+  :ensure nil
   :init
   (apheleia-global-mode +1)
   :config
@@ -40,7 +40,7 @@
 
 ;; 5. yafolding: 基于缩进的折叠工具
 (use-package yafolding
-  :ensure t
+  :ensure nil
   :bind (("C-c RET" . yafolding-toggle-element)
          ("C-c <return>" . yafolding-toggle-element)
          ("C-c Y" . yafolding-toggle-all))
@@ -48,7 +48,7 @@
 
 ;; 5. Sidebar & Code Map: 全局函数/标题侧边栏
 (use-package imenu-list
-  :ensure t
+  :ensure nil
   :bind (("C-c i" . imenu-list-smart-toggle)
          :map imenu-list-major-mode-map
          ("f" . imenu-list-goto-entry)) ; 'f' 键跳转并自动收起侧边栏
