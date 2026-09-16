@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Org Mode Configuration - 2026 Advanced Professional Setup
@@ -70,7 +71,7 @@
            "* TODO %?\n  SCHEDULED: %t\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a" :empty-lines 1)
           ("n" "Note [随手记]" entry (file+headline "inbox.org" "Notes")
            "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %i%a" :empty-lines 1)
-          ("j" "Journal [日志]" entry (file+datetree "journal.org")
+          ("j" "Journal [日志]" entry (file+olp+datetree "journal.org")
            "* %U %?\n%i" :empty-lines 1))))
 
 ;; --- 5. Org-Modern (Refined UI) ---

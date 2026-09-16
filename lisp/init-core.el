@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Core System Configuration
@@ -18,12 +19,12 @@
 
 ;; 2. File Management
 ;; Auto-revert buffers when files change on disk.
-(global-auto-revert-mode t)
+(add-hook 'emacs-startup-hook #'global-auto-revert-mode)
 
 ;; 记忆光标位置
-(save-place-mode 1)
+(add-hook 'emacs-startup-hook #'save-place-mode)
 ;; 记忆输入历史 (搜索、命令等)
-(savehist-mode 1)
+(add-hook 'emacs-startup-hook #'savehist-mode)
 
 ;; Disable lockfiles (those .#filename files)
 (setq create-lockfiles nil)
@@ -46,10 +47,18 @@
 (delete-selection-mode 1)
 
 ;; 5. Indentation
-;; Use spaces instead of tabs and set default width to 2.
+;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-(setq-default standard-indent 2)
+(setq-default tab-width 4)
+(setq-default standard-indent 4)
+(setq-default c-basic-offset 4)
+(setq-default js-indent-level 4)
+(setq-default css-indent-offset 4)
+(setq-default verilog-indent-level 4)
+(setq-default verilog-indent-level-module 4)
+(setq-default verilog-indent-level-declaration 4)
+(setq-default verilog-indent-level-behavioral 4)
+(setq-default rust-indent-offset 4)
 
 ;; 6. Compilation Buffer Colors (Hardware Simulation Logs)
 (use-package ansi-color

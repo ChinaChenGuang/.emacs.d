@@ -120,7 +120,7 @@
   :config
   (setq tab-bar-show 1) ; 只有超过1个标签时才显示
   (setq tab-bar-close-button-show nil) ; 隐藏关闭按钮，保持极简
-  (setq tab-bar-new-tab-choice "*dashboard*") ; 新标签页默认打开面板
+  (setq tab-bar-new-tab-choice "*scratch*") ; 新标签页默认打开面板
   (tab-bar-mode 1)
   :bind (("C-x t t" . tab-bar-switch-to-next-tab)
          ("C-x t n" . tab-new)

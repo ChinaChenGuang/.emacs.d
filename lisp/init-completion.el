@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Completion System (Modern Stack)
@@ -118,17 +119,10 @@
 (use-package cape
   :ensure t
   :init
-  ;; 增加补全后端：文件名、关键词、Dict 等
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  
-  ;; 优化关键词补全：过滤掉 SystemVerilog 中干扰项较多的编译指令 (如 `begin_keywords)
-  (let ((keyword-capf (cape-capf-predicate
-                       #'cape-keyword
-                       (lambda (cand)
-                         (not (string-prefix-p "`" cand))))))
-    (add-to-list 'completion-at-point-functions keyword-capf))
-
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  ;; 用户要求：不想要智能补全，只在当前文件出现过的补全
+  (setq-default completion-at-point-functions (list #'cape-dabbrev))
+  (setq dabbrev-check-all-buffers nil) ;; 仅在当前缓冲区查找
+  (setq dabbrev-check-other-buffers nil))
 
 ;; 6. Embark: Actions at point (The contextual "Right Click")
 (use-package embark

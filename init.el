@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;; package --- Summary
 ;;; Commentary:
 
@@ -33,12 +34,10 @@
 (require 'init-dev)         ; Development tools
 (require 'init-pi)          ; AI Assistant (Pi & GPTel)
 (require 'init-misc)        ; Miscellaneous tools
-(require 'init-dashboard)   ; Startup dashboard
+(require 'init-tramp)       ; Remote SSH editing
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
 (require 'init-denote)      ; Startup denote
-(require 'init-treesit)     ; Startup Tree-sitter
-(require 'init-lsp)         ; Startup LSP (Eglot)
 (require 'init-debug)       ; Startup Debugging (Dape)
 (require 'init-cpp)         ; Startup C++ Development
 (require 'init-rust)        ; Startup Rust Development
@@ -59,9 +58,7 @@
                      (format "%.2f seconds"
                              (float-time
                               (time-subtract after-init-time before-init-time)))
-                     gcs-done)
-            ;; Reset GC threshold to 2MB for normal operation
-            (setq gc-cons-threshold (* 2 1024 1024))))
+                     gcs-done)))
 
 ;; 4. Custom File
 ;; Keep automatic custom settings in a separate file to keep init.el clean.

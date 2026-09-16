@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Miscellaneous Tools & Smart Editing
@@ -6,16 +7,17 @@
 
 ;; 1. Which-key: Displays available keybindings in popup
 (use-package which-key
+  :hook (emacs-startup . which-key-mode)
   :config
-  (which-key-mode)
   (setq which-key-idle-delay 0.3))
 
 ;; 2. Recentf: Track recent files
 (use-package recentf
-  :init (recentf-mode 1)
+  :hook (emacs-startup . recentf-mode)
   :config
   (setq recentf-max-menu-items 25
-        recentf-max-saved-items 25))
+        recentf-max-saved-items 25
+        recentf-auto-cleanup 'never))
 
 ;; 3. Smartparens: Auto-pairing & Jumping
 (use-package smartparens
