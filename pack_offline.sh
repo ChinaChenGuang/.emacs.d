@@ -136,10 +136,73 @@ EOF
 
 chmod +x "$DIST_DIR/install.sh"
 
+# 8.5 生成 Windows 版自动安装脚本 (install.ps1)
+cat > "$DIST_DIR/install.ps1" << 'EOF'
+<#
+.SYNOPSIS
+    Gemini Emacs Offline Installer for Windows
+#>
+$ErrorActionPreference = 'Stop'
+$InstallDir = Join-Path $env:APPDATA ".emacs.d"
+$BackupDir = Join-Path $env:APPDATA ".emacs.d.bak.$(Get-Date -UFormat %s)"
+$DistDir = $PSScriptRoot
+
+Write-Host ">>> 🚀 开始离线部署 Gemini Emacs 配置 (Windows)..." -ForegroundColor Cyan
+
+# 1. 备份旧配置
+if (Test-Path $InstallDir) {
+    Write-Host ">>> 📦 备份现有配置至 $BackupDir" -ForegroundColor Yellow
+    Rename-Item -Path $InstallDir -NewName $BackupDir
+}
+
+# 2. 部署新配置
+Write-Host ">>> 📂 复制配置文件..." -ForegroundColor Yellow
+Copy-Item -Path (Join-Path $DistDir ".emacs.d") -Destination $env:APPDATA -Recurse -Force
+
+# 3. 激活离线模式标记
+$OfflineFlag = Join-Path $InstallDir "offline"
+New-Item -Path $OfflineFlag -ItemType File -Force | Out-Null
+Write-Host ">>> 🌙 已启用离线模式 (阻止连网更新)" -ForegroundColor Green
+
+# 4. 辅助工具 (可选，Windows 如果没有可以忽略)
+$BinDir = Join-Path $InstallDir "bin"
+if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Path $BinDir | Out-Null }
+if (Test-Path (Join-Path $DistDir "bin\*")) {
+    Write-Host ">>> 🛠️ 复制辅助工具至 $BinDir..." -ForegroundColor Yellow
+    Copy-Item -Path (Join-Path $DistDir "bin\*") -Destination $BinDir -Recurse -Force
+}
+
+# 5. 安装字体
+$FontDir = Join-Path $DistDir "fonts"
+if (Test-Path $FontDir) {
+    Write-Host ">>> 🎨 正在安装适配字体..." -ForegroundColor Yellow
+    $TargetFontPath = Join-Path $env:windir "Fonts\NFM.ttf"
+    if (-not (Test-Path $TargetFontPath)) {
+        try {
+            Copy-Item -Path (Join-Path $FontDir "NFM.ttf") -Destination $TargetFontPath -Force
+            $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+            New-ItemProperty -Path $RegPath -Name "JetBrainsMono Nerd Font Mono (TrueType)" -Value "NFM.ttf" -PropertyType String -Force | Out-Null
+            Write-Host "✅ 字体安装成功。" -ForegroundColor Green
+        } catch {
+            Write-Host "⚠️  字体安装失败(可能需要管理员权限运行)。请手动安装 $FontDir 中的字体。" -ForegroundColor Red
+        }
+    }
+}
+
+Write-Host ""
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host " ✅ Windows 离线部署成功！" -ForegroundColor Green
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host "直接打开您的 Emacs 即可享受完整离线体验。"
+EOF
 # 9. 压缩打包
 echo ">>> 📦 正在生成最终压缩包..."
-rm -f emacs_config_deploy.tar.gz
+rm -f emacs_config_deploy.tar.gz emacs_config_deploy.zip
 tar -czf emacs_config_deploy.tar.gz -C "$DIST_DIR" .
+if command -v zip &> /dev/null; then
+    cd "$DIST_DIR" && zip -r ../emacs_config_deploy.zip . > /dev/null && cd ..
+    echo ">>> ✨ 构建完成: emacs_config_deploy.tar.gz (Linux) & emacs_config_deploy.zip (Windows)"
+else
+    echo ">>> ✨ 构建完成: emacs_config_deploy.tar.gz (建议使用 Windows 10/11 的 tar 命令解压)"
+fi
 rm -rf "$DIST_DIR"
-
-echo ">>> ✨ 构建完成: emacs_config_deploy.tar.gz"
