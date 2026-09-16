@@ -29,14 +29,12 @@
 (require 'init-packages)    ; Package manager setup
 (require 'init-core)        ; Core system settings
 (require 'init-ui)          ; Visuals, fonts, theme
-(require 'init-chinese)     ; Chinese Input Method (Pyim)
 (require 'init-completion)  ; Completion framework
 (require 'init-dev)         ; Development tools
 (require 'init-misc)        ; Miscellaneous tools
 (require 'init-tramp)       ; Remote SSH editing
 (require 'init-markdown)    ; Startup markdown
 (require 'init-org)         ; Startup org-mode
-(require 'init-denote)      ; Startup denote
 (require 'init-debug)       ; Startup Debugging (Dape)
 (require 'init-cpp)         ; Startup C++ Development
 (require 'init-rust)        ; Startup Rust Development
@@ -44,7 +42,6 @@
 (require 'init-toml)        ; Startup TOML Development
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)         ; Startup Perl Development
-(require 'init-latex)        ; Startup LaTeX Development
 (require 'init-verilog)      ; Startup Verilog Development
 (require 'init-systemc)      ; Startup SystemC Development
 

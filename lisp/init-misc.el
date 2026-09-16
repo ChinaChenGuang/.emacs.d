@@ -296,18 +296,6 @@
          ("C-c C-d" . helpful-at-point)))
 
 ;; ----------------------------------------------------------------------
-;; 16. Jinx: High-performance spell checker
-;; ----------------------------------------------------------------------
-(use-package jinx
-  :ensure t
-  :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages))
-  :init
-  ;; 默认不全局开启拼写检查，避免满屏幕波浪线。
-  ;; (global-jinx-mode 1)
-  )
-
-;; ----------------------------------------------------------------------
 ;; 17. Dogears: Location history (The modern "Jump Back")
 ;; ----------------------------------------------------------------------
 (use-package dogears
