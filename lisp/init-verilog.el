@@ -25,9 +25,12 @@
   (setq-local tab-width 4)
   (setq-local backward-delete-char-untabify-method 'hungry)
 
-  ;; 2. Disable Auto-newline after semicolon
+  ;; 2. Disable Auto-newline after semicolon and auto lineup
   (setq-local verilog-auto-newline nil)
-  (setq-local verilog-auto-lineup nil))
+  (setq-local verilog-auto-lineup nil)
+  
+  ;; 3. Disable "Electric" typing (auto re-indent on typing ;, end, etc.)
+  (electric-indent-local-mode -1))
 
 ;; Apply to Classic Verilog Mode (Stable & Basic)
 (use-package verilog-mode
@@ -44,7 +47,8 @@
   (setq verilog-indent-level-behavioral 4)
   (setq verilog-indent-level-directive 1) ; 1=跟随缩进，0=顶格
   (setq verilog-case-indent 4)
-  (setq verilog-auto-newline nil))
+  (setq verilog-auto-newline nil)
+  (setq verilog-auto-lineup nil))
 
 ;; ----------------------------------------------------------------------
 ;; Robust Verible Formatting & Project Indexing
@@ -130,7 +134,7 @@ Provides transparent error reporting if syntax errors prevent formatting."
 (use-package verilog-ts-mode
   :defer t
   :config
-  (setq verilog-ts-indent-level 2))
+  (setq verilog-ts-indent-level 4))
 
 (provide 'init-verilog)
 ;;; init-verilog.el ends here
