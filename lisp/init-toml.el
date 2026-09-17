@@ -1,8 +1,7 @@
 ;;; init-toml.el --- Basic TOML support -*- lexical-binding: t -*-
 
-(use-package toml-ts-mode
-  :ensure nil
-  :mode ("\\.kemurc\\'" "\\.toml\\'"))
+(add-to-list 'auto-mode-alist '("\\.kemurc\\'" . conf-toml-mode))
+(add-to-list 'auto-mode-alist '("\\.toml\\'" . conf-toml-mode))
 
 (provide 'init-toml)
 ;;; init-yaml.el ends here

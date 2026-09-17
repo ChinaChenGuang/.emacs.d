@@ -36,8 +36,7 @@
 (use-package verilog-mode
   :ensure nil ; Built-in
   :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
-  :hook ((verilog-mode . my/verilog-style-setup)
-         (verilog-ts-mode . my/verilog-style-setup))
+  :hook (verilog-mode . my/verilog-style-setup)
   :bind (:map verilog-mode-map
               ("C-c v" . my/verilog-menu)) ; 定义控制中心快捷键
   :config
@@ -129,12 +128,6 @@ Provides transparent error reporting if syntax errors prevent formatting."
      ("c" "Compile / Lint" compile)
      ("w" "GTKWave" (lambda () (interactive) (start-process "gtkwave" nil "gtkwave")))
      ("s" "Shell" eat)]))
-
-;; Tree-sitter specific enhancement for Verilog
-(use-package verilog-ts-mode
-  :defer t
-  :config
-  (setq verilog-ts-indent-level 4))
 
 (provide 'init-verilog)
 ;;; init-verilog.el ends here

@@ -22,7 +22,7 @@
   ;; 默认配置：为 C++ (gdb) 增加一些默认项
   (add-to-list 'dape-configs
                `(gdb-debug
-                 modes (c-mode c++-mode c-ts-mode c++-ts-mode)
+                 modes (c-mode c++-mode )
                  command "gdb"
                  command-args ("--interpreter=dap")
                  :request "launch"
