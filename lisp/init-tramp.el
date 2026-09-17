@@ -18,6 +18,9 @@
   ;; Note: Windows native SSH does NOT support Unix domain sockets for ControlMaster!
   (setq tramp-use-ssh-controlmaster-options (not (eq system-type 'windows-nt)))
   
+  ;; Disable inline compression to prevent "Couldn't find an inline transfer compress command" warning on Windows
+  (setq tramp-inline-compress-start-size nil)
+  
   ;; Keep auto-save and backup files locally instead of on the remote machine
   (setq tramp-auto-save-directory (expand-file-name "tmp/tramp/" user-emacs-directory))
   
