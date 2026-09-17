@@ -32,11 +32,7 @@
 (use-package apheleia
   :ensure nil
   :init
-  (apheleia-global-mode +1)
-  :config
-  ;; 配置 Verilog 格式化器 (优先使用 verible-verilog-format)
-  (setf (alist-get 'verilog-ts-mode apheleia-mode-alist) 'verible-verilog-format)
-  (setf (alist-get 'verilog-mode apheleia-mode-alist) 'verible-verilog-format))
+  (apheleia-global-mode +1))
 
 ;; 5. yafolding: 基于缩进的折叠工具
 (use-package yafolding

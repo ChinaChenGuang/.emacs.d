@@ -213,15 +213,7 @@
                    avy-goto-char avy-goto-char-timer))
   (advice-add command :after #'my/pulse-momentary-line))
 
-;; 9. Tech Stack Status (Tree-sitter Focused)
-(defun my/get-tech-stack-status ()
-  "Return a formatted string showing Tree-sitter status."
-  (let ((ts (if (and (fboundp 'treesit-parser-list) (treesit-parser-list)) 
-                (propertize "TS" 'face '(:inherit success :weight bold))
-              (propertize "TS" 'face '(:inherit shadow)))))
-    (format " [%s] " ts)))
 
-(add-to-list 'global-mode-string '(:eval (my/get-tech-stack-status)) t)
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
