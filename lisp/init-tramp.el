@@ -14,7 +14,8 @@
   
   ;; 2. Performance Optimizations for SSH
   ;; Enable SSH ControlMaster multiplexing (drastically reduces connection overhead)
-  (setq tramp-use-ssh-controlmaster-options t)
+  ;; Note: Windows native SSH does NOT support Unix domain sockets for ControlMaster!
+  (setq tramp-use-ssh-controlmaster-options (not (eq system-type 'windows-nt)))
   
   ;; Keep auto-save and backup files locally instead of on the remote machine
   (setq tramp-auto-save-directory (expand-file-name "tmp/tramp/" user-emacs-directory))
