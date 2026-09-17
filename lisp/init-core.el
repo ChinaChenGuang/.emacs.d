@@ -110,3 +110,7 @@
    ("C-x C-a g"   . activities-revert)))
 
 (provide 'init-core)
+
+;; Fix Windows Server Socket Error
+(when (eq system-type 'windows-nt)
+  (setq server-use-tcp t))
