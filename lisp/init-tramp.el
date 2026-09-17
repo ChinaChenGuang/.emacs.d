@@ -10,7 +10,8 @@
   :defer t
   :config
   ;; 1. Core Settings
-  (setq tramp-default-method "ssh")
+  ;; Use sshx on Windows to avoid native ssh.exe PTY allocation hangs
+  (setq tramp-default-method (if (eq system-type 'windows-nt) "sshx" "ssh"))
   
   ;; 2. Performance Optimizations for SSH
   ;; Enable SSH ControlMaster multiplexing (drastically reduces connection overhead)
@@ -39,8 +40,9 @@
   "Quickly connect to a remote server via SSH."
   (interactive)
   (let* ((host (read-string "🌐 SSH 目标 (格式: user@server): "))
-         (path (read-string "📂 远程路径 (默认 ~): " "~")))
-    (find-file (format "/ssh:%s:%s" host path))))
+         (path (read-string "📂 远程路径 (默认 ~): " "~"))
+         (method (if (eq system-type 'windows-nt) "sshx" "ssh")))
+    (find-file (format "/%s:%s:%s" method host path))))
 
 ;; 绑定快捷键 C-c r (Remote)
 (global-set-key (kbd "C-c r") 'my/find-remote-file)
