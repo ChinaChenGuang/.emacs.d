@@ -107,13 +107,8 @@
   (global-corfu-mode)
   :config
   ;; 添加图标支持 (Kind-icon: 自动适配主题色的 SVG 图标)
-  (use-package kind-icon
-    :ensure nil
-    :after corfu
-    :custom
-    (kind-icon-default-face 'corfu-default)
-    :config
-    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
+  ;; 已删除 kind-icon 因为它会使用 svg-lib 去 raw.githubusercontent 动态下载图标，导致断网卡死)
+) ;; closing use-package corfu
 
 ;; 补全后端扩展 (Cape)
 (use-package cape
