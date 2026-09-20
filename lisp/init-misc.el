@@ -143,7 +143,31 @@
 
 
 ;; ----------------------------------------------------------------------
-;; 6. Crux: A collection of Ridiculously Useful eXtensions
+;; 5. Native Window Numbering (M-1 ~ M-9, M-0: 纯原生实现，无需老旧插件)
+;; ----------------------------------------------------------------------
+(defun my/select-window-by-number (n)
+  "Select the N-th window in the current frame (1-indexed)."
+  (interactive "nWindow number: ")
+  (let* ((windows (window-list nil 'nomini))
+         (target (nth (1- n) windows)))
+    (if target
+        (select-window target)
+      (message "窗口 %d 不存在 (当前共 %d 个窗口)" n (length windows)))))
+
+(dotimes (i 9)
+  (let ((n (1+ i)))
+    (global-set-key (kbd (format "M-%d" n))
+                    (lambda ()
+                      (interactive)
+                      (my/select-window-by-number n)))))
+
+(global-set-key (kbd "M-0")
+                (lambda ()
+                  (interactive)
+                  (let* ((windows (window-list nil 'nomini))
+                         (target (or (nth 9 windows) (car (last windows)))))
+                    (when target (select-window target)))))
+
 ;; ----------------------------------------------------------------------
 (use-package crux
   :ensure nil
@@ -264,7 +288,8 @@
 ;; ----------------------------------------------------------------------
 (use-package ace-window
   :ensure nil
-  :bind ("M-o" . ace-window)
+  :bind (("M-o"   . ace-window)
+         ("C-x o" . ace-window))
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
         aw-scope 'frame))

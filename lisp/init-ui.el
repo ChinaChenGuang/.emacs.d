@@ -207,6 +207,7 @@
 
 (dolist (command '(windmove-do-window-select
                    ace-window other-window
+                   my/select-window-by-number
                    avy-goto-char avy-goto-char-timer))
   (advice-add command :after #'my/pulse-momentary-line))
 
