@@ -205,11 +205,8 @@
   "Pulse the current line momentarily."
   (pulse-momentary-highlight-one-line (point) 'next-error))
 
-(dolist (command '(windmove-do-window-select 
-                   winum-select-window-1 winum-select-window-2 
-                   winum-select-window-3 winum-select-window-4
-                   winum-select-window-5 winum-select-window-6
-                   winum-select-window-7 winum-select-window-8
+(dolist (command '(windmove-do-window-select
+                   ace-window other-window
                    avy-goto-char avy-goto-char-timer))
   (advice-add command :after #'my/pulse-momentary-line))
 
