@@ -43,22 +43,33 @@
       auto-save-timeout 10         ; 10 秒空闲无输入时自动写入暂存
       auto-save-interval 100)      ; 敲击键盘 100 次自动写入暂存
 
-;; C. 原生静默自动存盘 (Auto-Save Visited: 真实保存到文件)
-;; 当空闲 5 秒后自动把修改写回真实磁盘文件，彻底杜绝崩溃导致修改丢失
+;; C. 原生静默自动存盘 (Auto-Save Visited: 仅对本地文件生效，绝不乱动远程 Tramp 文件)
+;; 远程文件必须由用户显式 C-x C-s 保存，防止后台自动存盘与网络死锁引发截断
+(defun my/local-file-buffer-p (&optional buffer)
+  "Return non-nil if BUFFER visits a local (non-remote) file."
+  (let ((file (buffer-file-name (or buffer (current-buffer)))))
+    (and file (not (file-remote-p file)))))
+
 (if (fboundp 'auto-save-visited-mode)
     (progn
       (setq auto-save-visited-interval 5)
+      (when (boundp 'auto-save-visited-predicate)
+        (setq auto-save-visited-predicate #'my/local-file-buffer-p))
       (auto-save-visited-mode 1))
-  ;; 兼容旧版本：每 5 秒空闲自动存盘
-  (run-with-idle-timer 5 t (lambda () (save-some-buffers t))))
+  ;; 兼容旧版本：仅对本地文件执行空闲存盘
+  (run-with-idle-timer 5 t
+                       (lambda ()
+                         (save-some-buffers t #'my/local-file-buffer-p))))
 
-;; D. 周期性全盘保底保存 (每隔 5 分钟定时强制全盘保存一次)
-(run-with-timer 300 300 (lambda () (save-some-buffers t)))
+;; D. 周期性全盘保底保存 (每隔 5 分钟定时保存本地文件)
+(run-with-timer 300 300
+                (lambda ()
+                  (save-some-buffers t #'my/local-file-buffer-p)))
 
 ;; E. 历史版本文件备份机制 (filename~)
 (setq make-backup-files t       ; 启用历史版本备份
       version-control t         ; 启用版本号 (.~1~, .~2~)
-      backup-by-copying t       ; 复制备份，不破坏原文件的硬链接和权限
+      backup-by-copying nil     ; 严禁直接就地截断覆写！改用安全原子重命名，防止写入中断导致原文件被清空
       delete-old-versions t     ; 静默清理过旧版本
       kept-old-versions 6       ; 保留最旧的 6 个版本
       kept-new-versions 9)      ; 保留最新的 9 个版本

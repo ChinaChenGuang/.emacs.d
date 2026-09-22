@@ -27,8 +27,7 @@
   ;; Disable file locks (the .#filename files) for remote files to reduce latency
   (setq remote-file-name-inhibit-locks t)
   
-  ;; Speed up chunk size for large files over SSH
-  (setq tramp-chunksize 8192)
+
   
   ;; Disable VC (Version Control) for remote files. 
   ;; Git/SVN checks over SSH are the #1 cause of TRAMP slowdowns.
