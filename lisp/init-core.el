@@ -122,7 +122,8 @@
   (pixel-scroll-precision-mode 1))
 
 ;; 8.5 Repeat-mode: 减少快捷键连按负担
-(repeat-mode 1)
+(let ((inhibit-message t))
+  (repeat-mode 1))
 
 ;; 9. 环境与会话管理
 ;; Envrc: 自动加载目录环境 (dirent 支持)
