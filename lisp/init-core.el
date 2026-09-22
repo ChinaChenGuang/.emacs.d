@@ -29,15 +29,39 @@
 ;; Disable lockfiles (those .#filename files)
 (setq create-lockfiles nil)
 
-;; 3. Backup Management
-;; Store all backup files in a centralized directory instead of cluttering project folders.
-(setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
-(setq make-backup-files t       ; Enable backups
-      version-control t         ; Use version numbers for backups
-      backup-by-copying t       ; Copy instead of renaming
-      delete-old-versions t     ; Delete old versions silently
-      kept-old-versions 6       ; Keep 6 oldest versions
-      kept-new-versions 9)      ; Keep 9 newest versions
+;; 3. Auto-Save, Backup & Crash Recovery Management
+;; A. 集中管理目录，避免在项目代码仓库里生成乱七八糟的 ~ 和 # 垃圾文件
+(let ((backup-dir (expand-file-name "tmp/backups/" user-emacs-directory))
+      (autosave-dir (expand-file-name "tmp/auto-saves/" user-emacs-directory)))
+  (unless (file-exists-p backup-dir) (make-directory backup-dir t))
+  (unless (file-exists-p autosave-dir) (make-directory autosave-dir t))
+  (setq backup-directory-alist `(("." . ,backup-dir)))
+  (setq auto-save-file-name-transforms `((".*" ,autosave-dir t))))
+
+;; B. 崩溃自动恢复暂存机制 (#filename#)
+(setq auto-save-default t          ; 开启自动暂存
+      auto-save-timeout 10         ; 10 秒空闲无输入时自动写入暂存
+      auto-save-interval 100)      ; 敲击键盘 100 次自动写入暂存
+
+;; C. 原生静默自动存盘 (Auto-Save Visited: 真实保存到文件)
+;; 当空闲 5 秒后自动把修改写回真实磁盘文件，彻底杜绝崩溃导致修改丢失
+(if (fboundp 'auto-save-visited-mode)
+    (progn
+      (setq auto-save-visited-interval 5)
+      (auto-save-visited-mode 1))
+  ;; 兼容旧版本：每 5 秒空闲自动存盘
+  (run-with-idle-timer 5 t (lambda () (save-some-buffers t))))
+
+;; D. 周期性全盘保底保存 (每隔 5 分钟定时强制全盘保存一次)
+(run-with-timer 300 300 (lambda () (save-some-buffers t)))
+
+;; E. 历史版本文件备份机制 (filename~)
+(setq make-backup-files t       ; 启用历史版本备份
+      version-control t         ; 启用版本号 (.~1~, .~2~)
+      backup-by-copying t       ; 复制备份，不破坏原文件的硬链接和权限
+      delete-old-versions t     ; 静默清理过旧版本
+      kept-old-versions 6       ; 保留最旧的 6 个版本
+      kept-new-versions 9)      ; 保留最新的 9 个版本
 
 ;; 4. User Experience
 ;; Answer "y" or "n" instead of "yes" or "no".

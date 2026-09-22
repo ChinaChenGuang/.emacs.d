@@ -350,7 +350,6 @@
 (global-set-key (kbd "M-<up>") 'my/move-line-up)
 (global-set-key (kbd "M-<down>") 'my/move-line-down)
 
-(setq make-backup-files nil)
 (setq scroll-step 1)
 
 
