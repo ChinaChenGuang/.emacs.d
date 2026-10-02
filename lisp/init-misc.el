@@ -283,6 +283,8 @@
   :config
   (setq eat-kill-buffer-on-exit t)
   (setq eat-term-name "xterm-256color")
+  (setq eat-enable-directory-tracking t)     ;; 自动跟踪 shell 目录，便于 Emacs 联动
+  (setq eat-enable-shell-prompt-annotation t) ;; 识别 shell 提示符与命令状态
   ;; 启用 Corfu 支持
   (add-hook 'eat-mode-hook #'corfu-mode))
 ;; ----------------------------------------------------------------------
