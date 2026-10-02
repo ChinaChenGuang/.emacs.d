@@ -268,11 +268,17 @@
       (eat nil t)
     (eat)))
 
+(defun my/eat-other-window-new (&optional arg)
+  "在另一个窗口打开或新建一个独立的 Eat 终端。"
+  (interactive "P")
+  (if (or arg (derived-mode-p 'eat-mode))
+      (eat-other-window nil t)
+    (eat-other-window)))
+
 (use-package eat
   :ensure nil
   :bind (("C-c t" . my/eat-new-or-toggle)
-         ("C-c T" . eat-other-window)
-         :map eat-mode-map
+         ("C-c T" . my/eat-other-window-new)
          ("M-j" . avy-goto-char-timer)) ;; 允许在终端内使用 avy
   :config
   (setq eat-kill-buffer-on-exit t)
