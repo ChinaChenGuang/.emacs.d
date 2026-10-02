@@ -145,12 +145,10 @@
   (setq highlight-indent-guides-auto-enabled nil) ;; 避免 Daemon 模式报错
   (set-face-foreground 'highlight-indent-guides-character-face "dimgray"))
 
-;; 13. Breadcrumb: 面包屑导航 (在顶部显示当前函数/模块路径)
+;; 13. Breadcrumb: 面包屑导航 (仅在代码缓冲中生效，避免干扰非代码 buffer)
 (use-package breadcrumb
   :ensure nil
-  :init
-  (breadcrumb-mode 1))
-
+  :hook (prog-mode . breadcrumb-local-mode))
 ;; 14. Goggles: 编辑动作的视觉反馈
 (use-package goggles
   :ensure nil

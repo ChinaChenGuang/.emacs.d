@@ -259,9 +259,19 @@
 ;; ----------------------------------------------------------------------
 ;; 12. Eat: Modern Terminal Emulator (Emulate A Terminal)
 ;; ----------------------------------------------------------------------
+(defun my/eat-new-or-toggle (&optional arg)
+  "打开或新建一个独立的 Eat 终端。
+如果当前 buffer 已经是 Eat 终端，再次按下可新建独立会话（*eat*<2>, *eat*<3>...）；
+或者传入前缀参数 C-u C-c t 直接新建。"
+  (interactive "P")
+  (if (or arg (derived-mode-p 'eat-mode))
+      (eat nil t)
+    (eat)))
+
 (use-package eat
   :ensure nil
-  :bind (("C-c t" . eat)
+  :bind (("C-c t" . my/eat-new-or-toggle)
+         ("C-c T" . eat-other-window)
          :map eat-mode-map
          ("M-j" . avy-goto-char-timer)) ;; 允许在终端内使用 avy
   :config
@@ -269,7 +279,6 @@
   (setq eat-term-name "xterm-256color")
   ;; 启用 Corfu 支持
   (add-hook 'eat-mode-hook #'corfu-mode))
-
 ;; ----------------------------------------------------------------------
 ;; 13. diff-hl: Show Git changes in the fringe
 ;; ----------------------------------------------------------------------

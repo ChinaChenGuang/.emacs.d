@@ -1,4 +1,4 @@
-;;; dank-emacs-theme.el --- Enhanced theme using Matugen SCSS variables with dank16 colors
+;;; dank-emacs-theme.el --- Enhanced theme using Matugen SCSS variables with dank16 colors -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2025
 
@@ -60,13 +60,13 @@
       (dank-yellow "#ffda72")       ; Warm yellow
       (dank-yellow-bright "#ffe7a5") ; Bright yellow
       (dank-blue "#bca5f2")         ; Blue-green
-      (dank-magenta "#4e3d76")      ; Teal-magenta
+      (dank-magenta "#4F378B")      ; Teal-magenta
       (dank-cyan "#D0BCFF")         ; Bright cyan
       (dank-cyan-bright "#d7c6ff") ; Brightest cyan
       (dank-cyan-dark "#ded0ff")   ; Dark cyan
       (dank-teal "#e9e0ff")        ; Dark teal
       (dank-fg "#f4efff")           ; Light foreground
-      (dank-gray "#9d99a5")         ; Gray
+      (dank-gray "#434149")         ; Gray
       (dank-white "#faf8ff")       ; White
 
       ;; Map success colors to green
@@ -100,10 +100,10 @@
       (term2 "#7fff9a")
       (term3 "#ffda72")
       (term4 "#bca5f2")
-      (term5 "#4e3d76")
+      (term5 "#4F378B")
       (term6 "#D0BCFF")
       (term7 "#f4efff")
-      (term8 "#9d99a5")
+      (term8 "#434149")
       (term9 "#ff9fb2")
       (term10 "#a5ffb8")
       (term11 "#ffe7a5")
