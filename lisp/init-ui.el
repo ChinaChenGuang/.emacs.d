@@ -22,15 +22,16 @@
   "Apply background transparency to FRAME or current frame."
   (let ((target-frame (or frame (selected-frame))))
     (if (display-graphic-p target-frame)
-        ;; GUI 模式: 优先使用 Emacs 29+ 的 alpha-background (仅背景透明，文字保持 100% 锐利不发虚)
-        (if (boundp 'alpha-background)
-            (progn
-              (set-frame-parameter target-frame 'alpha-background my/transparency-value)
-              (add-to-list 'default-frame-alist `(alpha-background . ,my/transparency-value)))
-          (set-frame-parameter target-frame 'alpha `(,my/transparency-value . ,my/transparency-value))
-          (add-to-list 'default-frame-alist `(alpha . (,my/transparency-value . ,my/transparency-value))))
-      ;; 终端模式 (emacs -nw): 清空背景色，透出终端自身的透明壁纸
-      (set-face-background 'default "unspecified-bg" target-frame))))
+        ;; GUI 模式: 同时设置 alpha-background 与 alpha，确保 Emacs 28/29/30 及 Windows/Linux 100% 触发透明
+        (progn
+          (when (>= emacs-major-version 29)
+            (set-frame-parameter target-frame 'alpha-background my/transparency-value)
+            (add-to-list 'default-frame-alist `(alpha-background . ,my/transparency-value)))
+          (set-frame-parameter target-frame 'alpha my/transparency-value)
+          (add-to-list 'default-frame-alist `(alpha . ,my/transparency-value)))
+      ;; 终端模式 (emacs -nw): 移除 Emacs 自带底色，彻底透出终端自带的毛玻璃/透明壁纸
+      (dolist (face '(default line-number line-number-current-line))
+        (set-face-background face "unspecified-bg" target-frame)))))
 
 (defun my/toggle-transparency ()
   "Toggle transparency between 90% and 100%."
@@ -39,7 +40,8 @@
   (my/apply-transparency)
   (message "透明度已设置为: %d%%" my/transparency-value))
 
-(global-set-key (kbd "C-c T") #'my/toggle-transparency)
+;; 绑定至 C-c C-t (避免与 C-c t / C-c T 的 Eat 终端冲突)
+(global-set-key (kbd "C-c C-t") #'my/toggle-transparency)
 (add-hook 'after-init-hook #'my/apply-transparency)
 (add-hook 'after-make-frame-functions #'my/apply-transparency)
 
