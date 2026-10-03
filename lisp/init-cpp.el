@@ -2,7 +2,8 @@
 
 (use-package cc-mode
   :ensure nil
-  :config
+  :defer t
+  :init
   (setq-default c-basic-offset 4)
   (setq c-default-style "linux"))
 

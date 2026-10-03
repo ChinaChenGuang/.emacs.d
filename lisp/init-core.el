@@ -112,10 +112,10 @@
 
 (use-package gcmh
   :ensure nil
+  :hook (emacs-startup . gcmh-mode)
   :init
   (setq gcmh-idle-delay 5
-        gcmh-high-threshold (* 64 1024 1024))
-  (gcmh-mode 1))
+        gcmh-high-threshold (* 64 1024 1024)))
 
 ;; 8. 现代 UI 平滑滚动 (Emacs 30 / PGTK 专属优化)
 (when (fboundp 'pixel-scroll-precision-mode)

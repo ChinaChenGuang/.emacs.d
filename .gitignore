@@ -6,6 +6,7 @@
 /elpa/
 /eln-cache/
 /straight/
+package-quickstart.el*
 
 # 2. Temporary & Backup Files
 *~

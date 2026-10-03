@@ -88,11 +88,22 @@
 ;; --- 6. Org-Roam (The Second Brain) ---
 (use-package org-roam
   :ensure nil
+  :defer t
+  :commands (org-roam-node-find org-roam-node-insert org-roam-buffer-toggle org-roam-db-autosync-mode)
+  :init
+  ;; 延迟在 Emacs 空闲 3 秒后，或者在用户调用命令时，再启动后台数据库同步，彻底消除启动卡顿
+  (run-with-idle-timer 3 nil
+    (lambda ()
+      (when (file-directory-p (expand-file-name "roam" (or (bound-and-true-p org-directory) "~/org")))
+        (require 'org-roam)
+        (unless (bound-and-true-p org-roam-db-autosync-mode)
+          (org-roam-db-autosync-mode 1)))))
   :custom
   (org-roam-directory (file-truename "~/org/roam"))
   (org-roam-completion-everywhere t)
   :config
-  (org-roam-db-autosync-mode)
+  (unless (bound-and-true-p org-roam-db-autosync-mode)
+    (org-roam-db-autosync-mode 1))
   
   ;; 让搜索界面显示标签 (Tags)
   (setq org-roam-node-display-template
@@ -127,12 +138,16 @@
 (use-package consult-org-roam
   :ensure nil
   :after org-roam
-  :init (consult-org-roam-mode 1)
+  :commands (consult-org-roam-search consult-org-roam-backlinks)
+  :init
+  (with-eval-after-load 'org-roam
+    (consult-org-roam-mode 1))
   :bind (("C-c n s" . consult-org-roam-search)
          ("C-c n b" . consult-org-roam-backlinks)))
 
 (use-package org-ql
-  :ensure nil)
+  :ensure nil
+  :defer t)
 
 ;; --- 9. Extra UI Helpers ---
 (use-package visual-fill-column

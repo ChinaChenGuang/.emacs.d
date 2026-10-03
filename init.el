@@ -47,9 +47,16 @@
 
 ;; 3. Startup Profiler
 
-;; Display startup time and reset GC threshold after initialization.
+;; Display startup time, restore file-name-handler-alist, and reset GC threshold.
 (add-hook 'emacs-startup-hook
           (lambda ()
+            ;; 恢复文件处理器
+            (when (boundp 'my/saved-file-name-handler-alist)
+              (setq file-name-handler-alist
+                    (delete-dups (append file-name-handler-alist my/saved-file-name-handler-alist))))
+            ;; 恢复运行时垃圾回收阈值
+            (setq gc-cons-threshold (* 32 1024 1024)
+                  gc-cons-percentage 0.1)
             (message "Emacs loaded in %s with %d garbage collections."
                      (format "%.2f seconds"
                              (float-time

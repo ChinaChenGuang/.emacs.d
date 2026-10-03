@@ -82,6 +82,18 @@ find "$DIST_DIR/.emacs.d/" -name "*.elc" -delete
 find "$DIST_DIR/.emacs.d/" -name "*.eln" -delete
 rm -rf "$DIST_DIR/.emacs.d/eln-cache" 2>/dev/null || true
 
+# 7.5 预构建 package-quickstart.el 极速索引 (纯 .el 格式，保证跨机器跨版本兼容)
+if command -v emacs &> /dev/null; then
+    echo ">>> ⚡ 预生成 package-quickstart 索引以极致压缩离线启动耗时..."
+    emacs -Q --batch --eval '
+      (setq user-emacs-directory "'"$PWD/$DIST_DIR/.emacs.d/"'")
+      (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
+      (setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-directory))
+      (require (quote package))
+      (package-initialize)
+      (package-quickstart-refresh)' 2>/dev/null || true
+fi
+
 # 8. 生成自动安装脚本 (install.sh)
 cat > "$DIST_DIR/install.sh" << 'EOF'
 #!/bin/bash

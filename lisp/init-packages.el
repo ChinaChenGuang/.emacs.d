@@ -19,21 +19,25 @@
 (setq package-check-signature nil) ;; Faster, avoids GPG issues in some envs
 (setq url-queue-timeout 30)
 
-;; 3. Initialization
+;; 3. Initialization (Fast Package Quickstart)
+(setq package-quickstart t)
+(setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-directory))
 (package-initialize)
 
 ;; 4. Offline Activation (Handles manually copied elpa directory)
 (when (featurep 'init-offline)
-  (let ((default-directory package-user-dir))
-    (when (file-directory-p default-directory)
-      (normal-top-level-add-subdirs-to-load-path)
-      ;; Force load all -autoloads.el files to ensure commands are defined
-      (dolist (dir (directory-files package-user-dir t "^[^.]"))
-        (when (file-directory-p dir)
-          (let ((autoloads (directory-files dir t "-autoloads.el$")))
-            (dolist (file autoloads) (load file t)))))))
-  (unless package-activated-list
-    (package-activate-all)))
+  (unless package--quickstart-pkgs
+    (let ((default-directory package-user-dir))
+      (when (file-directory-p default-directory)
+        (normal-top-level-add-subdirs-to-load-path)))
+    (unless package-activated-list
+      (package-activate-all))))
+
+(defun my/package-quickstart-rebuild ()
+  "重新生成 package-quickstart.el，将所有包索引预编译为单一文件，大幅压缩启动时间。"
+  (interactive)
+  (package-quickstart-refresh)
+  (message "✅ package-quickstart.el 索引已重新生成！"))
 
 ;; 5. Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
