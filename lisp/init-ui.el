@@ -90,8 +90,9 @@
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   
-  ;; Load the default theme (doom-nord is muted and low-saturation)
-  (load-theme 'doom-nord t)
+  ;; Load the default theme (Gruvbox: classic retro groove warmth)
+  (setq doom-gruvbox-brighter-comments t)
+  (load-theme 'doom-gruvbox t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
