@@ -14,6 +14,35 @@
 ;; 默认最大化启动
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;; 1.1 背景透明度设置 (GUI 现代 alpha-background + 终端自适应)
+(defvar my/transparency-value 90
+  "Default transparency percentage (0-100, 90 is optimal for wallpaper pass-through).")
+
+(defun my/apply-transparency (&optional frame)
+  "Apply background transparency to FRAME or current frame."
+  (let ((target-frame (or frame (selected-frame))))
+    (if (display-graphic-p target-frame)
+        ;; GUI 模式: 优先使用 Emacs 29+ 的 alpha-background (仅背景透明，文字保持 100% 锐利不发虚)
+        (if (boundp 'alpha-background)
+            (progn
+              (set-frame-parameter target-frame 'alpha-background my/transparency-value)
+              (add-to-list 'default-frame-alist `(alpha-background . ,my/transparency-value)))
+          (set-frame-parameter target-frame 'alpha `(,my/transparency-value . ,my/transparency-value))
+          (add-to-list 'default-frame-alist `(alpha . (,my/transparency-value . ,my/transparency-value))))
+      ;; 终端模式 (emacs -nw): 清空背景色，透出终端自身的透明壁纸
+      (set-face-background 'default "unspecified-bg" target-frame))))
+
+(defun my/toggle-transparency ()
+  "Toggle transparency between 90% and 100%."
+  (interactive)
+  (setq my/transparency-value (if (= my/transparency-value 100) 90 100))
+  (my/apply-transparency)
+  (message "透明度已设置为: %d%%" my/transparency-value))
+
+(global-set-key (kbd "C-c T") #'my/toggle-transparency)
+(add-hook 'after-init-hook #'my/apply-transparency)
+(add-hook 'after-make-frame-functions #'my/apply-transparency)
+
 ;; Enable CUA Selection Mode (Standard Copy/Paste & Rectangles)
 (cua-selection-mode 1)
 
@@ -93,6 +122,7 @@
   ;; Load the default theme (Gruvbox: classic retro groove warmth)
   (setq doom-gruvbox-brighter-comments t)
   (load-theme 'doom-gruvbox t)
+  (my/apply-transparency)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
