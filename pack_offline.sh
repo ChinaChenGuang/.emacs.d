@@ -44,22 +44,17 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'ac-comphist.dat' \
     --exclude 'deps'
 
-# 3. 准备兼容性组件 (针对 Emacs < 29)
-echo ">>> 🛠️ 正在下载兼容性补丁 (use-package, compat)..."
+# 3. 准备兼容性组件 (针对 Emacs < 31)
+echo ">>> 🛠️ 同步兼容性补丁 (use-package, compat 31+)..."
 mkdir -p "$DIST_DIR/.emacs.d/lisp/compat"
-UP_BASE="https://raw.githubusercontent.com/jwiegley/use-package/master"
-curl -sL "$UP_BASE/use-package.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package.el"
-curl -sL "$UP_BASE/use-package-core.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-core.el"
-curl -sL "$UP_BASE/use-package-bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/use-package-bind-key.el"
-curl -sL "$UP_BASE/bind-key.el" -o "$DIST_DIR/.emacs.d/lisp/compat/bind-key.el"
-
-COMPAT_BASE="https://raw.githubusercontent.com/emacs-compat/compat/main"
-for v in 27 28 29 30; do
-    curl -sL "$COMPAT_BASE/compat-$v.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-$v.el"
-done
-curl -sL "$COMPAT_BASE/compat.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat.el"
-curl -sL "$COMPAT_BASE/compat-macs.el" -o "$DIST_DIR/.emacs.d/lisp/compat/compat-macs.el"
-
+if [ -d "$EMACS_D/lisp/compat" ]; then
+    cp -r "$EMACS_D/lisp/compat/"* "$DIST_DIR/.emacs.d/lisp/compat/"
+else
+    COMPAT_ELPA=$(find "$EMACS_D/elpa" -maxdepth 1 -type d -name "compat-*" | sort -V | tail -n 1)
+    if [ -n "$COMPAT_ELPA" ] && [ -d "$COMPAT_ELPA" ]; then
+        cp -r "$COMPAT_ELPA/"*.el "$DIST_DIR/.emacs.d/lisp/compat/"
+    fi
+fi
 # 4. 包含 Tree-sitter 语法解析器 (离线高亮核心)
 TS_DIR="$EMACS_D/tree-sitter"
 if [ -d "$TS_DIR" ]; then

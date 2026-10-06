@@ -13,7 +13,7 @@
 
 ;; 3. Network & Security Settings
 (setq network-security-level 'low) ; Avoid GnuTLS checks that might hang
-(setq warning-suppress-types '((comp) (ad-handle-definition))) ; Suppress compilation warnings
+(setq warning-suppress-types '((comp) (ad-handle-definition) (treesit) (files)))
 
 ;; 4. Mock Icon Downloads
 (with-eval-after-load 'nerd-icons

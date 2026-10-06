@@ -1,0 +1,7 @@
+#!/bin/bash
+REAL_EMACS=$(which -a emacs 2>/dev/null | grep -v "$HOME/.emacs.d/bin/emacs" | grep -v "$HOME/bin/emacs" | head -n 1)
+if [ -z "$REAL_EMACS" ]; then
+    REAL_EMACS="/usr/bin/emacs"
+fi
+export LD_LIBRARY_PATH="$HOME/.emacs.d/lib:${LD_LIBRARY_PATH}"
+exec "$REAL_EMACS" "$@"

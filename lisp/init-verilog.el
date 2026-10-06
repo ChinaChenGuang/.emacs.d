@@ -17,9 +17,6 @@
   (setq-local verilog-cexp-indent 4)
   (setq-local verilog-indent-lists 4)
   
-  ;; verilog-ts-mode specific (Tree-sitter)
-  (setq-local verilog-ts-indent-level 4)
-  
   ;; Ensure spaces instead of tabs
   (setq-local indent-tabs-mode nil)
   (setq-local tab-width 4)
@@ -33,6 +30,10 @@
   (electric-indent-local-mode -1))
 
 ;; Apply to Classic Verilog Mode (Stable & Basic)
+(add-to-list 'auto-mode-alist '("\\.v\\'" . verilog-mode))
+(add-to-list 'auto-mode-alist '("\\.sv\\'" . verilog-mode))
+(add-to-list 'auto-mode-alist '("\\.svh\\'" . verilog-mode))
+
 (use-package verilog-mode
   :ensure nil ; Built-in
   :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")

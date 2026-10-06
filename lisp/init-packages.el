@@ -19,6 +19,17 @@
 (setq package-check-signature nil) ;; Faster, avoids GPG issues in some envs
 (setq url-queue-timeout 30)
 
+;; 2.5 Compatibility Layer (compat, use-package polyfills for cross-version support)
+(let ((compat-elpa (car (file-expand-wildcards (expand-file-name "elpa/compat-*" user-emacs-directory))))
+      (compat-bundled (expand-file-name "lisp/compat" user-emacs-directory)))
+  (when (and compat-elpa (file-directory-p compat-elpa))
+    (add-to-list 'load-path compat-elpa))
+  (when (file-directory-p compat-bundled)
+    (add-to-list 'load-path compat-bundled)))
+(require 'compat nil t)
+(when (< emacs-major-version 31)
+  (require 'compat-31 nil t))
+
 ;; 3. Initialization (Fast Package Quickstart)
 (setq package-quickstart t)
 (setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-directory))

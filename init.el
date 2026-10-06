@@ -11,7 +11,7 @@
 ;; 0. Warning Suppression
 (setq native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings nil
-      warning-suppress-types '((bytecomp) (native-compiler)))
+      warning-suppress-types '((bytecomp) (native-compiler) (treesit) (files)))
 
 ;; 1. Path Configuration
 ;;; Add the 'lisp' directory to the load path so we can require our modules.

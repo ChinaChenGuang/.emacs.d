@@ -5,6 +5,10 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; 0. Warning Suppression (Suppress treesit ABI mismatches & noisy warnings)
+(add-to-list 'warning-suppress-types '(treesit))
+(add-to-list 'warning-suppress-types '(files))
+
 ;; 1. Encoding
 ;; Set UTF-8 as the default encoding system for everything.
 (set-language-environment "UTF-8")
@@ -80,7 +84,14 @@
 
 ;; 允许在选中区域直接输入来替换或包裹内容 (配合 smartparens)
 (delete-selection-mode 1)
+;; 选区激活时，允许按 Alt+d 或 Alt+Backspace 直接删除选区内容
+(put 'kill-word 'delete-selection 'supersede)
+(put 'backward-kill-word 'delete-selection 'supersede)
 
+;; Tree-sitter 预编译语法库目录
+(let ((ts-dir (expand-file-name "tree-sitter" user-emacs-directory)))
+  (when (file-directory-p ts-dir)
+    (add-to-list 'treesit-extra-load-path ts-dir)))
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)
