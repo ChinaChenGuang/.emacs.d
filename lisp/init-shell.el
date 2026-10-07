@@ -78,7 +78,8 @@
             (save-excursion
               (goto-char (point-min))
               (looking-at-p "#!.*\\(t\\|c\\)?csh")))
-    (sh-set-shell "csh" t t)
+    ;; NO-QUERY=t, INSERT-FLAG=nil：只设置语法类型，绝不改写文件首行 shebang
+    (sh-set-shell "csh" t nil)
     (setq-local indent-line-function #'my/csh-indent-line)
     (electric-indent-local-mode 1)))
 
