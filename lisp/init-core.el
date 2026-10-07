@@ -88,6 +88,11 @@
 (put 'kill-word 'delete-selection 'supersede)
 (put 'backward-kill-word 'delete-selection 'supersede)
 
+;; 粘贴时剥离外部（浏览器/其他编辑器）携带的背景/字体属性，
+;; 避免整段文本出现黄色或彩色的背景高亮块。
+(add-to-list 'yank-excluded-properties 'face)
+(add-to-list 'yank-excluded-properties 'background)
+
 ;; Tree-sitter 预编译语法库目录
 (let ((ts-dir (expand-file-name "tree-sitter" user-emacs-directory)))
   (when (file-directory-p ts-dir)

@@ -43,7 +43,8 @@
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)         ; Startup Perl Development
 (require 'init-verilog)      ; Startup Verilog Development
-(require 'init-systemc)      ; Startup SystemC Development
+(require 'init-systemc)
+(require 'init-shell)     ; Shell scripting (Bash & CSH/TCSH)
 
 ;; 3. Startup Profiler
 
