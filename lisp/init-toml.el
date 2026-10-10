@@ -1,53 +1,71 @@
-;;; init-toml.el --- Pure-Elisp robust TOML support -*- lexical-binding: t -*-
+;;; init-toml.el --- TOML support (Tree-sitter first, pure-Elisp fallback) -*- lexical-binding: t -*-
 
 ;; ----------------------------------------------------------------------
-;; 纯 Elisp 结构化括号感知缩进器 (零 Tree-sitter 依赖，完美兼容离线与旧版环境)
+;; TOML 编辑支持
+;; - 优先使用内置 toml-ts-mode（Tree-sitter AST 语法高亮与结构化缩进）
+;; - 当当前 Emacs 未启用 tree-sitter / 加载不到 toml 语法库时，
+;;   自动降级到 conf-toml-mode + 纯 Elisp 括号感知缩进器，保证任何环境可用
+;; ----------------------------------------------------------------------
+
+(require 'treesit nil t)
+
+(defvar my/toml-tree-sitter-p
+  (and (fboundp 'treesit-ready-p)
+       (treesit-ready-p 'toml t))
+  "Non-nil when the toml tree-sitter grammar can actually be loaded.")
+
+;; ----------------------------------------------------------------------
+;; 降级方案：纯 Elisp 结构化括号感知缩进器
 ;; ----------------------------------------------------------------------
 (defun my/toml-indent-line ()
   "Simple, reliable, pure-Elisp bracket-depth indentation for TOML.
 Automatically indents arrays/lists by 2 spaces and aligns closing brackets."
   (interactive)
   (let* ((bol (line-beginning-position))
-         ;; 当前行是否以闭合括号 ] 或 } 开头
          (closing (save-excursion
                     (goto-char bol)
                     (skip-chars-forward " \t")
                     (looking-at-p "[]}]")))
-         ;; syntax-ppss 内置解析括号嵌套深度
          (depth (car (syntax-ppss bol)))
          (indent (* (max 0 (if closing (1- depth) depth)) 2)))
-    ;; 表头如 [section] 或 [[table-array]] 始终顶格
     (save-excursion
       (goto-char bol)
       (skip-chars-forward " \t")
       (when (looking-at-p "^\\[+[^\\]\n]+\\]+")
         (setq indent 0)))
-    ;; 执行缩进
     (save-excursion
       (goto-char bol)
       (delete-horizontal-space)
       (indent-to indent))
-    ;; 光标若在缩进之前则移至缩进之后
     (when (< (point) (+ bol indent))
       (goto-char (+ bol indent)))))
 
-(defun my/toml-mode-setup ()
-  "Configure reliable pure-Elisp indentation for TOML buffers."
+(defun my/toml-classic-mode-setup ()
+  "Configure reliable pure-Elisp indentation for conf-toml-mode buffers."
   (setq-local indent-line-function #'my/toml-indent-line)
   (setq-local tab-width 2)
   (setq-local standard-indent 2)
   (setq-local indent-tabs-mode nil)
-  ;; 开启回车自动缩进，并在输入 ] 或 } 时自动退格对齐
   (electric-indent-local-mode 1)
   (setq-local electric-indent-chars (append '(?\] ?\}) electric-indent-chars))
-  ;; TAB 键绑定标准缩进
   (local-set-key (kbd "TAB") #'indent-for-tab-command)
   (local-set-key (kbd "<tab>") #'indent-for-tab-command))
 
-;; 全局关联 TOML 与 .kemurc 到 conf-toml-mode，彻底不依赖外部 tree-sitter
-(add-to-list 'auto-mode-alist '("\\.kemurc\\'" . conf-toml-mode))
-(add-to-list 'auto-mode-alist '("\\.toml\\'" . conf-toml-mode))
-(add-hook 'conf-toml-mode-hook #'my/toml-mode-setup)
+;; ----------------------------------------------------------------------
+;; 模式关联
+;; ----------------------------------------------------------------------
+(if my/toml-tree-sitter-p
+    (progn
+      ;; toml-ts-mode 会通过 treesit-major-mode-remap-alist 自动接管 .toml/.kemurc，
+      ;; 这里再显式绑定一次以覆盖手工改过 auto-mode-alist 的旧会话
+      (add-to-list 'auto-mode-alist '("\\.kemurc\\'" . toml-ts-mode))
+      (add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode))
+      (with-eval-after-load 'toml-ts-mode
+        (setq toml-ts-indent-offset 2)))
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.kemurc\\'" . conf-toml-mode))
+    (add-to-list 'auto-mode-alist '("\\.toml\\'" . conf-toml-mode))
+    (add-hook 'conf-toml-mode-hook #'my/toml-classic-mode-setup)))
 
 (provide 'init-toml)
 ;;; init-toml.el ends here

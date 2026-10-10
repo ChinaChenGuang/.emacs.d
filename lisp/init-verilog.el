@@ -3,52 +3,75 @@
 ;;
 ;; Verilog & SystemVerilog Configuration
 ;;
+;; - 优先使用 verilog-ts-mode（Tree-sitter AST：语法高亮 + 结构化缩进）
+;; - tree-sitter 语法库不可用时，自动降级到内置经典 verilog-mode
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'treesit nil t)
+
+(defvar my/verilog-tree-sitter-p
+  (and (fboundp 'treesit-ready-p)
+       (treesit-ready-p 'systemverilog t))
+  "Non-nil when the systemverilog tree-sitter grammar can be loaded.")
+
+;; ----------------------------------------------------------------------
+;; 通用风格设置（两种模式共用）
+;; ----------------------------------------------------------------------
 (defun my/verilog-style-setup ()
   "Custom style for Verilog and SystemVerilog."
-  ;; 1. Indentation Settings (Set to 4 spaces)
+  (setq-local indent-tabs-mode nil)
+  (setq-local tab-width 4)
+  (setq-local backward-delete-char-untabify-method 'hungry)
+  (setq-local verilog-auto-newline nil)
+  (setq-local verilog-auto-lineup nil))
+
+(defun my/verilog-classic-setup ()
+  "Hook for classic built-in `verilog-mode'."
+  (my/verilog-style-setup)
+  ;; 缩进 4 空格，宏指令跟随代码块
   (setq-local verilog-indent-level 4)
   (setq-local verilog-indent-level-module 4)
   (setq-local verilog-indent-level-declaration 4)
   (setq-local verilog-indent-level-behavioral 4)
-  (setq-local verilog-indent-level-directive 1) ; 宏指令缩进：1=跟随代码块，0=顶格(Column 0)
+  (setq-local verilog-indent-level-directive 1)
   (setq-local verilog-case-indent 4)
   (setq-local verilog-cexp-indent 4)
   (setq-local verilog-indent-lists 4)
-  
-  ;; Ensure spaces instead of tabs
-  (setq-local indent-tabs-mode nil)
-  (setq-local tab-width 4)
-  (setq-local backward-delete-char-untabify-method 'hungry)
-
-  ;; 2. Disable Auto-newline after semicolon and auto lineup
-  (setq-local verilog-auto-newline nil)
-  (setq-local verilog-auto-lineup nil)
-  
-  ;; 3. Disable "Electric" typing (auto re-indent on typing ;, end, etc.)
+  ;; 经典模式下 electric-indent 表现糟糕，保持关闭
   (electric-indent-local-mode -1))
 
-;; Apply to Classic Verilog Mode (Stable & Basic)
-(add-to-list 'auto-mode-alist '("\\.v\\'" . verilog-mode))
-(add-to-list 'auto-mode-alist '("\\.sv\\'" . verilog-mode))
-(add-to-list 'auto-mode-alist '("\\.svh\\'" . verilog-mode))
+(defun my/verilog-ts-setup ()
+  "Hook for `verilog-ts-mode'."
+  (my/verilog-style-setup)
+  (setq-local verilog-ts-indent-level 4)
+  (electric-indent-local-mode 1))
 
-(use-package verilog-mode
-  :ensure nil ; Built-in
-  :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
-  :hook (verilog-mode . my/verilog-style-setup)
-  :bind (:map verilog-mode-map
-              ("C-c v" . my/verilog-menu)) ; 定义控制中心快捷键
-  :config
-  (setq verilog-indent-level 4)
-  (setq verilog-indent-level-module 4)
-  (setq verilog-indent-level-declaration 4)
-  (setq verilog-indent-level-behavioral 4)
-  (setq verilog-indent-level-directive 1) ; 1=跟随缩进，0=顶格
-  (setq verilog-case-indent 4)
-  (setq verilog-auto-newline nil)
-  (setq verilog-auto-lineup nil))
+;; ----------------------------------------------------------------------
+;; 模式关联：优先 verilog-ts-mode，降级 verilog-mode
+;; ----------------------------------------------------------------------
+(if my/verilog-tree-sitter-p
+    (progn
+      (use-package verilog-ts-mode
+        :ensure nil
+        :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
+        :hook (verilog-ts-mode . my/verilog-ts-setup))
+      ;; 兜底：经典 verilog-mode 也配置好，防止个别文件被手工切回
+      (add-hook 'verilog-mode-hook #'my/verilog-classic-setup))
+  (progn
+    (use-package verilog-mode
+      :ensure nil
+      :mode ("\\.v\\'" "\\.sv\\'" "\\.svh\\'")
+      :hook (verilog-mode . my/verilog-classic-setup)
+      :config
+      (setq verilog-indent-level 4)
+      (setq verilog-indent-level-module 4)
+      (setq verilog-indent-level-declaration 4)
+      (setq verilog-indent-level-behavioral 4)
+      (setq verilog-indent-level-directive 1)
+      (setq verilog-case-indent 4)
+      (setq verilog-auto-newline nil)
+      (setq verilog-auto-lineup nil))))
 
 ;; ----------------------------------------------------------------------
 ;; Robust Verible Formatting & Project Indexing
