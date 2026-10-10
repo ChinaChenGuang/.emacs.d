@@ -130,6 +130,28 @@ fi
 touch "$INSTALL_DIR/offline"
 echo ">>> 🌙 已启用离线模式 (静态加载 elpa & tree-sitter)"
 
+# 2.5 让 Emacs 优先加载用户目录下的新版 libtree-sitter 运行时 (ABI 15)
+#     解决系统自带旧运行时 (仅支持 ABI 13-14) 无法加载新版语法库的问题，无需 root。
+if [ -d "$INSTALL_DIR/lib" ]; then
+    echo ">>> 🧠 配置用户态 Tree-sitter 运行时 (libtree-sitter 0.25, ABI 15)..."
+    (cd "$INSTALL_DIR/lib" && [ -f libtree-sitter.so.0 ] && {
+        ln -sf libtree-sitter.so.0 libtree-sitter.so
+        ln -sf libtree-sitter.so.0 libtree-sitter.so.0.25
+    })
+    for RC in "$HOME/.bashrc" "$HOME/.zshrc"; do
+        [ -f "$RC" ] || continue
+        grep -q "\.emacs\.d/lib" "$RC" || cat >> "$RC" <<'RC_EOF'
+
+# User-local tree-sitter runtime (ABI 15) for Emacs tree-sitter grammars
+export LD_LIBRARY_PATH="$HOME/.emacs.d/lib:${LD_LIBRARY_PATH}"
+RC_EOF
+    done
+    FISH_CFG="$HOME/.config/fish/config.fish"
+    if [ -d "$(dirname "$FISH_CFG")" ] && [ -f "$FISH_CFG" ] && ! grep -q "\.emacs\.d/lib" "$FISH_CFG"; then
+        echo 'set -gx LD_LIBRARY_PATH "$HOME/.emacs.d/lib" $LD_LIBRARY_PATH' >> "$FISH_CFG"
+    fi
+fi
+
 # 3. 安装辅助工具 (rg / fd)
 mkdir -p "$BIN_DIR"
 if [ -d "$SCRIPT_DIR/bin" ] && [ "$(ls -A "$SCRIPT_DIR/bin" 2>/dev/null)" ]; then
