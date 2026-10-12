@@ -30,6 +30,9 @@ org-roam.db
 /image-dired/
 .ido.last
 projectile-bookmarks.eld
+*scratch*
+places.eld
+tramp
 # 4. LSP & Tree-sitter (Local & Binary files)
 .lsp-session*
 /tree-sitter/
