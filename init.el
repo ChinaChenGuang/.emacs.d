@@ -11,7 +11,7 @@
 ;; 0. Warning Suppression
 (setq native-comp-async-report-warnings-errors 'silent
       byte-compile-warnings nil
-      warning-suppress-types '((bytecomp) (native-compiler)))
+      warning-suppress-types '((bytecomp) (native-compiler) (treesit) (files)))
 
 ;; 1. Path Configuration
 ;;; Add the 'lisp' directory to the load path so we can require our modules.
@@ -43,13 +43,21 @@
 (require 'init-tcl)         ; Startup Tcl Development
 (require 'init-perl)         ; Startup Perl Development
 (require 'init-verilog)      ; Startup Verilog Development
-(require 'init-systemc)      ; Startup SystemC Development
+(require 'init-systemc)
+(require 'init-shell)     ; Shell scripting (Bash & CSH/TCSH)
 
 ;; 3. Startup Profiler
 
-;; Display startup time and reset GC threshold after initialization.
+;; Display startup time, restore file-name-handler-alist, and reset GC threshold.
 (add-hook 'emacs-startup-hook
           (lambda ()
+            ;; 恢复文件处理器
+            (when (boundp 'my/saved-file-name-handler-alist)
+              (setq file-name-handler-alist
+                    (delete-dups (append file-name-handler-alist my/saved-file-name-handler-alist))))
+            ;; 恢复运行时垃圾回收阈值
+            (setq gc-cons-threshold (* 32 1024 1024)
+                  gc-cons-percentage 0.1)
             (message "Emacs loaded in %s with %d garbage collections."
                      (format "%.2f seconds"
                              (float-time

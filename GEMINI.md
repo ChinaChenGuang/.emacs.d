@@ -28,18 +28,20 @@
 无论是在图形界面还是通过 SSH 连接的终端中，Gemini 都能为您提供一致且舒适的操作体验：
 
 ### 🎨 图形化界面 (GUI)
-- **精致 UI**: 采用 `doom-one` 主题与 `doom-modeline` 状态栏，兼顾美感与功能。
-- **字体优化**: 预设中英文等宽对齐方案（推荐 JetBrains Mono + 微软雅黑），确保表格与布局完美对齐。
+- **精致 UI**: 采用复古温润的 **`doom-gruvbox`** 主题与 `doom-modeline` 状态栏，兼顾高对比美感与护眼舒适度。
+- **背景透明度**: 默认开启 **90% 极佳透明度**，透出终端或桌面壁纸；配套提供 `~/.emacs.d/wallpapers/` 精选 Gruvbox 暗色壁纸库。
+- **字体优化**: 预设中英文等宽对齐方案（推荐 JetBrains Mono + 微软雅黑），确保代码与表格完美对齐。
 - **图标增强**: 全面集成 `nerd-icons`，在文件管理、补全列表和状态栏中展示精美图标。
 
 ### ⌨️ 终端模式 (Terminal)
 - **轻量稳定**: 针对终端模式（`emacs -nw`）自动禁用重量级视觉特效，确保即使在低带宽或高延迟的 SSH 环境下也能丝滑操作。
 - **智能降级**: 自动检测环境并切换图标与字体显示方案，防止在不支持 Nerd Fonts 的终端中出现乱码。
+- **透明底色自适应**: 自动透出 Linux 终端自带的毛玻璃/背景图片。
 - **快捷交互**: 所有现代化补全与搜索功能在终端中保持完全一致。
 
 ## 📦 离线移植与安装
 
-本配置专为离线环境和多机协作设计：
+本配置专为离线 EDA/服务器环境和多机协作设计：
 
 ### 1. 联网安装 (Arch Linux/Ubuntu)
 ```bash
@@ -51,20 +53,26 @@ cd ~/.emacs.d && ./setup.sh
   ```bash
   ./pack_offline.sh
   ```
-  该脚本会自动清理二进制缓存（确保跨版本兼容），并生成 `emacs_config_deploy.tar.gz`。
+  该脚本会自动清理二进制缓存与敏感隐私、预编译 `package-quickstart.el` 加速索引，生成轻量化的 `emacs_config_deploy.tar.gz` (Linux) 与 `emacs_config_deploy.zip` (Windows)。
 - **第二步 (离线机器)**: 将压缩包拷贝到目标机器并解压运行：
   ```bash
   tar -xzvf emacs_config_deploy.tar.gz
   ./install.sh
   ```
+  *(注：脚本具有智能路径识别，无论解压在 `~` 还是临时目录均能稳妥部署)*
 - **特性**: 
   - 自动创建 `~/.emacs.d/offline` 标记文件，使 Emacs 进入**静默离线模式**（禁用联网更新）。
-  - 打包已包含所有 `elpa` 插件、兼容性补丁及 `NFM.ttf` 图标字体。
+  - 打包已包含所有 `elpa` 插件、Tree-sitter 语法包、兼容性补丁、`NFM.ttf` 图标字体及 Gruvbox 精选壁纸库。
 
 ## ⌨️ 常用快捷键
 
 | 快捷键 | 功能 |
 | :--- | :--- |
+| `M-1` ~ `M-9`, `M-0` | 原生窗口直达 (1~9号窗口直切，0切末尾) |
+| `M-o` / `C-x o` | 智能窗口跳转 (Ace-window) |
+| `C-c C-t` | 切换背景透明度 (90% ⇄ 100%) |
+| `C-c t` / `C-c T` | Eat 现代终端 (当前窗口 / 另辟窗口新建) |
+| `C-c v` | Verilog 控制中心 (AUTO展开/Verible格式化/工程索引) |
 | `M-s r` | 全局搜索 (Ripgrep) |
 | `M-s l` | 当前 Buffer 搜索 (Consult line) |
 | `M-i`   | 符号高亮 (Symbol Overlay: 开启/关闭当前词高亮) |
@@ -74,6 +82,8 @@ cd ~/.emacs.d && ./setup.sh
 | `M-g i` | 跳转到符号 (Imenu) |
 | `C-x b` | 切换缓冲区 (Consult buffer) |
 | `C-x g` | 打开 Magit (Git Status) |
+| `C-c a` | 打开 Org-mode 议程与待办看板 |
+| `C-c n f` | Org-Roam 笔记查找与新建 (第二大脑) |
 | `C-c x` | 快速切换网络代理 |
 | `C->` / `C-.` | 多光标：选中下个相同单词 (自动选中当前词) |
 | `C-<` / `C-,` | 多光标：选中上个相同单词 (自动选中当前词) |

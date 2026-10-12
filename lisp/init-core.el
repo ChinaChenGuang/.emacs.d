@@ -5,6 +5,10 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; 0. Warning Suppression (Suppress treesit ABI mismatches & noisy warnings)
+(add-to-list 'warning-suppress-types '(treesit))
+(add-to-list 'warning-suppress-types '(files))
+
 ;; 1. Encoding
 ;; Set UTF-8 as the default encoding system for everything.
 (set-language-environment "UTF-8")
@@ -80,7 +84,19 @@
 
 ;; 允许在选中区域直接输入来替换或包裹内容 (配合 smartparens)
 (delete-selection-mode 1)
+;; 选区激活时，允许按 Alt+d 或 Alt+Backspace 直接删除选区内容
+(put 'kill-word 'delete-selection 'supersede)
+(put 'backward-kill-word 'delete-selection 'supersede)
 
+;; 粘贴时剥离外部（浏览器/其他编辑器）携带的背景/字体属性，
+;; 避免整段文本出现黄色或彩色的背景高亮块。
+(add-to-list 'yank-excluded-properties 'face)
+(add-to-list 'yank-excluded-properties 'background)
+
+;; Tree-sitter 预编译语法库目录
+(let ((ts-dir (expand-file-name "tree-sitter" user-emacs-directory)))
+  (when (file-directory-p ts-dir)
+    (add-to-list 'treesit-extra-load-path ts-dir)))
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)
@@ -112,10 +128,10 @@
 
 (use-package gcmh
   :ensure nil
+  :hook (emacs-startup . gcmh-mode)
   :init
   (setq gcmh-idle-delay 5
-        gcmh-high-threshold (* 64 1024 1024))
-  (gcmh-mode 1))
+        gcmh-high-threshold (* 64 1024 1024)))
 
 ;; 8. 现代 UI 平滑滚动 (Emacs 30 / PGTK 专属优化)
 (when (fboundp 'pixel-scroll-precision-mode)
