@@ -11,11 +11,11 @@
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; 默认最大化启动
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; 平铺窗口管理器下由 WM 托管窗口尺寸，禁止 Emacs 内部自发强制最大化
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; 1.1 背景透明度设置 (GUI 现代 alpha-background + 终端自适应)
-(defvar my/transparency-value 90
+;; 1.1 背景透明度设置 (默认 100% 完整实心背景，防止下半屏露底；需要时可按 C-c C-t 开启透明)
+(defvar my/transparency-value 100
   "Default transparency percentage (0-100, 90 is optimal for wallpaper pass-through).")
 
 (defun my/apply-transparency (&optional frame)
