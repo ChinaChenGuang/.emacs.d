@@ -141,25 +141,26 @@
 (let ((inhibit-message t))
   (repeat-mode 1))
 
-;; 9. 环境与会话管理
-;; Envrc: 自动加载目录环境 (dirent 支持)
+;; 9. 环境与会话管理 (按需延迟加载)
+;; Envrc: 目录环境管理 (direnv 支持，按需启用)
 (use-package envrc
   :ensure nil
-  :hook (after-init . envrc-global-mode))
+  :commands (envrc-mode envrc-global-mode))
 
-;; Activities: 现代化的会话/布局管理
+;; Activities: 现代化的会话/布局管理 (按需加载)
 (use-package activities
   :ensure nil
-  :init
-  (activities-mode 1)
-  (activities-tabs-mode 1)
+  :defer t
   :bind
   (("C-x C-a C-a" . activities-resume)
    ("C-x C-a C-q" . activities-suspend)
    ("C-x C-a C-s" . activities-save)
    ("C-x C-a C-l" . activities-list)
    ("C-x C-a n"   . activities-new)
-   ("C-x C-a g"   . activities-revert)))
+   ("C-x C-a g"   . activities-revert))
+  :config
+  (activities-mode 1)
+  (activities-tabs-mode 1))
 
 ;; Fix Windows Server Socket Error
 (when (eq system-type 'windows-nt)

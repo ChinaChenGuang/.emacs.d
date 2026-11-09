@@ -216,25 +216,26 @@
          ("C-M-m"       . mc/mark-all-dwim)
          ("C->"         . mc/mark-next-symbol-like-this)
          ("C-<"         . mc/mark-previous-symbol-like-this)
-         ("C-."         . mc/mark-next-symbol-like-this)
          ("C-,"         . mc/mark-previous-symbol-like-this)
          ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 ;; ----------------------------------------------------------------------
-;; 8. Symbol Overlay: Highlight symbols and jump between them
+;; 8. Symbol Overlay: Highlight symbols and jump between them (On-Demand)
 ;; ----------------------------------------------------------------------
 ;; Usage:
-;; - M-i : Toggle highlight for symbol at point
-;; - n / p : Move to next/previous highlight (when overlay is active)
+;; - M-i : Toggle highlight for symbol at point (手动开启/关闭，严禁后台自动变黄)
+;; - M-n / M-p : Move to next/previous highlight
 ;; - M-s n / M-s p : Global jump to next/previous occurrence
 (use-package symbol-overlay
   :ensure nil
-  :bind (("M-i" . symbol-overlay-put)
-         ("M-n" . symbol-overlay-jump-next)
-         ("M-p" . symbol-overlay-jump-prev)
+  :bind (("M-i"   . symbol-overlay-put)
+         ("M-n"   . symbol-overlay-jump-next)
+         ("M-p"   . symbol-overlay-jump-prev)
          ("M-s n" . symbol-overlay-switch-forward)
          ("M-s p" . symbol-overlay-switch-backward))
-  :hook (prog-mode . symbol-overlay-mode))
+  :config
+  ;; 彻底关闭后台 idle 自动高亮，严禁在光标移动、mark set 或粘贴后自动添加黄色临时高亮
+  (setq symbol-overlay-idle-time 0))
 
 ;; ----------------------------------------------------------------------
 ;; 10. Vundo: Visual Undo Tree

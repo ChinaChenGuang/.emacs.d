@@ -10,10 +10,10 @@
     :init
     (magit-todos-mode 1)))
 
-;; 2. Yasnippet: 代码模板
+;; 2. Yasnippet: 代码模板 (编程模式按需加载)
 (use-package yasnippet
   :ensure nil
-  :hook (after-init . yas-global-mode)
+  :hook (prog-mode . yas-minor-mode)
   :config
   (use-package yasnippet-snippets :ensure nil)
   (setq yas-wrap-around-region t))

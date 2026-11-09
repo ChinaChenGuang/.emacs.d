@@ -46,8 +46,8 @@
          (method (if (eq system-type 'windows-nt) "sshx" "ssh")))
     (find-file (format "/%s:%s:%s" method host path))))
 
-;; 绑定快捷键 C-c r (Remote)
-(global-set-key (kbd "C-c r") 'my/find-remote-file)
+;; 绑定快捷键 C-c R (Remote, 避免与 C-c r 的重命名文件冲突)
+(global-set-key (kbd "C-c R") 'my/find-remote-file)
 
 (provide 'init-tramp)
 ;;; init-tramp.el ends here

@@ -9,6 +9,7 @@
 
 ;; SystemC 关联到 C++ 模式
 (add-to-list 'auto-mode-alist '("\\.systemc\\'" . c++-mode))
+(require 'init-systemc nil t)
 
 (provide 'init-cpp)
 ;;; init-cpp.el ends here

@@ -45,9 +45,6 @@
 (add-hook 'after-init-hook #'my/apply-transparency)
 (add-hook 'after-make-frame-functions #'my/apply-transparency)
 
-;; Enable CUA Selection Mode (Standard Copy/Paste & Rectangles)
-(cua-selection-mode 1)
-
 ;; 2. Smooth Scrolling
 (setq scroll-margin 2
       scroll-conservatively 101
@@ -162,11 +159,11 @@
          ("M-[" . tab-bar-switch-to-prev-tab)
          ("M-]" . tab-bar-switch-to-next-tab)))
 
-;; 8. Rainbow Colors
+;; 8. Rainbow Colors (Delimiters for code, rainbow-mode on-demand)
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 (use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode))
+  :commands rainbow-mode)
 
 ;; 12. Highlight Indent Guides: 结构化缩进线
 (use-package highlight-indent-guides
