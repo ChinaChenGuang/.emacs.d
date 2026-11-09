@@ -27,6 +27,7 @@ org-roam.db
 /recentf
 /history
 /server/
+/org-persist/
 /image-dired/
 .ido.last
 projectile-bookmarks.eld

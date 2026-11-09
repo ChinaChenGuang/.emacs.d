@@ -28,6 +28,7 @@
 (require 'init-proxy)       ; Network proxy setup (Must be early)
 (require 'init-packages)    ; Package manager setup
 (require 'init-core)        ; Core system settings
+(require 'init-stats)       ; Command usage statistics
 (require 'init-ui)          ; Visuals, fonts, theme
 (require 'init-completion)  ; Completion framework
 (require 'init-dev)         ; Development tools

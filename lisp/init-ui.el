@@ -174,20 +174,15 @@
   :hook (prog-mode . highlight-indent-guides-mode)
   :config
   (setq highlight-indent-guides-method 'character) ;; 使用字符模式，最轻量
-  (setq highlight-indent-guides-responsive 'focused) ;; 仅高亮当前代码块
+  (setq highlight-indent-guides-responsive 'top) ;; 仅高亮光标所在行（合法值 nil/top/stack）
   (setq highlight-indent-guides-auto-enabled nil) ;; 避免 Daemon 模式报错
-  (set-face-foreground 'highlight-indent-guides-character-face "dimgray"))
+  (set-face-foreground 'highlight-indent-guides-character-face "#928374") ;; gruvbox 中灰，低饱和
+  (set-face-foreground 'highlight-indent-guides-top-character-face "#928374")) ;; 光标行同名色
 
 ;; 13. Breadcrumb: 面包屑导航 (仅在代码缓冲中生效，避免干扰非代码 buffer)
 (use-package breadcrumb
   :ensure nil
   :hook (prog-mode . breadcrumb-local-mode))
-;; 14. Goggles: 编辑动作的视觉反馈
-(use-package goggles
-  :ensure nil
-  :hook (prog-mode . goggles-mode)
-  :config
-  (setq goggles-pulse t))
 
 ;; 15. PDF Tools: 专业数据手册阅读器
 (use-package pdf-tools
