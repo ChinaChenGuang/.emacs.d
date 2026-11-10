@@ -81,8 +81,11 @@
 (my/register-lazy-mode '("\\.md\\'" "\\.markdown\\'") 'init-markdown 'markdown-mode)
 
 ;; D. C/C++ & SystemC
-(my/register-lazy-mode '("\\.c\\'" "\\.cpp\\'" "\\.cxx\\'" "\\.cc\\'" "\\.h\\'" "\\.hpp\\'" "\\.sc\\'" "\\.systemc\\'")
+(my/register-lazy-mode '("\\.c\\'" "\\.cpp\\'" "\\.cxx\\'" "\\.cc\\'" "\\.h\\'" "\\.hpp\\'")
                        'init-cpp
+                       'c++-mode)
+(my/register-lazy-mode '("\\.sc\\'" "\\.systemc\\'")
+                       'init-systemc
                        'c++-mode)
 
 ;; E. 脚本与配置语言 (Shell / Rust / YAML / TOML / Tcl / Perl / Jinja2)

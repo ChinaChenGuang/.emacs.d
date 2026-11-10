@@ -7,9 +7,8 @@
   (setq-default c-basic-offset 4)
   (setq c-default-style "linux"))
 
-;; SystemC 关联到 C++ 模式
+;; SystemC 文件仍按 C++ 模式打开；SystemC 专属功能见 init-systemc.el
 (add-to-list 'auto-mode-alist '("\\.systemc\\'" . c++-mode))
-(require 'init-systemc nil t)
 
 (provide 'init-cpp)
 ;;; init-cpp.el ends here
