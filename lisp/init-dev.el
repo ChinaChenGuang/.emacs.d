@@ -54,5 +54,22 @@
         imenu-list-auto-resize t       ; 自动根据内容微调宽度
         imenu-list-focus-after-activation t))
 
+;; 6. Eglot: 原生现代化语言服务器客户端 (Emacs 29+ 官方标配)
+;; 极简高效、零外部侵入，与 Corfu 补全、Consult 导航和 Xref 完美融合
+(use-package eglot
+  :ensure nil
+  :defer t
+  :bind (:map eglot-mode-map
+              ("C-c l r" . eglot-rename)
+              ("C-c l a" . eglot-code-actions)
+              ("C-c l f" . eglot-format))
+  :config
+  ;; 关闭庞大的事件历史日志，换取超大工程下的极致性能
+  (setq eglot-events-buffer-size 0)
+  ;; 非阻塞异步连接，避免后台卡死输入
+  (setq eglot-sync-connect nil)
+  ;; 配合 Eldoc 单行或紧凑展示悬停文档
+  (setq eldoc-echo-area-use-multiline-p 3))
+
 (provide 'init-dev)
 ;;; init-dev.el ends here

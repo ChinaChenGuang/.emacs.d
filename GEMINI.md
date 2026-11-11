@@ -12,13 +12,18 @@
 - **Orderless**: 灵活的模糊匹配算法，支持多模式过滤。
 - **Consult**: 提供极其强大的搜索与导航指令（如 `consult-line`, `consult-ripgrep`）。
 - **Marginalia**: 在补全列表中实时显示丰富的元数据（如文件大小、函数定义等）。
-- **Company**: 极速的代码内补全，支持智能提示。
+- **Corfu + Cape**: 极速轻量的现代行内代码补全，告别臃肿的 Company。
 
 ### 🎨 深度语法支持 (Tree-sitter)
-- **原生加速**: 在 Emacs 29+ 环境下自动启用原生 **Tree-sitter** (`-ts-mode`)，提供更精准的语法解析、更快速的高亮以及稳定的结构化编辑。
-- **多语言适配**: 针对 C/C++, SystemVerilog, Rust, YAML 等现代开发语言进行了深度优化。
+- **原生 AST 加速**: 借助 Emacs 29/30/31 原生 **Tree-sitter** (`treesit-major-mode-remap-alist`)，提供更精准的语法解析、更快速的高亮以及稳定的结构化编辑。
+- **全栈语言覆盖**: 针对 SystemVerilog, Verilog, C/C++, Rust, YAML, TOML, Python, Bash 等深度适配，毫秒级冷启动。
 
-### 🛠 开发者生产力
+### 🛠 现代 Emacs 30/31 新特性集成
+- **Eglot 原生 LSP**: 深度集成 Emacs 原生语言服务器客户端，按需唤醒（`C-c l ...`），零额外包依赖，极速丝滑。
+- **EditorConfig 内置支持**: 原生自动识别项目根目录 `.editorconfig` 规范团队缩进与排版。
+- **Which-Key 原生内置**: 采用 Emacs 30 官方内置的标准库，无缝呈现快捷键提示面板。
+- **自适应折行对齐 (visual-wrap-prefix)**: 消除折行时的缩进断裂，代码与列表自动跟随层级对齐。
+- **巨型日志防卡死 (so-long)**: 自动保护超长单行文件与波形仿真 log，结合 bidi 双向文字扫描禁用，彻底消除卡顿。
 - **Magit**: 深度集成 Emacs 下最强 Git 客户端，大幅提升 Git 操作效率。
 - **Org Mode**: 集成 `org-modern`，提供美观的笔记与项目管理界面。
 - **Flycheck**: 实时语法错误检查，确保代码质量。
@@ -73,6 +78,7 @@ cd ~/.emacs.d && ./setup.sh
 | `C-c C-t` | 切换背景透明度 (90% ⇄ 100%) |
 | `C-c t` / `C-c T` | Eat 现代终端 (当前窗口 / 另辟窗口新建) |
 | `C-c v` | Verilog 控制中心 (AUTO展开/Verible格式化/工程索引) |
+| `C-c l` | 原生 LSP 操作前缀 (r 重命名 / a 代码操作 / f 格式化) |
 | `M-s r` | 全局搜索 (Ripgrep) |
 | `M-s l` | 当前 Buffer 搜索 (Consult line) |
 | `M-i`   | 符号高亮 (Symbol Overlay: 开启/关闭当前词高亮) |

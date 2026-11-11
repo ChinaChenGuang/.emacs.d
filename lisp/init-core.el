@@ -78,7 +78,7 @@
       kept-old-versions 6       ; 保留最旧的 6 个版本
       kept-new-versions 9)      ; 保留最新的 9 个版本
 
-;; 4. User Experience
+;; 4. User Experience & Modern Interactions (Emacs 30+ 专属增强)
 ;; Answer "y" or "n" instead of "yes" or "no".
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -93,10 +93,59 @@
 (add-to-list 'yank-excluded-properties 'face)
 (add-to-list 'yank-excluded-properties 'background)
 
-;; Tree-sitter 预编译语法库目录
+;; 4.1 现代窗口管理与交互优化 (Emacs 30/31 标配体验)
+;; 分割窗口时平均分配可用屏幕空间，避免单向挤压
+(setq window-combination-resize t)
+;; 打开帮助/文档窗口时自动对焦，按 q 可瞬间关闭返回
+(setq help-window-select t)
+;; M-x 智能上下文过滤：在当前模式下仅展示有意义且可用的命令 (Emacs 28+)
+(setq read-extended-command-predicate #'command-completion-default-include-p)
+;; 切换文件时忽略重复警告
+(setq find-file-suppress-same-file-warnings t)
+;; 快速搜索引用优先使用高性能 ripgrep
+(when (executable-find "rg")
+  (setq xref-search-program 'ripgrep))
+
+;; 4.2 长文件保护与文本性能优化 (Emacs 29+ 核心优化)
+;; 打开包含超长单行的仿真 log、波形输出或压缩文件时自动启用保护，杜绝 Emacs 假死卡死
+(when (fboundp 'global-so-long-mode)
+  (global-so-long-mode 1))
+;; 禁用不适用的双向文字（阿拉伯语/希伯来语等）扫描，大幅提升巨型工程代码的滚动与渲染性能
+(setq-default bidi-paragraph-direction 'left-to-right
+              bidi-inhibit-bpa t)
+
+;; 4.3 自适应折行缩进对齐 (Emacs 30+ 内置 visual-wrap-prefix-mode)
+;; 开启折行后，折下去的文本行自动保持上一行的缩进深度，彻底消除长代码/列表折行的排版撕裂
+(when (fboundp 'global-visual-wrap-prefix-mode)
+  (global-visual-wrap-prefix-mode 1))
+
+;; 4.4 EditorConfig 原生支持 (Emacs 30+ 官方内置)
+;; 自动读取项目根目录下的 .editorconfig 规约缩进、换行风格，跨团队协作免配置
+(when (fboundp 'editorconfig-mode)
+  (editorconfig-mode 1))
+
+;; 4.5 Tree-sitter 全局现代化映射 (Emacs 29+ / 30 / 31 原生标准机制)
+;; 优先使用基于语法树 AST 解析的 -*-ts-mode，性能与语义解析远胜传统正则模式
 (let ((ts-dir (expand-file-name "tree-sitter" user-emacs-directory)))
   (when (file-directory-p ts-dir)
     (add-to-list 'treesit-extra-load-path ts-dir)))
+
+(when (and (fboundp 'treesit-available-p) (treesit-available-p))
+  (require 'treesit)
+  (dolist (item '((c-mode          c-ts-mode          c)
+                  (c++-mode        c++-ts-mode        cpp)
+                  (rust-mode       rust-ts-mode       rust)
+                  (yaml-mode       yaml-ts-mode       yaml)
+                  (conf-toml-mode  toml-ts-mode       toml)
+                  (sh-mode         bash-ts-mode       bash)
+                  (python-mode     python-ts-mode     python)
+                  (json-mode       json-ts-mode       json)))
+    (let ((orig-mode (nth 0 item))
+          (ts-mode   (nth 1 item))
+          (lang      (nth 2 item)))
+      (when (and (fboundp ts-mode)
+                 (treesit-ready-p lang t))
+        (add-to-list 'treesit-major-mode-remap-alist (cons orig-mode ts-mode))))))
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)

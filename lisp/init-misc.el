@@ -5,11 +5,14 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 1. Which-key: Displays available keybindings in popup
+;; 1. Which-key: 快捷键弹出提示 (Emacs 30+ 官方原生内置标准库)
 (use-package which-key
+  :ensure nil
   :hook (emacs-startup . which-key-mode)
   :config
-  (setq which-key-idle-delay 0.3))
+  (setq which-key-idle-delay 0.3
+        which-key-idle-secondary-delay 0.05
+        which-key-add-column-padding 1))
 
 ;; 2. Recentf: Track recent files
 (use-package recentf
