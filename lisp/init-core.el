@@ -146,6 +146,27 @@
       (when (and (fboundp ts-mode)
                  (treesit-ready-p lang t))
         (add-to-list 'treesit-major-mode-remap-alist (cons orig-mode ts-mode))))))
+
+;; 4.6 EDA 编译清单与文件列表 (.f / .flist / .vc / .args)
+;; GNU Emacs 默认会将 *.f / *.F 绑定为古老的 Fortran 语言 (fortran-mode)。
+;; 在芯片设计与 EDA 仿真 (VCS/Verdi/Xcelium/ModelSim/Verilator) 中，*.f 是包含编译选项
+;; (+incdir+, +define+) 与源码路径的纯文本文件清单。
+;; 重定向为纯文本派生模式，支持 // 与 # 注释，彻底杜绝 Fortran 缩进干扰。
+(define-derived-mode eda-filelist-mode text-mode "EDA-Filelist"
+  "纯文本 EDA 编译选项与源码文件清单模式 (.f, .flist, .vc, .args)。
+保持纯文本行为，同时原生支持 // 与 # 注释语法。"
+  (modify-syntax-entry ?/ ". 124b" eda-filelist-mode-syntax-table)
+  (modify-syntax-entry ?* ". 23" eda-filelist-mode-syntax-table)
+  (modify-syntax-entry ?\n "> b" eda-filelist-mode-syntax-table)
+  (modify-syntax-entry ?# "< b" eda-filelist-mode-syntax-table)
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (setq-local indent-tabs-mode nil))
+
+(add-to-list 'auto-mode-alist '("\\.[fF]\\'" . eda-filelist-mode))
+(add-to-list 'auto-mode-alist '("\\.flist\\'" . eda-filelist-mode))
+(add-to-list 'auto-mode-alist '("\\.vc\\'" . eda-filelist-mode))
+(add-to-list 'auto-mode-alist '("\\.args\\'" . eda-filelist-mode))
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)
