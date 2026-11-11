@@ -33,6 +33,7 @@
 (require 'init-ui)          ; 字体、主题与视觉
 (require 'init-completion)  ; 补全体系 (Vertico + Orderless + Corfu)
 (require 'init-dev)         ; 核心开发工具 (Magit, Apheleia 等)
+(require 'init-fold)        ; Tree-sitter AST 结构化代码折叠 (C-c RET / C-c Y)
 (require 'init-misc)        ; 实用编辑命令 (Avy, Smartparens 等)
 
 ;; 2.2 语言与特定工具按需懒加载 (On-Demand Loading)

@@ -34,15 +34,10 @@
   :init
   (apheleia-global-mode +1))
 
-;; 5. yafolding: 基于缩进的折叠工具
-(use-package yafolding
-  :ensure nil
-  :bind (("C-c RET" . yafolding-toggle-element)
-         ("C-c <return>" . yafolding-toggle-element)
-         ("C-c Y" . yafolding-toggle-all))
-  :hook ((prog-mode text-mode conf-mode) . yafolding-mode))
+;; 5. Tree-sitter AST 代码折叠 (现代语法树折叠引擎，替代陈旧 yafolding)
+(require 'init-fold)
 
-;; 5. Sidebar & Code Map: 全局函数/标题侧边栏
+;; 6. Sidebar & Code Map: 全局函数/标题侧边栏
 (use-package imenu-list
   :ensure nil
   :bind (("C-c i" . imenu-list-smart-toggle)

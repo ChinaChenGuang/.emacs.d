@@ -17,6 +17,7 @@
 ### 🎨 深度语法支持 (Tree-sitter)
 - **原生 AST 加速**: 借助 Emacs 29/30/31 原生 **Tree-sitter** (`treesit-major-mode-remap-alist`)，提供更精准的语法解析、更快速的高亮以及稳定的结构化编辑。
 - **全栈语言覆盖**: 针对 SystemVerilog, Verilog, C/C++, Rust, YAML, TOML, Python, Bash 等深度适配，毫秒级冷启动。
+- **高精度 AST 代码折叠**: 淘汰依据缩进猜测的陈旧方案，基于语法树语义节点（函数、模块、always 块、TOML table 等）精准折叠，附带行数统计提示（` ... [N lines] `），搜索自动穿透展开，非 Tree-sitter 模式优雅兜底 hideshow。
 
 ### 🛠 现代 Emacs 30/31 新特性集成
 - **Eglot 原生 LSP**: 深度集成 Emacs 原生语言服务器客户端，按需唤醒（`C-c l ...`），零额外包依赖，极速丝滑。
@@ -76,6 +77,8 @@ cd ~/.emacs.d && ./setup.sh
 | `M-1` ~ `M-9`, `M-0` | 原生窗口直达 (1~9号窗口直切，0切末尾) |
 | `M-o` / `C-x o` | 智能窗口跳转 (Ace-window) |
 | `C-c C-t` | 切换背景透明度 (90% ⇄ 100%) |
+| `C-c RET` | 智能折叠/展开当前代码块 (Tree-sitter AST 代码折叠) |
+| `C-c Y` | 全文件顶级定义一键全部折叠/展开 |
 | `C-c t` / `C-c T` | Eat 现代终端 (当前窗口 / 另辟窗口新建) |
 | `C-c v` | Verilog 控制中心 (AUTO展开/Verible格式化/工程索引) |
 | `C-c l` | 原生 LSP 操作前缀 (r 重命名 / a 代码操作 / f 格式化) |
