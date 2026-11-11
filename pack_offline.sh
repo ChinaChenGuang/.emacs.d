@@ -6,15 +6,16 @@
 # =============================================================================
 
 # Configuration
-DIST_DIR="emacs_dist"
-EMACS_D="$HOME/.emacs.d"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DIST_DIR="$SCRIPT_DIR/emacs_dist"
+EMACS_D="$SCRIPT_DIR"
 BIN_DIR="$EMACS_D/bin"
 
 echo ">>> 🚀 开始构建 Gemini Emacs 离线部署包..."
 
 # 1. 准备工作目录与清理历史包
 rm -rf "$DIST_DIR"
-rm -f "$EMACS_D/emacs_config_deploy.tar.gz" "$EMACS_D/emacs_config_deploy.zip"
+rm -f "$SCRIPT_DIR/emacs_config_deploy.tar.gz" "$SCRIPT_DIR/emacs_config_deploy.zip"
 mkdir -p "$DIST_DIR"
 mkdir -p "$DIST_DIR/bin"
 mkdir -p "$DIST_DIR/fonts"
@@ -24,6 +25,7 @@ echo ">>> 📂 正在同步配置并清理缓存与隐私数据..."
 rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude '.git' \
     --exclude '.gitignore' \
+    --exclude '.gitmodules' \
     --exclude 'tmp' \
     --exclude 'backups' \
     --exclude 'auto-save-list' \
@@ -41,6 +43,10 @@ rsync -av --progress "$EMACS_D/" "$DIST_DIR/.emacs.d/" \
     --exclude 'transient' \
     --exclude 'eshell' \
     --exclude 'org-roam.db' \
+    --exclude 'org-persist' \
+    --exclude '.mc-lists.el' \
+    --exclude '.org-id-locations' \
+    --exclude 'elgrep-data.el' \
     --exclude 'ac-comphist.dat' \
     --exclude 'deps'
 
@@ -90,15 +96,25 @@ find "$DIST_DIR/.emacs.d/" -name "*.eln" -delete
 rm -rf "$DIST_DIR/.emacs.d/eln-cache" 2>/dev/null || true
 
 # 7.5 预构建 package-quickstart.el 极速索引 (纯 .el 格式，保证跨机器跨版本兼容)
-if command -v emacs &> /dev/null; then
-    echo ">>> ⚡ 预生成 package-quickstart 索引以极致压缩离线启动耗时..."
-    emacs -Q --batch --eval '
-      (setq user-emacs-directory "'"$PWD/$DIST_DIR/.emacs.d/"'")
+EMACS_BIN=""
+for cand in "/snap/emacs/current/usr/bin/emacs" "emacs" "emacs-31.1" "emacs-30" "emacs-29"; do
+    if command -v "$cand" &> /dev/null; then
+        EMACS_BIN="$cand"
+        break
+    fi
+done
+
+if [ -n "$EMACS_BIN" ]; then
+    echo ">>> ⚡ 使用 $EMACS_BIN 预生成 package-quickstart 索引以极致压缩离线启动耗时..."
+    "$EMACS_BIN" -Q --batch --eval '
+      (setq user-emacs-directory "'"$DIST_DIR/.emacs.d/"'")
       (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
       (setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-directory))
       (require (quote package))
       (package-initialize)
       (package-quickstart-refresh)' 2>/dev/null || true
+else
+    echo ">>> ℹ️ 未发现可用的 Emacs 命令，跳过本地 package-quickstart 预构建。"
 fi
 
 # 8. 生成自动安装脚本 (install.sh)
@@ -154,10 +170,12 @@ fi
 
 # 3. 安装辅助工具 (rg / fd)
 mkdir -p "$BIN_DIR"
+mkdir -p "$INSTALL_DIR/bin"
 if [ -d "$SCRIPT_DIR/bin" ] && [ "$(ls -A "$SCRIPT_DIR/bin" 2>/dev/null)" ]; then
-    echo ">>> 🛠️ 安装辅助工具 (rg/fd) 至 $BIN_DIR..."
+    echo ">>> 🛠️ 安装辅助工具 (rg/fd) 至 $INSTALL_DIR/bin 与 $BIN_DIR..."
+    cp "$SCRIPT_DIR/bin/"* "$INSTALL_DIR/bin/"
     cp "$SCRIPT_DIR/bin/"* "$BIN_DIR/"
-    chmod +x "$BIN_DIR/"*
+    chmod +x "$INSTALL_DIR/bin/"* "$BIN_DIR/"*
 fi
 
 # 4. 安装适配字体 (解决终端/GUI 图标乱码)
