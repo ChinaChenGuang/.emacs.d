@@ -8,7 +8,8 @@
 ;; - 绝不受代码空行、行内换行或 0 缩进（如 TOML [section]）的干扰；
 ;; - 带有温和的折叠行数统计指示器，如 " ... [15 lines] "；
 ;; - isearch 搜索命中折叠区域时自动展开；
-;; - 非 Tree-sitter 环境优雅回退至 Emacs 原生内置的 hideshow (hs-minor-mode)。
+;; - 非 Tree-sitter 环境优雅回退至 Emacs 原生内置的 hideshow (hs-minor-mode)
+;;   以及针对于配置文件的 [section] 结构化表头折叠。
 ;;
 ;; 快捷键映射（全局统一）：
 ;;   C-c RET / C-c <return> : 智能折叠 / 展开当前代码块或语法节点 (DWIM)
@@ -49,7 +50,7 @@
      . ("function_item" "impl_item" "struct_item" "enum_item"
         "trait_item" "block" "match_expression" "mod_item" "macro_definition"))
     (toml
-     . ("table" "table_array_element" "inline_table" "array"))
+     . ("table" "table_array_element"))
     (yaml
      . ("block_mapping_pair" "block_sequence" "document"))
     (python
@@ -109,6 +110,34 @@ Keeps the header line visible and folds through to the block's end."
         (dolist (child (nreverse (treesit-node-children curr t)))
           (push child stack))))
     (nreverse result)))
+
+;; ----------------------------------------------------------------------
+;; 2.1 传统模式兜底：Conf / TOML / INI 文件的 [section] 表格识别
+;; ----------------------------------------------------------------------
+(defconst my/conf-fold-section-header-regexp
+  "^[ \t]*\\[+[^]\n]+\\]+"
+  "Regular expression matching section/table headers in INI and TOML files.")
+
+(defun my/conf-fold--get-section-bounds ()
+  "Get (BEG . END) for folding the current [section] in conf/toml mode.
+Keeps the header line visible and folds up to the start of the next section."
+  (save-excursion
+    (let (beg end)
+      (beginning-of-line)
+      (if (looking-at-p my/conf-fold-section-header-regexp)
+          (setq beg (line-end-position))
+        (when (re-search-backward my/conf-fold-section-header-regexp nil t)
+          (setq beg (line-end-position))))
+      (when beg
+        (forward-line 1)
+        (if (re-search-forward my/conf-fold-section-header-regexp nil t)
+            (progn
+              (beginning-of-line)
+              (forward-line -1)
+              (setq end (line-end-position)))
+          (setq end (point-max)))
+        (when (> end beg)
+          (cons beg end))))))
 
 ;; ----------------------------------------------------------------------
 ;; 3. Overlay 管理与视觉呈现
@@ -173,10 +202,22 @@ Bound to C-c RET / C-c <return>."
                           (goto-char (car range))))
                     (message "该语法节点只有单行，无需折叠")))
               (message "未在光标处找到可折叠的语法块")))
-        ;; C. 传统模式：原生 hideshow 兜底
-        (if (bound-and-true-p hs-minor-mode)
-            (hs-toggle-hiding)
-          (message "当前模式未启用代码折叠支持"))))))
+        ;; C. 传统模式兜底
+        (cond
+         ;; C1. conf-mode / conf-toml-mode 等配置模式：依据 [section] 表头精准折叠
+         ((derived-mode-p 'conf-mode)
+          (let ((range (my/conf-fold--get-section-bounds)))
+            (if range
+                (progn
+                  (my/ts-fold--make-overlay (car range) (cdr range))
+                  (when (> (point) (car range))
+                    (goto-char (car range))))
+              (message "未在当前光标处找到可折叠的 [section] 表格"))))
+         ;; C2. 传统编程模式：hideshow 原生兜底
+         ((bound-and-true-p hs-minor-mode)
+          (hs-toggle-hiding))
+         (t
+          (message "当前模式未启用代码折叠支持")))))))
 
 (defun my/fold-toggle-all ()
   "Toggle fold for all definitions in buffer.
@@ -200,13 +241,25 @@ Bound to C-c Y."
                 (when (and range (my/ts-fold--make-overlay (car range) (cdr range)))
                   (cl-incf count))))
             (message "已折叠 %d 个代码块 (按 C-c Y 或 C-c RET 可展开)" count))
-        (if (bound-and-true-p hs-minor-mode)
-            (progn
-              (if (hs-already-hidden-p)
-                  (hs-show-all)
-                (hs-hide-all))
-              (message "已切换 hideshow 全局折叠状态"))
-          (message "当前模式未启用全局折叠支持"))))))
+        (cond
+         ;; conf-mode / conf-toml-mode 全局一键折叠所有 [section]
+         ((derived-mode-p 'conf-mode)
+          (let ((count 0))
+            (save-excursion
+              (goto-char (point-min))
+              (while (re-search-forward my/conf-fold-section-header-regexp nil t)
+                (let ((range (my/conf-fold--get-section-bounds)))
+                  (when (and range (my/ts-fold--make-overlay (car range) (cdr range)))
+                    (cl-incf count)))))
+            (message "已折叠 %d 个 [section] 表格 (按 C-c Y 或 C-c RET 可展开)" count)))
+         ((bound-and-true-p hs-minor-mode)
+          (progn
+            (if (hs-already-hidden-p)
+                (hs-show-all)
+              (hs-hide-all))
+            (message "已切换 hideshow 全局折叠状态")))
+         (t
+          (message "当前模式未启用全局折叠支持")))))))
 
 ;; ----------------------------------------------------------------------
 ;; 5. Minor Mode 与按键挂载
@@ -227,8 +280,9 @@ Bound to C-c Y."
   (if my-fold-mode
       (progn
         (add-to-invisibility-spec 'my-ts-fold)
-        ;; 非 Tree-sitter 模式自动启用 hideshow 兜底
-        (unless (and (fboundp 'treesit-parser-list) (treesit-parser-list))
+        ;; 非 Tree-sitter 模式且非 conf 模式时自动启用 hideshow 兜底
+        (unless (or (and (fboundp 'treesit-parser-list) (treesit-parser-list))
+                    (derived-mode-p 'conf-mode))
           (hs-minor-mode 1)))
     (remove-from-invisibility-spec 'my-ts-fold)
     (mapc #'delete-overlay (my/ts-fold--all-overlays))))

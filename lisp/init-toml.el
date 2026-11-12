@@ -31,7 +31,7 @@ Automatically indents arrays/lists by 2 spaces and aligns closing brackets."
     (save-excursion
       (goto-char bol)
       (skip-chars-forward " \t")
-      (when (looking-at-p "^\\[+[^\\]\n]+\\]+")
+      (when (looking-at-p "^[ \t]*\\[+[^]\n]+\\]+")
         (setq indent 0)))
     (save-excursion
       (goto-char bol)

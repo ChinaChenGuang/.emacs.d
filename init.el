@@ -90,10 +90,30 @@
                        'c++-mode)
 
 ;; E. 脚本与配置语言 (Shell / Rust / YAML / TOML / Tcl / Perl / Jinja2)
-(my/register-lazy-mode '("\\.sh\\'" "\\.bash\\'" "\\.csh\\'" "\\.tcsh\\'" "\\.[tc]*csh\\(rc\\)?\\'") 'init-shell 'sh-mode)
-(my/register-lazy-mode '("\\.rs\\'") 'init-rust 'rust-mode)
-(my/register-lazy-mode '("\\.ya?ml\\'") 'init-yaml 'yaml-mode)
-(my/register-lazy-mode '("\\.toml\\'" "\\.kemurc\\'") 'init-toml 'conf-toml-mode)
+(my/register-lazy-mode '("\\.sh\\'" "\\.bash\\'" "\\.csh\\'" "\\.tcsh\\'" "\\.[tc]*csh\\(rc\\)?\\'")
+                       'init-shell
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'bash t))
+                           'bash-ts-mode
+                         'sh-mode))
+(my/register-lazy-mode '("\\.rs\\'")
+                       'init-rust
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'rust t))
+                           'rust-ts-mode
+                         'rust-mode))
+(my/register-lazy-mode '("\\.ya?ml\\'")
+                       'init-yaml
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'yaml t))
+                           'yaml-ts-mode
+                         'yaml-mode))
+(my/register-lazy-mode '("\\.toml\\'" "\\.kemurc\\'")
+                       'init-toml
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'toml t))
+                           'toml-ts-mode
+                         'conf-toml-mode))
 (my/register-lazy-mode '("\\.tcl\\'" "\\.exp\\'" "\\.itcl\\'" "\\.qel\\'") 'init-tcl 'tcl-mode)
 (my/register-lazy-mode '("\\.p[lm]\\'" "\\.t\\'" "\\.perl\\'") 'init-perl 'cperl-mode)
 (my/register-lazy-mode '("\\.jinja2?\\'" "\\.j2\\'") 'init-jinja2 'jinja2-mode)
