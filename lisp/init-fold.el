@@ -31,14 +31,18 @@
 (defvar my/ts-fold-node-types-alist
   '((verilog
      . ("module_declaration" "interface_declaration" "package_declaration"
-        "class_declaration" "task_declaration" "function_declaration"
+        "class_declaration" "class_method" "class_constructor_declaration"
+        "task_declaration" "function_declaration"
         "always_construct" "initial_construct" "final_construct"
-        "generate_region" "seq_block" "case_statement" "specify_block"))
+        "generate_region" "conditional_generate_construct" "loop_generate_construct"
+        "seq_block" "case_statement" "specify_block"))
     (systemverilog
      . ("module_declaration" "interface_declaration" "package_declaration"
-        "class_declaration" "task_declaration" "function_declaration"
+        "class_declaration" "class_method" "class_constructor_declaration"
+        "task_declaration" "function_declaration"
         "always_construct" "initial_construct" "final_construct"
-        "generate_region" "seq_block" "case_statement" "specify_block"))
+        "generate_region" "conditional_generate_construct" "loop_generate_construct"
+        "seq_block" "case_statement" "specify_block"))
     (c
      . ("function_definition" "struct_specifier" "enum_specifier"
         "compound_statement" "preproc_if" "preproc_ifdef"))
@@ -52,16 +56,32 @@
     (toml
      . ("table" "table_array_element"))
     (yaml
-     . ("block_mapping_pair" "block_sequence" "document"))
+     . ("block_mapping_pair" "block_sequence"))
     (python
-     . ("function_definition" "class_definition" "if_statement"
-        "while_statement" "for_statement" "try_statement" "with_statement"
-        "dictionary" "list"))
+     . ("function_definition" "class_definition" "decorated_definition"
+        "if_statement" "while_statement" "for_statement"
+        "try_statement" "with_statement" "dictionary" "list"))
     (bash
      . ("function_definition" "compound_statement" "c_style_for_statement"
         "for_statement" "while_statement" "if_statement" "case_statement"))
     (json
-     . ("object" "array")))
+     . ("object" "array"))
+    (javascript
+     . ("function_declaration" "method_definition" "class_declaration"
+        "arrow_function" "statement_block" "object" "switch_statement"
+        "if_statement" "for_statement" "while_statement" "try_statement"))
+    (typescript
+     . ("function_declaration" "method_definition" "class_declaration"
+        "arrow_function" "statement_block" "object" "switch_statement"
+        "if_statement" "for_statement" "while_statement" "try_statement"))
+    (tsx
+     . ("function_declaration" "method_definition" "class_declaration"
+        "arrow_function" "statement_block" "object" "switch_statement"
+        "if_statement" "for_statement" "while_statement" "try_statement"))
+    (go
+     . ("function_declaration" "method_declaration" "type_declaration"
+        "block" "select_statement" "communication_case" "expression_case"
+        "type_case" "for_statement" "if_statement")))
   "Alist mapping treesit language symbols to lists of foldable AST node type names.")
 
 ;; ----------------------------------------------------------------------

@@ -39,14 +39,17 @@
 ;; 2.2 语言与特定工具按需懒加载 (On-Demand Loading)
 ;; 仅在打开对应文件或按下快捷键时才动态加载，大幅减少启动负担与内存占用
 (defun my/register-lazy-mode (patterns module mode-fn)
-  "关联文件后缀 PATTERNS，打开文件时才动态加载 MODULE 并执行 MODE-FN。"
+  "关联文件后缀 PATTERNS，打开文件时才动态加载 MODULE 并执行 MODE-FN。
+自动优先查询 `major-mode-remap-alist`，在 Tree-sitter 可用时无缝升级到 ts-mode。"
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist
                  (cons pattern
                        (lambda ()
-                         (require module)
-                         (when (fboundp mode-fn)
-                           (funcall mode-fn)))))))
+                         (when module (require module nil t))
+                         (let ((real-mode (or (alist-get mode-fn major-mode-remap-alist)
+                                              mode-fn)))
+                           (when (fboundp real-mode)
+                             (funcall real-mode))))))))
 
 (defun my/register-lazy-keys (key-bindings module)
   "为 KEY-BINDINGS 绑定延迟加载，按下快捷键时加载 MODULE 并重放命令。"
@@ -82,14 +85,38 @@
 (my/register-lazy-mode '("\\.md\\'" "\\.markdown\\'") 'init-markdown 'markdown-mode)
 
 ;; D. C/C++ & SystemC
-(my/register-lazy-mode '("\\.c\\'" "\\.cpp\\'" "\\.cxx\\'" "\\.cc\\'" "\\.h\\'" "\\.hpp\\'")
+(my/register-lazy-mode '("\\.c\\'")
                        'init-cpp
-                       'c++-mode)
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'c t))
+                           'c-ts-mode
+                         'c-mode))
+(my/register-lazy-mode '("\\.cpp\\'" "\\.cxx\\'" "\\.cc\\'" "\\.h\\'" "\\.hpp\\'")
+                       'init-cpp
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'cpp t))
+                           'c++-ts-mode
+                         'c++-mode))
 (my/register-lazy-mode '("\\.sc\\'" "\\.systemc\\'")
                        'init-systemc
-                       'c++-mode)
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'cpp t))
+                           'c++-ts-mode
+                         'c++-mode))
 
-;; E. 脚本与配置语言 (Shell / Rust / YAML / TOML / Tcl / Perl / Jinja2)
+;; E. 脚本与配置语言 (Shell / Rust / YAML / TOML / Python / JSON / Tcl / Perl / Jinja2)
+(my/register-lazy-mode '("\\.py\\'")
+                       nil
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'python t))
+                           'python-ts-mode
+                         'python-mode))
+(my/register-lazy-mode '("\\.json\\'")
+                       nil
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'json t))
+                           'json-ts-mode
+                         'js-json-mode))
 (my/register-lazy-mode '("\\.sh\\'" "\\.bash\\'" "\\.csh\\'" "\\.tcsh\\'" "\\.[tc]*csh\\(rc\\)?\\'")
                        'init-shell
                        (if (and (fboundp 'treesit-ready-p)
