@@ -50,6 +50,10 @@
 ;; ----------------------------------------------------------------------
 ;; 模式关联：优先 verilog-ts-mode，降级 verilog-mode
 ;; ----------------------------------------------------------------------
+;; 保证透明度切换快捷键 C-c C-t 不被 verilog 模板前缀劫持
+(with-eval-after-load 'verilog-mode
+  (define-key verilog-mode-map (kbd "C-c C-t") #'my/toggle-transparency))
+
 (if my/verilog-tree-sitter-p
     (progn
       (use-package verilog-ts-mode

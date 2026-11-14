@@ -69,13 +69,12 @@
                                 (treesit-ready-p 'systemverilog t))
                            'verilog-ts-mode
                          'verilog-mode))
-(my/register-lazy-keys '(("C-c v" . my/verilog-format)) 'init-verilog)
+(my/register-lazy-keys '(("C-c v" . my/verilog-menu)) 'init-verilog)
 
 ;; B. Org Mode & Org-Roam (笔记与任务看板)
 (my/register-lazy-mode '("\\.org\\'" "\\.org_archive\\'") 'init-org 'org-mode)
 (my/register-lazy-keys '(("C-c a" . org-agenda)
                          ("C-c c" . org-capture)
-                         ("C-c l" . org-store-link)
                          ("C-c n f" . org-roam-node-find)
                          ("C-c n i" . org-roam-node-insert)
                          ("C-c n l" . org-roam-buffer-toggle))

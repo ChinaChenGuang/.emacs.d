@@ -53,6 +53,7 @@
       (maphash (lambda (k v) (push (cons k v) entries)) my/stats-table)
       (setq entries (sort entries (lambda (a b) (> (cdr a) (cdr b)))))
       (with-temp-file my/stats-file
+        (insert ";;; -*- lexical-binding: t -*-\n")
         (insert ";; 命令使用统计，自动生成，请勿手工编辑。\n")
         (insert "(setq my/stats-table (make-hash-table :test 'equal))\n")
         (dolist (e entries)

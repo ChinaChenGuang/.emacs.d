@@ -77,8 +77,9 @@ cd ~/.emacs.d && ./setup.sh
 | `M-1` ~ `M-9`, `M-0` | 原生窗口直达 (1~9号窗口直切，0切末尾) |
 | `M-o` / `C-x o` | 智能窗口跳转 (Ace-window) |
 | `C-c C-t` | 切换背景透明度 (90% ⇄ 100%) |
-| `C-c RET` | 智能折叠/展开当前代码块 (Tree-sitter AST 代码折叠) |
-| `C-c Y` | 全文件顶级定义一键全部折叠/展开 |
+| `C-<return>` / `C-c RET` | 智能折叠/展开当前代码块 (Tree-sitter AST 代码折叠) |
+| `C-M-<return>` / `C-c Y` | 全文件顶级定义一键全部折叠/展开 |
+| `C-S-<return>` | 一键折叠外层父语法块 |
 | `C-c t` / `C-c T` | Eat 现代终端 (当前窗口 / 另辟窗口新建) |
 | `C-c v` | Verilog 控制中心 (AUTO展开/Verible格式化/工程索引) |
 | `C-c l` | 原生 LSP 操作前缀 (r 重命名 / a 代码操作 / f 格式化) |

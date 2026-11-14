@@ -281,14 +281,50 @@ Bound to C-c Y."
          (t
           (message "当前模式未启用全局折叠支持")))))))
 
+(defun my/fold-hide-parent ()
+  "Fold the parent AST node or outer block enclosing current point.
+Bound to C-S-<return> / <C-S-return>."
+  (interactive)
+  (if (and (fboundp 'treesit-parser-list)
+           (treesit-parser-list))
+      (let* ((node (treesit-node-at (point)))
+             (lang (treesit-language-at (point)))
+             (curr-target (my/ts-fold--find-target-node node lang))
+             (parent (and curr-target
+                          (treesit-node-parent curr-target)
+                          (my/ts-fold--find-target-node (treesit-node-parent curr-target) lang))))
+        (if parent
+            (let ((range (my/ts-fold--get-range parent)))
+              (if range
+                  (progn
+                    (my/ts-fold--make-overlay (car range) (cdr range))
+                    (goto-char (car range))
+                    (message "已折叠外层语法块: %s" (treesit-node-type parent)))
+                (message "外层语法块无需折叠")))
+          (message "未找到更外层的可折叠语法块")))
+    (if (bound-and-true-p hs-minor-mode)
+        (hs-hide-level 1)
+      (message "当前模式不支持折叠父语法块"))))
+
 ;; ----------------------------------------------------------------------
 ;; 5. Minor Mode 与按键挂载
 ;; ----------------------------------------------------------------------
 (defvar my-fold-mode-map
   (let ((map (make-sparse-keymap)))
+    ;; 1. 单块折叠/展开 DWIM: 同时支持 C-<return> 与 C-c RET
+    (define-key map (kbd "<C-return>") #'my/fold-toggle)
+    (define-key map (kbd "C-<return>") #'my/fold-toggle)
     (define-key map (kbd "C-c RET") #'my/fold-toggle)
     (define-key map (kbd "C-c <return>") #'my/fold-toggle)
+
+    ;; 2. 全篇顶级折叠/展开: 同时支持 C-M-<return> 与 C-c Y
+    (define-key map (kbd "<C-M-return>") #'my/fold-toggle-all)
+    (define-key map (kbd "C-M-<return>") #'my/fold-toggle-all)
     (define-key map (kbd "C-c Y") #'my/fold-toggle-all)
+
+    ;; 3. 收起外层父语法块: 支持 C-S-<return>
+    (define-key map (kbd "<C-S-return>") #'my/fold-hide-parent)
+    (define-key map (kbd "C-S-<return>") #'my/fold-hide-parent)
     map)
   "Keymap for `my-fold-mode'.")
 
@@ -307,15 +343,28 @@ Bound to C-c Y."
     (remove-from-invisibility-spec 'my-ts-fold)
     (mapc #'delete-overlay (my/ts-fold--all-overlays))))
 
+(defun my/fold-enable-maybe ()
+  "Enable `my-fold-mode' unless in modes with native folding like org-mode."
+  (unless (derived-mode-p 'org-mode)
+    (my-fold-mode 1)))
+
 ;; 默认挂载到所有编程与配置模式
 ;; 注：toml-ts-mode 与 yaml-ts-mode 继承自 text-mode 而非 prog-mode/conf-mode，
 ;; 需显式挂载其 hook 以便自动激活折叠功能
 (dolist (hook '(prog-mode-hook
                 conf-mode-hook
+                text-mode-hook
                 toml-ts-mode-hook
                 yaml-ts-mode-hook
                 yaml-mode-hook))
-  (add-hook hook #'my-fold-mode))
+  (add-hook hook #'my/fold-enable-maybe))
+
+;; 在 prog-mode-map 中也做直接绑定，确保快捷键恒定可用
+(with-eval-after-load 'prog-mode
+  (define-key prog-mode-map (kbd "<C-return>") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "C-<return>") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "<C-M-return>") #'my/fold-toggle-all)
+  (define-key prog-mode-map (kbd "C-M-<return>") #'my/fold-toggle-all))
 
 (provide 'init-fold)
 ;;; init-fold.el ends here
