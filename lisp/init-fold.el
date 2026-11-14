@@ -311,20 +311,37 @@ Bound to C-S-<return> / <C-S-return>."
 ;; ----------------------------------------------------------------------
 (defvar my-fold-mode-map
   (let ((map (make-sparse-keymap)))
-    ;; 1. 单块折叠/展开 DWIM: 同时支持 C-<return> 与 C-c RET
+    ;; 1. 单块折叠/展开 DWIM:
+    ;; 全面兼容各种输入习惯：
+    ;; - 单键模式: C-<return>
+    ;; - 双键连续模式 (松开 Ctrl 或终端): C-c RET / C-c <return>
+    ;; - 双键连按保持 Ctrl 模式: C-c C-<return> / C-c <C-return>
     (define-key map (kbd "<C-return>") #'my/fold-toggle)
     (define-key map (kbd "C-<return>") #'my/fold-toggle)
     (define-key map (kbd "C-c RET") #'my/fold-toggle)
     (define-key map (kbd "C-c <return>") #'my/fold-toggle)
+    (define-key map (kbd "C-c C-<return>") #'my/fold-toggle)
+    (define-key map (kbd "C-c <C-return>") #'my/fold-toggle)
+    (define-key map (kbd "C-c C-m") #'my/fold-toggle)
 
-    ;; 2. 全篇顶级折叠/展开: 同时支持 C-M-<return> 与 C-c Y
+    ;; 2. 全篇顶级折叠/展开:
+    ;; 支持 C-M-<return>、C-c Y 以及 C-c C-M-<return>
     (define-key map (kbd "<C-M-return>") #'my/fold-toggle-all)
     (define-key map (kbd "C-M-<return>") #'my/fold-toggle-all)
     (define-key map (kbd "C-c Y") #'my/fold-toggle-all)
+    (define-key map (kbd "C-c C-M-<return>") #'my/fold-toggle-all)
+    (define-key map (kbd "C-c <C-M-return>") #'my/fold-toggle-all)
+    (define-key map (kbd "C-c M-<return>") #'my/fold-toggle-all)
+    (define-key map (kbd "C-c <M-return>") #'my/fold-toggle-all)
 
-    ;; 3. 收起外层父语法块: 支持 C-S-<return>
+    ;; 3. 收起外层父语法块:
+    ;; 支持 C-S-<return> 以及 C-c C-S-<return>
     (define-key map (kbd "<C-S-return>") #'my/fold-hide-parent)
     (define-key map (kbd "C-S-<return>") #'my/fold-hide-parent)
+    (define-key map (kbd "C-c C-S-<return>") #'my/fold-hide-parent)
+    (define-key map (kbd "C-c <C-S-return>") #'my/fold-hide-parent)
+    (define-key map (kbd "C-c S-<return>") #'my/fold-hide-parent)
+    (define-key map (kbd "C-c <S-return>") #'my/fold-hide-parent)
     map)
   "Keymap for `my-fold-mode'.")
 
@@ -363,8 +380,19 @@ Bound to C-S-<return> / <C-S-return>."
 (with-eval-after-load 'prog-mode
   (define-key prog-mode-map (kbd "<C-return>") #'my/fold-toggle)
   (define-key prog-mode-map (kbd "C-<return>") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "C-c RET") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "C-c <return>") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "C-c C-<return>") #'my/fold-toggle)
+  (define-key prog-mode-map (kbd "C-c <C-return>") #'my/fold-toggle)
   (define-key prog-mode-map (kbd "<C-M-return>") #'my/fold-toggle-all)
-  (define-key prog-mode-map (kbd "C-M-<return>") #'my/fold-toggle-all))
+  (define-key prog-mode-map (kbd "C-M-<return>") #'my/fold-toggle-all)
+  (define-key prog-mode-map (kbd "C-c Y") #'my/fold-toggle-all)
+  (define-key prog-mode-map (kbd "C-c C-M-<return>") #'my/fold-toggle-all)
+  (define-key prog-mode-map (kbd "C-c <C-M-return>") #'my/fold-toggle-all)
+  (define-key prog-mode-map (kbd "<C-S-return>") #'my/fold-hide-parent)
+  (define-key prog-mode-map (kbd "C-S-<return>") #'my/fold-hide-parent)
+  (define-key prog-mode-map (kbd "C-c C-S-<return>") #'my/fold-hide-parent)
+  (define-key prog-mode-map (kbd "C-c <C-S-return>") #'my/fold-hide-parent))
 
 (provide 'init-fold)
 ;;; init-fold.el ends here
