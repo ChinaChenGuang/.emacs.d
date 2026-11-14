@@ -308,7 +308,13 @@ Bound to C-c Y."
     (mapc #'delete-overlay (my/ts-fold--all-overlays))))
 
 ;; 默认挂载到所有编程与配置模式
-(dolist (hook '(prog-mode-hook conf-mode-hook))
+;; 注：toml-ts-mode 与 yaml-ts-mode 继承自 text-mode 而非 prog-mode/conf-mode，
+;; 需显式挂载其 hook 以便自动激活折叠功能
+(dolist (hook '(prog-mode-hook
+                conf-mode-hook
+                toml-ts-mode-hook
+                yaml-ts-mode-hook
+                yaml-mode-hook))
   (add-hook hook #'my-fold-mode))
 
 (provide 'init-fold)
