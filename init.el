@@ -144,6 +144,17 @@
 (my/register-lazy-mode '("\\.p[lm]\\'" "\\.t\\'" "\\.perl\\'") 'init-perl 'cperl-mode)
 (my/register-lazy-mode '("\\.jinja2?\\'" "\\.j2\\'") 'init-jinja2 'jinja2-mode)
 
+;; 保证 .j2 / .jinja2 模板后缀即使首行存在 #!/bin/bash / #!/usr/bin/env 等 Shebang 时，
+;; 也绝不被 interpreter-mode-alist 误判定为 shell-script 或 python，强制优先使用 jinja2-mode
+(defun my/jinja2-enforce-template-mode ()
+  "Force `jinja2-mode' for .j2 and .jinja2 files even if they contain a shebang."
+  (when (and buffer-file-name
+             (string-match-p "\\.\\(jinja2?\\|j2\\)\\'" buffer-file-name)
+             (not (derived-mode-p 'jinja2-mode)))
+    (require 'init-jinja2)
+    (jinja2-mode)))
+(add-hook 'find-file-hook #'my/jinja2-enforce-template-mode)
+
 ;; F. 调试与远程工具 (Dape / Tramp)
 (my/register-lazy-keys '(("<f5>" . dape-continue)
                          ("<f9>" . dape-breakpoint-toggle)

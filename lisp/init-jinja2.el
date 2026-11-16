@@ -23,6 +23,14 @@
                           (setq-local sgml-basic-offset 2)))
          (jinja2-mode . smartparens-mode))
   :config
+  ;; 防止包含 Shebang (如 #!/bin/bash) 的模板文件在 normal-mode 下被误切为其他模式
+  (add-hook 'after-change-major-mode-hook
+            (lambda ()
+              (when (and buffer-file-name
+                         (string-match-p "\\.\\(jinja2?\\|j2\\)\\'" buffer-file-name)
+                         (not (derived-mode-p 'jinja2-mode)))
+                (jinja2-mode))))
+
   ;; Smartparens 自动成对闭合与空格处理增强
   (with-eval-after-load 'smartparens
     (sp-with-modes 'jinja2-mode
