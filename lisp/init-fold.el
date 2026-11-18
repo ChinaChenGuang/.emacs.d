@@ -81,7 +81,10 @@
     (go
      . ("function_declaration" "method_declaration" "type_declaration"
         "block" "select_statement" "communication_case" "expression_case"
-        "type_case" "for_statement" "if_statement")))
+        "type_case" "for_statement" "if_statement"))
+    (lua
+     . ("function_declaration" "for_statement" "while_statement"
+        "repeat_statement" "if_statement" "table_constructor")))
   "Alist mapping treesit language symbols to lists of foldable AST node type names.")
 
 ;; ----------------------------------------------------------------------

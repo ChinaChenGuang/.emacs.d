@@ -144,6 +144,7 @@
                   (javascript-mode js-ts-mode         javascript)
                   (js-mode         js-ts-mode         javascript)
                   (typescript-mode typescript-ts-mode typescript)
+                  (lua-mode        lua-ts-mode        lua)
                   (go-mode         go-ts-mode         go)))
     (let ((orig-mode (nth 0 item))
           (ts-mode   (nth 1 item))

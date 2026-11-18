@@ -142,6 +142,12 @@
                          'conf-toml-mode))
 (my/register-lazy-mode '("\\.tcl\\'" "\\.exp\\'" "\\.itcl\\'" "\\.qel\\'") 'init-tcl 'tcl-mode)
 (my/register-lazy-mode '("\\.p[lm]\\'" "\\.t\\'" "\\.perl\\'") 'init-perl 'cperl-mode)
+(my/register-lazy-mode '("\\.lua\\'")
+                       nil
+                       (if (and (fboundp 'treesit-ready-p)
+                                (treesit-ready-p 'lua t))
+                           'lua-ts-mode
+                         'lua-mode))
 (my/register-lazy-mode '("\\.jinja2?\\'" "\\.j2\\'") 'init-jinja2 'jinja2-mode)
 
 ;; 保证 .j2 / .jinja2 模板后缀即使首行存在 #!/bin/bash / #!/usr/bin/env 等 Shebang 时，
