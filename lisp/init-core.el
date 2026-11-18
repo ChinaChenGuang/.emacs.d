@@ -153,26 +153,42 @@
         (add-to-list 'treesit-major-mode-remap-alist (cons orig-mode ts-mode))
         (add-to-list 'major-mode-remap-alist (cons orig-mode ts-mode))))))
 
-;; 4.6 EDA 编译清单与文件列表 (.f / .flist / .vc / .args)
+;; 4.6 EDA 编译清单与文件列表 (.f / .flist / .vc / .args / .vf)
 ;; GNU Emacs 默认会将 *.f / *.F 绑定为古老的 Fortran 语言 (fortran-mode)。
 ;; 在芯片设计与 EDA 仿真 (VCS/Verdi/Xcelium/ModelSim/Verilator) 中，*.f 是包含编译选项
 ;; (+incdir+, +define+) 与源码路径的纯文本文件清单。
-;; 重定向为纯文本派生模式，支持 // 与 # 注释，彻底杜绝 Fortran 缩进干扰。
+;; 提供专用的轻量语法高亮，将 //、#、/* */ 标注为注释颜色，并高亮环境变量与编译选项。
+(defvar eda-filelist-font-lock-keywords
+  '(;; 1. 环境变量与宏变量引用: $VAR, ${VAR}, $(VAR)
+    ("\\$[{(][^}) \t\n]+[})]\\|\\$[A-Za-z0-9_]+"
+     0 font-lock-variable-name-face)
+    ;; 2. EDA 常见 +选项 (如 +incdir+, +define+, +libext+, +timescale+ 等)
+    ("\\+[A-Za-z0-9_]+\\(?:\\+[A-Za-z0-9_+=,.:/-]*\\)?"
+     0 font-lock-builtin-face)
+    ;; 3. EDA 常见命令行参数 (如 -f, -F, -v, -y, -sverilog, -debug_access 等)
+    ("\\(?:^\\|[ \t]\\)\\(-[a-zA-Z0-9_+-]+\\)"
+     1 font-lock-keyword-face))
+  "EDA 文件清单语法高亮关键字。")
+
 (define-derived-mode eda-filelist-mode text-mode "EDA-Filelist"
-  "纯文本 EDA 编译选项与源码文件清单模式 (.f, .flist, .vc, .args)。
-保持纯文本行为，同时原生支持 // 与 # 注释语法。"
+  "纯文本 EDA 编译选项与源码文件清单模式 (.f, .flist, .vc, .args, .vf)。
+保持纯文本行为，同时原生支持 //、# 与 /* */ 注释着色，以及编译选项和变量高亮。"
   (modify-syntax-entry ?/ ". 124b" eda-filelist-mode-syntax-table)
   (modify-syntax-entry ?* ". 23" eda-filelist-mode-syntax-table)
   (modify-syntax-entry ?\n "> b" eda-filelist-mode-syntax-table)
   (modify-syntax-entry ?# "< b" eda-filelist-mode-syntax-table)
+  (modify-syntax-entry ?\" "\"" eda-filelist-mode-syntax-table)
   (setq-local comment-start "// ")
   (setq-local comment-end "")
+  (setq-local comment-start-skip "\\(?://+\\|#+\\)[ \t]*")
+  (setq-local font-lock-defaults '(eda-filelist-font-lock-keywords nil nil nil nil))
   (setq-local indent-tabs-mode nil))
 
 (add-to-list 'auto-mode-alist '("\\.[fF]\\'" . eda-filelist-mode))
 (add-to-list 'auto-mode-alist '("\\.flist\\'" . eda-filelist-mode))
 (add-to-list 'auto-mode-alist '("\\.vc\\'" . eda-filelist-mode))
 (add-to-list 'auto-mode-alist '("\\.args\\'" . eda-filelist-mode))
+(add-to-list 'auto-mode-alist '("\\.vf\\'" . eda-filelist-mode))
 ;; 5. Indentation
 ;; Use spaces instead of tabs and set default width to 4.
 (setq-default indent-tabs-mode nil)
